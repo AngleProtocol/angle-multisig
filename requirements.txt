@@ -1,0 +1,5 @@
+requests
+eth_account
+web3
+hexbytes
+click
