@@ -8,12 +8,6 @@ import { ethers, utils, BigNumber } from 'ethers'
 import { CONTRACTS_ADDRESSES, ChainId, Interfaces } from '@angleprotocol/sdk'
 
 async function main() {
-  const web3 = new Web3(Web3.givenProvider)
-
-  const contractInterface = Interfaces.Governor_Interface
-
-  const governorAddress = CONTRACTS_ADDRESSES[ChainId.MAINNET].Governor
-  const timestampAddress = CONTRACTS_ADDRESSES[ChainId.MAINNET].Timelock
   const rewardDistributorAddress =
     CONTRACTS_ADDRESSES[ChainId.MAINNET].RewardsDistributor
   const rewardDistributorInterface = new utils.Interface([
@@ -24,10 +18,6 @@ async function main() {
 
   const curveInterface = new utils.Interface([
     'function deposit_reward_token(address _reward_token, uint256 _amount) external',
-  ])
-
-  const erc20Interface = new utils.Interface([
-    'function approve(address spender, uint256 amount)',
   ])
 
   const curveGaugeAddress = '0x1E212e054d74ed136256fc5a5DDdB4867c6E003F'
@@ -47,16 +37,9 @@ async function main() {
       .stakingContractAddress
 
   const ANGLE = CONTRACTS_ADDRESSES[ChainId.MAINNET].ANGLE
-  const stakingDuration = BigNumber.from(3600 * 24 * 365 * 10)
-  const updateFrequency = BigNumber.from(3600 * 24 * 7)
-  const incentiveAmount = parseAmount.ether(100)
 
-  const functionName = 'setStakingContract'
   const newFunctionName = 'setAmountToDistribute'
-  const recoverFunction = 'governorWithdrawRewardToken'
   const curveFunction = 'deposit_reward_token'
-
-  const bridgingAddress = '0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185'
 
   const amountHADAI = parseAmount.ether(34951381.05)
   const amountHAUSDC = parseAmount.ether(88829502.74)
@@ -225,7 +208,6 @@ async function main() {
   await submit(baseTxnCurve, startNonce + 13)
   await submit(baseTxnCurveIbEUR, startNonce + 14)
 
-  /*
   await execute(
     baseTxnHADAI,
     '0x847821c8e6d90cfaab493c4d03bb87934b11d939a0180bf7551c53854204a074',
@@ -279,20 +261,18 @@ async function main() {
     baseTxnGUNIagEURwETH,
     '0x2a8084ff9f2fec7cd2f95a82799b0a5002c8464d71d6fee78343f1ea31055fa4',
   )
-  */
 
   // Transactions to be executed later
-  /*
+
   await execute(
     baseTxnCurve,
     '0xfbcc9f27a51c1ccb0483bce0a7da65db6f13f3bb4c09459d12199a3f44c15cbf',
   )
-  
+
   await execute(
     baseTxnCurveIbEUR,
     '0x44db4494ac9f7f2f8fe99b866f6750098ef419fcf859ec5e3af74e0523369a4a',
   )
-  */
 }
 
 main().catch((error) => {
