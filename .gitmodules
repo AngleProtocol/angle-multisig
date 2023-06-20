@@ -6,10 +6,17 @@
 	path = lib/solidity-stringutils
 	url = https://github.com/Arachnid/solidity-stringutils
 	ignore = dirty
-[submodule "lib/prb-math"]
-	path = lib/prb-math
-	url = https://github.com/PaulRBerg/prb-math
-	ignore = dirty
 [submodule "lib/safe-contracts"]
 	path = lib/safe-contracts
 	url = https://github.com/safe-global/safe-contracts
+[submodule "lib/borrow-contracts"]
+	path = lib/borrow-contracts
+	url = https://github.com/AngleProtocol/borrow-contracts
+	tags = v2.3
+[submodule "lib/angle-transmuter"]
+	path = lib/angle-transmuter
+	url = https://github.com/AngleProtocol/angle-transmuter
+[submodule "lib/openzeppelin-contracts"]
+	path = lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+	branch = v4.8.1
