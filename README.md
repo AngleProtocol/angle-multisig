@@ -3,12 +3,40 @@
 This repo contains scripts to push transaction to multisigs associated to Angle Protocol on Gnosis.
 More generally, signers of multisig can also use this repo to check that the transactions they see on the Gnosis Safe interface on the front correspond to what they expect.
 
-## Setup
+## Getting started
 
-To install all the packages needed to run the tests, run:
+### Install Foundry
 
-```javascript
+If you don't have Foundry:
+
+```bash
+curl -L https://foundry.paradigm.xyz | bash
+
+source /root/.zshrc
+# or, if you're under bash: source /root/.bashrc
+
+foundryup
+```
+
+To install the standard library:
+
+```bash
+forge install foundry-rs/forge-std
+```
+
+To update libraries:
+
+```bash
+forge update
+```
+
+### Install packages
+
+You can install all dependencies by running
+
+```bash
 yarn
+forge i
 ```
 
 ## Setup environment
@@ -52,7 +80,7 @@ This will generate in your terminal the hex data that is printed on Gnosis
 Simply run:
 
 ```typescript
-await submit(transaction, gnosisNonceOfTheTx)
+await submit(transaction, gnosisNonceOfTheTx);
 ```
 
 Make sure that your `.env` is correctly set for this
@@ -62,7 +90,7 @@ Make sure that your `.env` is correctly set for this
 This only works for the moment for Gnosis which require 2/3 signatures. You need to execute:
 
 ```typescript
-await execute(transaction, safeTxHashOnGnosis)
+await execute(transaction, safeTxHashOnGnosis);
 ```
 
 ## Changing Network
