@@ -12,7 +12,7 @@ import {
 } from '@angleprotocol/sdk'
 
 // Only change this line to submit a proposal
-import aip from '../../proposals/aip-curve'
+import aip from '../../../proposals/aip-curve'
 
 // ====================== TO NOT CHANGE ======================
 async function main() {
