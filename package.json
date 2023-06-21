@@ -2,6 +2,24 @@
   "name": "angle-multisig",
   "version": "1.0.0",
   "description": "",
+  "scripts": {
+    "address": "rm -rf ./build && tsc && node ./build/scripts/getAddress.js",
+    "execute": "rm -rf ./build && tsc && node ./build/scripts/main.js",
+    "deploy:fork": "forge script --fork-url fork --broadcast",
+    "fork": "source .env && anvil --fork-url $ETH_NODE_URI_MAINNET",
+    "getSignatures": "rm -rf ./build && tsc && node ./build/scripts/getSignatures.js",
+    "merkle": "rm -rf ./build && tsc && node ./build/scripts/updateAirdropMerkle.js",
+    "path": "rm -rf ./build && tsc && node ./build/scripts/encodePath.js",
+    "removeStaking": "rm -rf ./build && tsc && node ./build/scripts/removeStaking.js",
+    "sendEth": "rm -rf ./build && tsc && node ./build/scripts/sendEth.js",
+    "setHAFees": "rm -rf ./build && tsc && node ./build/scripts/setHAFees.js",
+    "setIncentives": "rm -rf ./build && tsc && node ./build/scripts/setIsIncentivised.js",
+    "setMaxInterests": "rm -rf ./build && tsc && node ./build/scripts/setMaxInterests.js",
+    "submit": "rm -rf ./build && tsc && node ./build/scripts//submitFoundryTx.js",
+    "sign": "rm -rf ./build && tsc && node ./build/scripts/sign.js",
+    "staking": "rm -rf ./build && tsc && node ./build/scripts/setStakingContract.js",
+    "unpause": "rm -rf ./build && tsc && node ./build/scripts/unpause.js"
+  },
   "devDependencies": {
     "@angleprotocol/sdk": "1.0.34",
     "@metamask/detect-provider": "1.2.0",
@@ -44,21 +62,6 @@
     "yargs": "^17.2.1"
   },
   "dependencies": {},
-  "scripts": {
-    "address": "rm -rf ./build && tsc && node ./build/scripts/getAddress.js",
-    "execute": "rm -rf ./build && tsc && node ./build/scripts/main.js",
-    "getSignatures": "rm -rf ./build && tsc && node ./build/scripts/getSignatures.js",
-    "merkle": "rm -rf ./build && tsc && node ./build/scripts/updateAirdropMerkle.js",
-    "path": "rm -rf ./build && tsc && node ./build/scripts/encodePath.js",
-    "removeStaking": "rm -rf ./build && tsc && node ./build/scripts/removeStaking.js",
-    "sendEth": "rm -rf ./build && tsc && node ./build/scripts/sendEth.js",
-    "setHAFees": "rm -rf ./build && tsc && node ./build/scripts/setHAFees.js",
-    "setIncentives": "rm -rf ./build && tsc && node ./build/scripts/setIsIncentivised.js",
-    "setMaxInterests": "rm -rf ./build && tsc && node ./build/scripts/setMaxInterests.js",
-    "sign": "rm -rf ./build && tsc && node ./build/scripts/sign.js",
-    "staking": "rm -rf ./build && tsc && node ./build/scripts/setStakingContract.js",
-    "unpause": "rm -rf ./build && tsc && node ./build/scripts/unpause.js"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC"

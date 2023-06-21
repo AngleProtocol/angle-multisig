@@ -1,5 +1,5 @@
-import { generic } from './utils'
-import { submit } from './submitTx'
+import { generic } from '../utils'
+import { submit } from '../utils/submitTx'
 import { utils } from 'ethers'
 
 async function main() {

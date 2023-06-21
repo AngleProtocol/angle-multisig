@@ -1,7 +1,7 @@
-import { generic } from '../utils'
+import { generic } from '../../utils'
 import Web3 from 'web3'
 import { ethers } from 'ethers'
-import { submit, execute } from '../submitTx'
+import { submit, execute } from '../../utils/submitTx'
 
 import { CONTRACTS_ADDRESSES, ChainId, Interfaces } from '@angleprotocol/sdk'
 

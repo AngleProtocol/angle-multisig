@@ -1,6 +1,6 @@
-import { generic } from './utils'
+import { generic } from '../utils'
 import { parseAmount } from './bignumber'
-import { submit, execute } from './submitTx'
+import { submit, execute } from '../utils/submitTx'
 import Web3 from 'web3'
 import { ethers, utils, BigNumber } from 'ethers'
 

@@ -1,4 +1,4 @@
-import { submit, execute } from './submitTx'
+import { submit, execute } from '../utils/submitTx'
 
 async function main() {
   const baseTxn = {

@@ -6,8 +6,8 @@
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
   "include": ["./scripts"],
   "files": ["./hardhat.config.ts"]

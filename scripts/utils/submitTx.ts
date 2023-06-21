@@ -6,9 +6,8 @@ import {
   gnosisProposeTx,
   gnosisEstimateNonce,
   gnosisGetSignatures,
-} from './utils'
+} from '.'
 import { executeTx } from './executeTx'
-import BigNumber from 'bignumber.js'
 import { config } from 'dotenv'
 
 const { utils } = ethers

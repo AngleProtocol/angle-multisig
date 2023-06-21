@@ -19,3 +19,8 @@ build
 .env4
 .env-governor
 dist
+
+
+# foundry
+/out
+/cache-forge

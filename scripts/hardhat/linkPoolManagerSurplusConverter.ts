@@ -1,6 +1,6 @@
-import { generic } from './utils'
+import { generic } from '../utils'
 import { parseAmount } from './bignumber'
-import { execute, submit } from './submitTx'
+import { execute, submit } from '../utils/submitTx'
 import { utils } from 'ethers'
 
 // import {StableMasterInterface} from "../interfaces/interfaces";
