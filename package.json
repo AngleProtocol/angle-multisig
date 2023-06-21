@@ -15,7 +15,7 @@
     "setHAFees": "rm -rf ./build && tsc && node ./build/scripts/setHAFees.js",
     "setIncentives": "rm -rf ./build && tsc && node ./build/scripts/setIsIncentivised.js",
     "setMaxInterests": "rm -rf ./build && tsc && node ./build/scripts/setMaxInterests.js",
-    "submit": "rm -rf ./build && tsc && node ./build/scripts//submitFoundryTx.js",
+    "submit:foundry": "rm -rf ./build && tsc && node ./build/scripts/submitFoundryTx.js",
     "sign": "rm -rf ./build && tsc && node ./build/scripts/sign.js",
     "staking": "rm -rf ./build && tsc && node ./build/scripts/setStakingContract.js",
     "unpause": "rm -rf ./build && tsc && node ./build/scripts/unpause.js"

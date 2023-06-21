@@ -3,7 +3,7 @@ import transactionJson from '../scripts/foundry/transaction.json';
 
 async function main() {
   console.log(transactionJson)
-//   await submit(transactionJson)
+  await submit(transactionJson)
 }
 
 main().catch((error) => {

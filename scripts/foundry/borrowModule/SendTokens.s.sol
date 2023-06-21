@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import { console } from "forge-std/console.sol";
 import { ERC20 } from "oz/token/ERC20/ERC20.sol";
 import { Enum } from "safe/Safe.sol";
-import { Utils } from "../Utils.s.sol";
+import { MultiSend, Utils } from "../Utils.s.sol";
 
 contract SendTokens is Utils {
     function run() external {
@@ -15,7 +15,7 @@ contract SendTokens is Utils {
         uint256 value = 0;
         bytes memory data = abi.encodeWithSelector(
             ERC20.transfer.selector,
-            1000 * BASE_18,
+            1 * BASE_18,
             0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185
         );
         uint256 dataLength = data.length;
@@ -25,6 +25,6 @@ contract SendTokens is Utils {
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
         // console.logBytes(payloadMultiSend);
-        _serializeJson(address(guardianArbitrumSafe), 0, payloadMultiSend, Enum.Operation.Call);
+        _serializeJson(address(multiSendArbitrum), 0, payloadMultiSend, Enum.Operation.Call);
     }
 }
