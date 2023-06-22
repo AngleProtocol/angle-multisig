@@ -68,13 +68,12 @@ def add_new_delegate():
     print(add_response.text)
     print(add_response.status_code)
     return
-    
+
 if __name__ == "__main__":
-    # view_existing_delegates()
-    # get_address()
-    # get_signature()
+    view_existing_delegates()
+    print(get_address().address)
+    get_signature()
     # add_new_delegate()
-    #view_existing_delegates()
     
     
     

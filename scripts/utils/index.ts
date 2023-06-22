@@ -3,6 +3,7 @@ import axios from 'axios'
 
 import { ethers } from 'ethers'
 import { config } from 'dotenv'
+import { SAFE_API } from './constants'
 
 config()
 export async function signHash(hash: string) {
@@ -46,7 +47,7 @@ export const gnosisEstimateTransaction = async (
 ): Promise<any> => {
   try {
     const resp = await axios.post(
-      `https://safe-relay.mainnet.gnosis.io/api/v2/safes/${safe}/transactions/estimate/`,
+      `${SAFE_API}/safes/${safe}/multisig-transactions/estimations/`,
       tx,
     )
     console.log('')
@@ -63,9 +64,8 @@ export const gnosisEstimateTransaction = async (
 export const gnosisEstimateNonce = async (safe: string): Promise<any> => {
   try {
     const resp = await axios.post(
-      `https://safe-relay.mainnet.gnosis.io/api/v1/safes/${safe}`,
+      `${SAFE_API}/safes/${safe}`,
     )
-    console.log(resp.data)
     return resp.data
   } catch (e) {
     console.log('')
@@ -79,7 +79,7 @@ export const gnosisEstimateNonce = async (safe: string): Promise<any> => {
 export const gnosisProposeTx = async (safe: string, tx: any): Promise<any> => {
   try {
     const resp = await axios.post(
-      `https://safe-transaction.mainnet.gnosis.io/api/v1/safes/${safe}/multisig-transactions/`,
+      `${SAFE_API}/safes/${safe}/multisig-transactions/`,
       tx,
     )
     console.log(resp.data)
@@ -102,7 +102,7 @@ export const gnosisProposeTx = async (safe: string, tx: any): Promise<any> => {
       newTx.signature = signature
       try {
         const resp2 = await axios.post(
-          `https://safe-transaction.mainnet.gnosis.io/api/v1/safes/${safe}/multisig-transactions/`,
+          `${SAFE_API}/safes/${safe}/multisig-transactions/`,
           newTx,
         )
         console.log('Success, transaction sent!')
@@ -126,7 +126,7 @@ export const gnosisGetSignatures = async (
 ): Promise<any> => {
   try {
     const resp = await axios.get(
-      `https://safe-transaction.mainnet.gnosis.io/api/v1/multisig-transactions/${safe_tx_hash}/confirmations/`,
+      `${SAFE_API}/multisig-transactions/${safe_tx_hash}/confirmations/`,
     )
     console.log('')
     console.log(resp.data)

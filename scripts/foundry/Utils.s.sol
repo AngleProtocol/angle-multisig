@@ -5,7 +5,7 @@ pragma solidity ^0.8.19;
 import "forge-std/Script.sol";
 import { Safe, Enum } from "safe/Safe.sol";
 import { MultiSend } from "safe/libraries/MultiSend.sol";
-import { ITransmuter } from "transmuter/interfaces/ITransmuter.sol";
+import { ITreasury } from "borrow/interfaces/ITreasury.sol";
 
 /// @title Utils
 /// @author Angle Labs, Inc.
@@ -17,6 +17,11 @@ contract Utils is Script {
     uint256 public constant BASE_18 = 1e18;
 
     ITransmuter public transmuter = ITransmuter(address(0x0));
+    ITransmuter public treasuryArbitrum = ITreasury(0x0D710512E100C171139D2Cf5708f22C680eccF52);
+    ITransmuter public treasuryAvalanche = ITreasury(0xa014A485D64efb236423004AB1a99C0aaa97a549);
+    ITransmuter public treasuryEthereum = ITreasury(0x8667DBEBf68B0BFa6Db54f550f41Be16c4067d60);
+    ITransmuter public treasuryPolygon = ITreasury(0x2F2e0ba9746aae15888cf234c4EB5B301710927e);
+    ITransmuter public treasuryOptimism = ITreasury(0xe9f183FC656656f1F17af1F2b0dF79b8fF9ad8eD);
     Safe public governorMainnetSafe = Safe(payable(address(0x0)));
     Safe public guardianMainnetSafe = Safe(payable(address(0x0)));
     Safe public governorArbitrumSafe = Safe(payable(address(0x0)));

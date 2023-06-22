@@ -44,18 +44,21 @@ export const submit = async (baseTxn, nonceCustom = 0) => {
   const lastUsedNonce = 9;
   const safeTxGas = "1000000";
   */
-  const { safeTxGas, lastUsedNonce } = await gnosisEstimateTransaction(
+  const { safeTxGas } = await gnosisEstimateTransaction(
     safe,
     baseTxn,
   )
+  const { nonce:safeNonce } = await gnosisEstimateNonce(
+    safe
+  )
   console.log('safeTxGas', safeTxGas)
-  console.log('Nonce', lastUsedNonce)
+  console.log('Nonce', safeNonce)
   console.log('')
 
   const nonce =
-    lastUsedNonce === undefined || nonceCustom != 0
+    safeNonce === undefined || nonceCustom != 0
       ? nonceCustom
-      : lastUsedNonce + 1
+      : safeNonce 
 
   const txn = {
     ...baseTxn,
@@ -94,9 +97,12 @@ export const execute = async (baseTxn, safe_tx_hash, numConfirmations = 2) => {
 
   // Lets the Safe service estimate the tx and retrieve the nonce
 
-  const { safeTxGas, lastUsedNonce } = await gnosisEstimateTransaction(
+  const { safeTxGas } = await gnosisEstimateTransaction(
     safe,
     baseTxn,
+  )
+  const { lastUsedNonce } = await gnosisEstimateNonce(
+    safe
   )
   console.log('safeTxGas', safeTxGas)
   console.log('Nonce', lastUsedNonce)
