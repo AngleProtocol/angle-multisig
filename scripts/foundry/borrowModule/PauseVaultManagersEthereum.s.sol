@@ -9,11 +9,7 @@ import { MockSafe } from "../mock/MockSafe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-interface IMockSafe {
-    function execTransaction(address to, bytes calldata data) external returns (bool success);
-}
-
-contract PauseVaultManagersOptimism is Utils {
+contract PauseVaultManagersEthereum is Utils {
     function run() external {
         bytes memory transactions;
         uint8 isDelegateCall = 0;
@@ -21,7 +17,7 @@ contract PauseVaultManagersOptimism is Utils {
 
         uint256 i;
         while (true) {
-            try treasuryOptimism.vaultManagerList(i) returns (address vault) {
+            try treasuryEthereum.vaultManagerList(i) returns (address vault) {
                 string memory name = IERC721Metadata(vault).name();
                 console.log("Pausing %s", name);
                 {
@@ -39,6 +35,6 @@ contract PauseVaultManagersOptimism is Utils {
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
-        _serializeJson(CHAIN_OPTIMISM, address(multiSendOptimism), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        _serializeJson(CHAIN_ETHEREUM, address(multiSendEthereum), 0, payloadMultiSend, Enum.Operation.DelegateCall);
     }
 }

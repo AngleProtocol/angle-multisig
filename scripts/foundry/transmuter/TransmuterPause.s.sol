@@ -6,6 +6,7 @@ import "transmuter/transmuter/Storage.sol" as Storage;
 import { ISettersGuardian } from "transmuter/interfaces/ISetters.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
+import "../Constants.s.sol";
 
 contract PauseTransmuter is Utils {
     function run() external {
@@ -50,6 +51,6 @@ contract PauseTransmuter is Utils {
         }
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
         // console.logBytes(payloadMultiSend);
-        _serializeJson(CHAIN_MAINNET, address(multiSendMainnet), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        _serializeJson(CHAIN_ETHEREUM, address(multiSendEthereum), 0, payloadMultiSend, Enum.Operation.DelegateCall);
     }
 }

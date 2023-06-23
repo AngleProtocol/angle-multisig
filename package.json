@@ -7,6 +7,10 @@
     "execute": "rm -rf ./build && tsc && node ./build/scripts/main.js",
     "deploy:fork": "forge script --fork-url fork --broadcast",
     "fork": "source .env && anvil --fork-url $ETH_NODE_URI_MAINNET",
+    "fork:avalanche": "source .env && anvil --fork-url $ETH_NODE_URI_AVALANCHE",
+    "fork:arbitrum": "source .env && anvil --fork-url $ETH_NODE_URI_ARBITRUM",
+    "fork:optimism": "source .env && anvil --fork-url $ETH_NODE_URI_OPTIMISM",
+    "fork:polygon": "source .env && anvil --fork-url $ETH_NODE_URI_POLYGON",
     "getSignatures": "rm -rf ./build && tsc && node ./build/scripts/getSignatures.js",
     "merkle": "rm -rf ./build && tsc && node ./build/scripts/updateAirdropMerkle.js",
     "path": "rm -rf ./build && tsc && node ./build/scripts/encodePath.js",
@@ -22,6 +26,7 @@
   },
   "devDependencies": {
     "@angleprotocol/sdk": "3.0.60",
+    "@chainlink/contracts": "0.2.1",
     "@metamask/detect-provider": "1.2.0",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
     "@nomiclabs/hardhat-solhint": "2.0.0",

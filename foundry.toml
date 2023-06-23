@@ -20,9 +20,3 @@ mainnet = "${ETH_NODE_URI_MAINNET}"
 optimism = "${ETH_NODE_URI_OPTIMISM}"
 polygon = "${ETH_NODE_URI_POLYGON}"
 fork = "${ETH_NODE_URI_FORK}"
-
-[etherscan]
-arbitrum = { key = "${ARBITRUM_ETHERSCAN_API_KEY}" }
-mainnet = { key = "${MAINNET_ETHERSCAN_API_KEY}" }
-optimism = { key = "${OPTIMISM_ETHERSCAN_API_KEY}" }
-polygon = { key = "${POLYGON_ETHERSCAN_API_KEY}" }
