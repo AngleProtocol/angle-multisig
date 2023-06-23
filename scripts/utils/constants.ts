@@ -1,5 +1,8 @@
-import { ChainId } from "@angleprotocol/sdk"
+import { ChainId } from '@angleprotocol/sdk';
 
-const chainName = ChainId[process.env.CHAIN_ID].toLowerCase()
+export function getSafeAPI(chainId: string) {
+  const chainName = ChainId[chainId].toLowerCase();
+  const safeAPI = `https://safe-transaction-${chainName}.safe.global/api/v1`;
+  return safeAPI;
 
-export const SAFE_API = `https://safe-transaction-${chainName}.safe.global/api/v1`
+}

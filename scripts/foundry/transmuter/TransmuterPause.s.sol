@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 import { console } from "forge-std/console.sol";
 import "transmuter/transmuter/Storage.sol" as Storage;
 import { ISettersGuardian } from "transmuter/interfaces/ISetters.sol";
-import { ProxyAdmin } from "oz/proxy/transparent/ProxyAdmin.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 
@@ -51,6 +50,6 @@ contract PauseTransmuter is Utils {
         }
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
         // console.logBytes(payloadMultiSend);
-        _serializeJson(address(multiSendMainnet), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        _serializeJson(CHAIN_MAINNET, address(multiSendMainnet), 0, payloadMultiSend, Enum.Operation.DelegateCall);
     }
 }
