@@ -32,7 +32,7 @@ export async function generic(toAddress: string, contractInterface, functionName
   return baseTxn;
 }
 
-export const gnosisEstimateTransaction = async (safe: string, chainId: string, tx: any): Promise<any> => {
+export const gnosisEstimateTransaction = async (safe: string, chainId: number, tx: any): Promise<any> => {
   const safeAPI = getSafeAPI(chainId);
   try {
     const resp = await axios.post(`${safeAPI}/safes/${safe}/multisig-transactions/estimations/`, tx);
@@ -47,7 +47,7 @@ export const gnosisEstimateTransaction = async (safe: string, chainId: string, t
   }
 };
 
-export const gnosisEstimateNonce = async (safe: string, chainId: string): Promise<any> => {
+export const gnosisEstimateNonce = async (safe: string, chainId: number): Promise<any> => {
   const safeAPI = getSafeAPI(chainId);
   try {
     const resp = await axios.post(`${safeAPI}/safes/${safe}`);
@@ -61,7 +61,7 @@ export const gnosisEstimateNonce = async (safe: string, chainId: string): Promis
   }
 };
 
-export const gnosisProposeTx = async (safe: string, chainId: string, tx: any): Promise<any> => {
+export const gnosisProposeTx = async (safe: string, chainId: number, tx: any): Promise<any> => {
   const safeAPI = getSafeAPI(chainId);
   try {
     const resp = await axios.post(`${safeAPI}/safes/${safe}/multisig-transactions/`, tx);
@@ -100,7 +100,7 @@ export const gnosisProposeTx = async (safe: string, chainId: string, tx: any): P
 
 export const gnosisGetSignatures = async (
   safe_tx_hash: string,
-  chainId: string,
+  chainId: number,
   numConfirmations = 2,
 ): Promise<any> => {
   const safeAPI = getSafeAPI(chainId);

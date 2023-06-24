@@ -5,7 +5,7 @@ async function main() {
   const chainId = transactionJson["chainId"];
   delete transactionJson["chainId"];
   console.log(transactionJson);
-  await submit(transactionJson,null, chainId)
+  await submit(transactionJson,0, chainId)
 }
 
 main().catch((error) => {

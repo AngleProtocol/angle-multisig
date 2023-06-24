@@ -5,7 +5,6 @@ import { console } from "forge-std/console.sol";
 import { IVaultManagerFunctions } from "borrow/interfaces/IVaultManager.sol";
 import { IERC721Metadata } from "oz/token/ERC721/extensions/IERC721Metadata.sol";
 import { Enum } from "safe/Safe.sol";
-import { MockSafe } from "../mock/MockSafe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 

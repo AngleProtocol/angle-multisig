@@ -12,10 +12,10 @@ const { utils } = ethers;
  * It wraps a transaction that has already been encoded using the `transaction.ts` file
  * * * * * * * * * * * * * * * * * * * */
 config();
-export const submit = async (baseTxn, nonceCustom = 0, chainId =null) => {
+export const submit = async (baseTxn, nonceCustom = 0, chainId: number|null =null) => {
   console.log('Now wrapping the base transaction for Gnosis');
   const safe: string = process.env.SAFE;
-  chainId = chainId ?? process.env.CHAIN_ID;
+  chainId = chainId ?? Number(process.env.CHAIN_ID);
   const sender: string = process.env.SENDER;
 
   const safeDomain = new EIP712Domain({
