@@ -4,18 +4,14 @@ __pycache__
 .DS_Store
 .deps
 .vscode
-.docs
 .env
-.env-master
-.env-guardian
-.env-anglemaster
-.env1
 node_modules
 venv
 build
-.env1
-.env2
-.env3
-.env4
-.env-governor
 dist
+scripts/foundry/transaction.json
+
+
+# foundry
+/out
+/cache-forge
