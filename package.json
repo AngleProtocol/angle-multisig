@@ -3,26 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "address": "rm -rf ./build && tsc && node ./build/scripts/hardhat/getAddress.js",
-    "execute": "rm -rf ./build && tsc && node ./build/scripts/main.js",
-    "deploy:fork": "forge script --fork-url fork --broadcast",
+    "script:fork": "forge script --fork-url fork --broadcast",
     "fork:arbitrum": "source .env && anvil --fork-url $ETH_NODE_URI_ARBITRUM",
     "fork:avalanche": "source .env && anvil --fork-url $ETH_NODE_URI_AVALANCHE",
     "fork:ethereum": "source .env && anvil --fork-url $ETH_NODE_URI_MAINNET",
     "fork:optimism": "source .env && anvil --fork-url $ETH_NODE_URI_OPTIMISM",
     "fork:polygon": "source .env && anvil --fork-url $ETH_NODE_URI_POLYGON",
-    "getSignatures": "rm -rf ./build && tsc && node ./build/scripts/getSignatures.js",
-    "merkle": "rm -rf ./build && tsc && node ./build/scripts/updateAirdropMerkle.js",
-    "path": "rm -rf ./build && tsc && node ./build/scripts/encodePath.js",
-    "removeStaking": "rm -rf ./build && tsc && node ./build/scripts/removeStaking.js",
-    "sendEth": "rm -rf ./build && tsc && node ./build/scripts/sendEth.js",
-    "setHAFees": "rm -rf ./build && tsc && node ./build/scripts/setHAFees.js",
-    "setIncentives": "rm -rf ./build && tsc && node ./build/scripts/setIsIncentivised.js",
-    "setMaxInterests": "rm -rf ./build && tsc && node ./build/scripts/setMaxInterests.js",
-    "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
-    "sign": "rm -rf ./build && tsc && node ./build/scripts/sign.js",
-    "staking": "rm -rf ./build && tsc && node ./build/scripts/setStakingContract.js",
-    "unpause": "rm -rf ./build && tsc && node ./build/scripts/unpause.js"
+    "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts"
   },
   "devDependencies": {
     "@angleprotocol/sdk": "3.0.60",

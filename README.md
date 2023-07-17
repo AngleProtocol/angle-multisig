@@ -54,36 +54,31 @@ The `addDelegate.py` file helps to add a delegate to a Gnosis Safe. A delegate i
 
 The reason for introducing a delegate is that the address of the delegate can be unsafe and its private key can be stored in clear (because it never directly interacts with the blockchain). In the multisig, most addresses are going to be Ledger for which you do not want to store the private key, even on a GitHub repo.
 
-### Scripts
+### Scripts: Propose and Verify
 
-There are different types of scripts within this repo: some to check whether transactions on Gnosis are valid, some to push transactions to Gnosis front, other to execute transactions from Gnosis.
+You can run a script with
 
-In general to execute a script:
-
-`yarn hardhat run --network YOUR_NETWORK PATH_TO_SCRIPT`
-
-A good example of script to verify, push and execute a transaction is the `scripts/setStakingContract.ts` file.
-
-#### Verify a transaction
-
-To just verify a transaction, you need to run:
-
-```typescript
-const transaction = await generic(contractAddress, contractInterface, contractFunctionToCall, [contractParameters]
-])
+```bash
+yarn script:fork
 ```
 
-This will generate in your terminal the hex data that is printed on Gnosis
+which will generate an object in `scripts/foundry/transaction.json` with properties: chainId, data,operation,to,value. These are required to pass a transaction on Gnosis Safe.
+
+Some scripts need to make on chain calls, so you should run beforehand:
+
+```bash
+yarn fork:{CHAIN_NAME}
+```
 
 #### Push a transaction to Gnosis
 
 Simply run:
 
-```typescript
-await submit(transaction, gnosisNonceOfTheTx);
+```bash
+yarn submit:foundry
 ```
 
-Make sure that your `.env` is correctly set for this
+Make sure that your `.env` is correctly set for this and you have the right values in `scripts/foundry/transaction.json`
 
 #### Executing a transaction
 
