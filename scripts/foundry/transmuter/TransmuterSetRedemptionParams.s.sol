@@ -19,7 +19,7 @@ contract PauseTransmuter is Utils {
         int64[] memory yFee = new int64[](2);
 
         xFee[0] = 0;
-        xFee[1] = BASE_9;
+        xFee[1] = uint64(BASE_9);
         yFee[0] = 0;
         yFee[1] = 0;
 

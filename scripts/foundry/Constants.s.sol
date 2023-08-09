@@ -4,12 +4,14 @@ import { ITreasury } from "borrow/interfaces/ITreasury.sol";
 import { MultiSend } from "safe/libraries/MultiSend.sol";
 import { Safe, Enum } from "safe/Safe.sol";
 import { ITransmuter } from "transmuter/interfaces/ITransmuter.sol";
+import { IAgToken } from "borrow/interfaces/IAgToken.sol";
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONSTANTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 uint256 constant BASE_18 = 1e18;
+uint256 constant BASE_9 = 1e9;
 
 uint256 constant CHAIN_ARBITRUM = 42161;
 uint256 constant CHAIN_AVALANCHE = 43114;
@@ -21,7 +23,6 @@ uint256 constant CHAIN_POLYGON = 137;
                                                     CONTRACTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-ITransmuter constant transmuter = ITransmuter(address(0x0));
 ITreasury constant treasuryArbitrum = ITreasury(0x0D710512E100C171139D2Cf5708f22C680eccF52);
 ITreasury constant treasuryAvalanche = ITreasury(0xa014A485D64efb236423004AB1a99C0aaa97a549);
 ITreasury constant treasuryEthereum = ITreasury(0x8667DBEBf68B0BFa6Db54f550f41Be16c4067d60);
@@ -43,3 +44,13 @@ MultiSend constant multiSendEthereum = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b
 MultiSend constant multiSendArbitrum = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendOptimism = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B);
 MultiSend constant multiSendPolygon = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
+
+ITransmuter constant transmuter = ITransmuter(0x00253582b2a3FE112feEC532221d9708c64cEFAb);
+IAgToken constant agEUREthereum = IAgToken(0x1a7e4e63778B4f12a199C062f3eFdD288afCBce8);
+
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                  EXTERNAL CONTRACTS                                                
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+address constant EUROC = 0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c;
+address constant BC3M = 0x2F123cF3F37CE3328CC9B5b8415f9EC5109b45e7;
