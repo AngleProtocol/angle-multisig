@@ -43,7 +43,7 @@ contract InitAndBoostrapTest is Utils {
         if (!success) revert();
 
         assertEq(IERC20(EUROC).balanceOf(address(transmuter)), 9_500_000 * 10 ** 6);
-        // assertEq(IERC20(BC3M).balanceOf(address(transmuter)), 4_500_000 * BASE_18);
+        assertEq(IERC20(BC3M).balanceOf(address(transmuter)), 38446 * BASE_18);
         assertEq(transmuter.isPaused(address(EUROC), Storage.ActionType.Mint), false);
         assertEq(transmuter.isPaused(address(EUROC), Storage.ActionType.Burn), false);
         assertEq(transmuter.isPaused(address(BC3M), Storage.ActionType.Mint), false);
@@ -53,12 +53,15 @@ contract InitAndBoostrapTest is Utils {
         // we ca do some quoteIn and quoteOut
         transmuter.quoteOut(BASE_18, address(EUROC), address(agEUREthereum));
         transmuter.quoteIn(10 ** 6, address(EUROC), address(agEUREthereum));
-        // transmuter.quoteOut(BASE_18, address(BC3M), address(agEUREthereum));
-        // transmuter.quoteIn(BASE_18, address(BC3M), address(agEUREthereum));
+        transmuter.quoteOut(BASE_18, address(BC3M), address(agEUREthereum));
+        transmuter.quoteIn(BASE_18, address(BC3M), address(agEUREthereum));
         // burn
         transmuter.quoteIn(BASE_18, address(agEUREthereum), address(EUROC));
         transmuter.quoteOut(10 ** 6, address(agEUREthereum), address(EUROC));
-        // transmuter.quoteIn(BASE_18, address(agEUREthereum), address(BC3M));
-        // transmuter.quoteOut(BASE_18, address(agEUREthereum), address(BC3M));
+        transmuter.quoteIn(BASE_18, address(agEUREthereum), address(BC3M));
+        transmuter.quoteOut(BASE_18, address(agEUREthereum), address(BC3M));
+
+        // quoteRedeem To check if it is the right implementation
+        transmuter.quoteRedemptionCurve(BASE_18);
     }
 }

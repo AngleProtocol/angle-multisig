@@ -4,6 +4,7 @@ pragma solidity ^0.8.19;
 import { console } from "forge-std/console.sol";
 import "transmuter/transmuter/Storage.sol" as Storage;
 import { ISettersGuardian } from "transmuter/interfaces/ISetters.sol";
+import { IDiamondCut } from "transmuter/interfaces/IDiamondCut.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
@@ -17,6 +18,58 @@ contract InitAndBootstrap is Utils {
         uint8 isDelegateCall = 0;
         uint256 value = 0;
         address to;
+
+        // Update Redeemer to non via ir implementation
+        {
+            Storage.FacetCut[] memory addCut = new Storage.FacetCut[](1);
+            Storage.FacetCut[] memory removeCut = new Storage.FacetCut[](1);
+            // Get Selectors from json
+            bytes4[] memory selectors = new bytes4[](4);
+            selectors[0] = hex"d703a0cd";
+            selectors[1] = hex"815822c1";
+            selectors[2] = hex"2e7639bc";
+            selectors[3] = hex"fd7daaf8";
+            addCut[0] = Storage.FacetCut({
+                // new Redeemer address
+                facetAddress: 0x1e45b65CdD3712fEf0024d063d6574A609985E59,
+                action: Storage.FacetCutAction.Add,
+                functionSelectors: selectors
+            });
+
+            removeCut[0] = Storage.FacetCut({
+                facetAddress: address(0),
+                action: Storage.FacetCutAction.Remove,
+                functionSelectors: selectors
+            });
+
+            to = address(transmuter);
+            bytes memory callData;
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    IDiamondCut.diamondCut.selector,
+                    removeCut,
+                    address(0),
+                    callData
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    IDiamondCut.diamondCut.selector,
+                    addCut,
+                    address(0),
+                    callData
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+        }
+
+        // Transfer funds to make live transmuter
         {
             to = EUROC;
             bytes memory data = abi.encodeWithSelector(
@@ -29,17 +82,17 @@ contract InitAndBootstrap is Utils {
             transactions = abi.encodePacked(transactions, internalTx);
         }
 
-        // {
-        //     to = BC3M;
-        //     bytes memory data = abi.encodeWithSelector(
-        //         IERC20.transfer.selector,
-        //         address(transmuter),
-        //         4_500_000 * 10 ** IERC20Metadata(to).decimals()
-        //     );
-        //     uint256 dataLength = data.length;
-        //     bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-        //     transactions = abi.encodePacked(transactions, internalTx);
-        // }
+        {
+            to = BC3M;
+            bytes memory data = abi.encodeWithSelector(
+                IERC20.transfer.selector,
+                address(transmuter),
+                38446 * 10 ** IERC20Metadata(to).decimals()
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
 
         // add transmuter as `agEUR` minter
         {
