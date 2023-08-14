@@ -26,6 +26,7 @@ contract Utils is Test {
     uint256 public ethereumFork;
     uint256 public optimismFork;
     uint256 public polygonFork;
+    uint256 public localFork;
     string public json;
 
     function setUp() public virtual {
@@ -34,6 +35,7 @@ contract Utils is Test {
         ethereumFork = vm.createFork(vm.envString("ETH_NODE_URI_MAINNET"));
         optimismFork = vm.createFork(vm.envString("ETH_NODE_URI_OPTIMISM"));
         polygonFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON"));
+        localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
 
         string memory root = vm.projectRoot();
         string memory path = string.concat(root, "/scripts/foundry/transaction.json");

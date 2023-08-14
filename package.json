@@ -9,7 +9,8 @@
     "fork:ethereum": "source .env && anvil --fork-url $ETH_NODE_URI_MAINNET",
     "fork:optimism": "source .env && anvil --fork-url $ETH_NODE_URI_OPTIMISM",
     "fork:polygon": "source .env && anvil --fork-url $ETH_NODE_URI_POLYGON",
-    "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts"
+    "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
+    "test": "forge test -vvvv"
   },
   "devDependencies": {
     "@angleprotocol/sdk": "3.0.60",
