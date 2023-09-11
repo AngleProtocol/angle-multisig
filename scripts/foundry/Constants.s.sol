@@ -6,6 +6,18 @@ import { Safe, Enum } from "safe/Safe.sol";
 import { ITransmuter } from "transmuter/interfaces/ITransmuter.sol";
 import { IAgToken } from "borrow/interfaces/IAgToken.sol";
 
+interface IVaultManagerGovernance {
+    function setUint64(uint64 param, bytes32 what) external;
+
+    function interestRate() external view returns(uint64);
+}
+
+interface ISavings {
+    function setRate(uint208 newRate) external;
+
+    function rate() external view returns (uint208);
+}
+
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONSTANTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -19,6 +31,9 @@ uint256 constant CHAIN_ETHEREUM = 1;
 uint256 constant CHAIN_OPTIMISM = 10;
 uint256 constant CHAIN_POLYGON = 137;
 
+uint64 constant twoPoint5Rate = 782997666703977344;
+uint64 constant fourRate = 1243680713969297408;
+
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -31,7 +46,7 @@ ITreasury constant treasuryOptimism = ITreasury(0xe9f183FC656656f1F17af1F2b0dF79
 
 Safe constant governorArbitrumSafe = Safe(payable(0xAA2DaCCAb539649D1839772C625108674154df0B));
 Safe constant guardianArbitrumSafe = Safe(payable(0x55F01DDaE74b60e3c255BD2f619FEbdFce560a9C));
-Safe constant governorAvalancheSafe = Safe(payable(address(0x0)));
+Safe constant governorAvalancheSafe = Safe(payable(0x43a7947A1288e65fAF30D8dDb3ca61Eaabd41613));
 Safe constant guardianAvalancheSafe = Safe(payable(0xCcD44983f597aE4d4E2B70CF979597D63a10870D));
 Safe constant governorEthereumSafe = Safe(payable(0xdC4e6DFe07EFCa50a197DF15D9200883eF4Eb1c8));
 Safe constant guardianEthereumSafe = Safe(payable(0x0C2553e4B9dFA9f83b1A6D3EAB96c4bAaB42d430));
@@ -44,9 +59,11 @@ MultiSend constant multiSendEthereum = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b
 MultiSend constant multiSendArbitrum = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendOptimism = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B);
 MultiSend constant multiSendPolygon = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
+MultiSend constant multiSendAvalanche = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 
 ITransmuter constant transmuter = ITransmuter(0x00253582b2a3FE112feEC532221d9708c64cEFAb);
 IAgToken constant agEUREthereum = IAgToken(0x1a7e4e63778B4f12a199C062f3eFdD288afCBce8);
+address constant stEUR = 0x004626A008B1aCdC4c74ab51644093b155e59A23;
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   EXTERNAL CONTRACTS                                                
