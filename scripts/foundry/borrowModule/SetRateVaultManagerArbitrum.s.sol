@@ -20,7 +20,7 @@ contract SetRateVaultManagerArbitrum is Utils {
             try treasuryArbitrum.vaultManagerList(i) returns (address vault) {
                 uint64 rate;
                 // Non yield bearing vaults
-                if (i==0 || i==1 || i==2|| i==3) rate = twoPoint5Rate;
+                if (i==0 || i==1 || i==2) rate = twoPoint5Rate;
                 else rate = fourRate;
                 string memory name = IERC721Metadata(vault).name();
                 console.log("Setting rate %s", name);
