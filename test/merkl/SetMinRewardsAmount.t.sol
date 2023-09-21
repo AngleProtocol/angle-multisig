@@ -32,19 +32,23 @@ contract SetMinRewardsAmount is Utils {
         if (!success) revert();
 
         // TODO complete for the tokens
-        uint256 CHAIN = 0;
         address[] memory tokens = new address[](1);
         uint256[] memory amounts = new uint256[](1);
 
-        tokens[0] = address(0);
-        amounts[0] = 0;
+        uint256 CHAIN = CHAIN_POLYGON;
+        tokens[0] = 0x18e73A5333984549484348A94f4D219f4faB7b81;
+        amounts[0] = 105 * 1e8;
         // end TODO
 
-        for (uint256 i = 0; i < tokens.length; i++)
+        for (uint256 i = 0; i < tokens.length; i++) {
             console.log(
-                tokens[i],
+                amounts[i],
+                tokens[i]
+            );
+            assertEq(
                 uint256(IDistributionCreator(distributionCreator).rewardTokenMinAmounts(tokens[i])),
                 amounts[i]
             );
+        }
     }
 }
