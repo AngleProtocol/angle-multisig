@@ -10,6 +10,7 @@ venv
 build
 dist
 scripts/foundry/transaction.json
+cache
 
 
 # foundry

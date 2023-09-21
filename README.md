@@ -78,7 +78,7 @@ Simply run:
 yarn submit:foundry
 ```
 
-Make sure that your `.env` is correctly set for this and you have the right values in `scripts/foundry/transaction.json`
+Make sure that your `.env` is correctly set for this and that you have the right values in `scripts/foundry/transaction.json`
 
 #### Executing a transaction
 

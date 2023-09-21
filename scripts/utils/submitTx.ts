@@ -12,27 +12,11 @@ const { utils } = ethers;
  * It wraps a transaction that has already been encoded using the `transaction.ts` file
  * * * * * * * * * * * * * * * * * * * */
 config();
-export const submit = async (baseTxn, nonceCustom = 0, chainId: number|null =null) => {
+export const submit = async (baseTxn, nonceCustom = 0, chainId: number | null = null, safe: string | null = null) => {
   console.log('Now wrapping the base transaction for Gnosis');
-  const safe: string = process.env.SAFE;
+  safe = safe ?? process.env.SAFE;
   chainId = chainId ?? Number(process.env.CHAIN_ID);
   const sender: string = process.env.SENDER;
-
-  const safeDomain = new EIP712Domain({
-    verifyingContract: safe,
-  });
-  const SafeTx = safeDomain.createType('SafeTx', [
-    { type: 'address', name: 'to' },
-    { type: 'uint256', name: 'value' },
-    { type: 'bytes', name: 'data' },
-    { type: 'uint8', name: 'operation' },
-    { type: 'uint256', name: 'safeTxGas' },
-    { type: 'uint256', name: 'baseGas' },
-    { type: 'uint256', name: 'gasPrice' },
-    { type: 'address', name: 'gasToken' },
-    { type: 'address', name: 'refundReceiver' },
-    { type: 'uint256', name: 'nonce' },
-  ]);
 
   // Lets the Safe service estimate the tx and retrieve the nonce
   // We can also simply find the nonce using `gnosisEstimateNonce` and use a bad value for gas
@@ -78,7 +62,7 @@ export const submit = async (baseTxn, nonceCustom = 0, chainId: number|null =nul
   console.log('Done?');
 };
 
-export const execute = async (baseTxn, safe_tx_hash, numConfirmations = 2, chainId=null) => {
+export const execute = async (baseTxn, safe_tx_hash, numConfirmations = 2, chainId = null) => {
   console.log(`Now executing the transaction`);
   const safe: string = process.env.SAFE;
   chainId = chainId ?? process.env.CHAIN_ID;
