@@ -8,10 +8,6 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-interface IMockSafe {
-    function execTransaction(address to, bytes calldata data) external returns (bool success);
-}
-
 contract PauseVaultManagersOptimism is Utils {
     function run() external {
         bytes memory transactions;
