@@ -29,4 +29,13 @@ contract Utils is Script {
         console.log(finalJson);
         vm.writeJson(finalJson, "./scripts/foundry/transaction.json");
     }
+
+    function _chainToMultiSend(uint256 chain) internal pure returns (MultiSend) {
+        if (chain == CHAIN_ETHEREUM) return multiSendEthereum;
+        else if (chain == CHAIN_POLYGON) return multiSendPolygon;
+        else if (chain == CHAIN_ARBITRUM) return multiSendArbitrum;
+        else if (chain == CHAIN_OPTIMISM) return multiSendOptimism;
+        else if (chain == CHAIN_AVALANCHE) return multiSendAvalanche;
+        else revert("chain not supported");
+    }
 }

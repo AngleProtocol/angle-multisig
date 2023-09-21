@@ -29,7 +29,6 @@ contract SetRateVaultManagers is Utils {
         vm.selectFork(fork);
 
         address to = json.readAddress("$.to");
-        uint256 value = json.readUint("$.value");
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
 
@@ -40,9 +39,10 @@ contract SetRateVaultManagers is Utils {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(IVaultManagerGovernance(0x9FFC8A23eafc25635DAe822eA9c4fF440226a001).interestRate()),fourRate);
-        assertEq(uint256(IVaultManagerGovernance(0x8E2277929B2D849c0c344043D9B9507982e6aDd0).interestRate()),twoPoint5Rate);
-
-
+        assertEq(uint256(IVaultManagerGovernance(0x9FFC8A23eafc25635DAe822eA9c4fF440226a001).interestRate()), fourRate);
+        assertEq(
+            uint256(IVaultManagerGovernance(0x8E2277929B2D849c0c344043D9B9507982e6aDd0).interestRate()),
+            twoPoint5Rate
+        );
     }
 }

@@ -12,13 +12,14 @@
 [submodule "lib/borrow-contracts"]
 	path = lib/borrow-contracts
 	url = https://github.com/AngleProtocol/borrow-contracts
+	tags = v2.7
 [submodule "lib/angle-transmuter"]
 	path = lib/angle-transmuter
 	url = https://github.com/AngleProtocol/angle-transmuter
 [submodule "lib/openzeppelin-contracts"]
 	path = lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
-	branch = master
+	branch = release-v4.8
 [submodule "lib/merkl-contracts"]
 	path = lib/merkl-contracts
 	url = https://github.com/AngleProtocol/merkl-contracts

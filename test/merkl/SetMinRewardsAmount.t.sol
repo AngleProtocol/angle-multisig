@@ -5,9 +5,10 @@ import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { Utils } from "../Utils.s.sol";
+import { IDistributionCreator } from "../../scripts/foundry/merkl/SetMinAmountsRewardToken.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
-contract SetRateSavings is Utils {
+contract SetMinRewardsAmount is Utils {
     using stdJson for string;
 
     function setUp() public override {
@@ -16,20 +17,10 @@ contract SetRateSavings is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = chainId == 1
-            ? (ethereumFork, address(guardianEthereumSafe))
-            : chainId == 10
-            ? (optimismFork, address(guardianOptimismSafe))
-            : chainId == 137
-            ? (polygonFork, address(guardianPolygonSafe))
-            : chainId == 42161
-            ? (arbitrumFork, address(guardianArbitrumSafe))
-            : (avalancheFork, address(guardianAvalancheSafe));
-
+        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
         vm.selectFork(fork);
 
         address to = json.readAddress("$.to");
-        uint256 value = json.readUint("$.value");
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
 
@@ -40,6 +31,20 @@ contract SetRateSavings is Utils {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(ISavings(stEUR).rate()), fourRate);
+        // TODO complete for the tokens
+        uint256 CHAIN = 0;
+        address[] memory tokens = new address[](1);
+        uint256[] memory amounts = new uint256[](1);
+
+        tokens[0] = address(0);
+        amounts[0] = 0;
+        // end TODO
+
+        for (uint256 i = 0; i < tokens.length; i++)
+            console.log(
+                tokens[i],
+                uint256(IDistributionCreator(distributionCreator).rewardTokenMinAmounts(tokens[i])),
+                amounts[i]
+            );
     }
 }

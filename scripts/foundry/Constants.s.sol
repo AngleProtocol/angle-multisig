@@ -9,7 +9,7 @@ import { IAgToken } from "borrow/interfaces/IAgToken.sol";
 interface IVaultManagerGovernance {
     function setUint64(uint64 param, bytes32 what) external;
 
-    function interestRate() external view returns(uint64);
+    function interestRate() external view returns (uint64);
 }
 
 interface ISavings {
@@ -64,6 +64,7 @@ MultiSend constant multiSendAvalanche = MultiSend(0x40A2aCCbd92BCA938b02010E17A5
 ITransmuter constant transmuter = ITransmuter(0x00253582b2a3FE112feEC532221d9708c64cEFAb);
 IAgToken constant agEUREthereum = IAgToken(0x1a7e4e63778B4f12a199C062f3eFdD288afCBce8);
 address constant stEUR = 0x004626A008B1aCdC4c74ab51644093b155e59A23;
+address constant distributionCreator = 0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd;
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   EXTERNAL CONTRACTS                                                
