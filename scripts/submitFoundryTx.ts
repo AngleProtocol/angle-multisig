@@ -6,7 +6,7 @@ async function main() {
   const chainId = transactionJson['chainId'];
   console.log(transactionJson);
   const safeAddress = registry(chainId).Guardian;
-  await submit(transactionJson, 268, chainId, safeAddress);
+  await submit(transactionJson, 0, chainId, safeAddress);
 }
 
 main().catch(error => {
