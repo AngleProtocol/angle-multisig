@@ -44,13 +44,24 @@ contract Utils is Test {
 
     function _chainToForkAndSafe(uint256 chainId) internal view returns (uint256, address) {
         return
-            chainId == CHAIN_ETHEREUM ? (ethereumFork, address(guardianEthereumSafe)) : chainId == CHAIN_OPTIMISM
-                ? (optimismFork, address(guardianOptimismSafe))
+            chainId == CHAIN_ETHEREUM ? (ethereumFork, address(guardianEthereum)) : chainId == CHAIN_OPTIMISM
+                ? (optimismFork, address(guardianOptimism))
                 : chainId == CHAIN_POLYGON
-                ? (polygonFork, address(guardianPolygonSafe))
+                ? (polygonFork, address(guardianPolygon))
                 : chainId == CHAIN_ARBITRUM
-                ? (arbitrumFork, address(guardianArbitrumSafe))
-                : (avalancheFork, address(guardianAvalancheSafe));
+                ? (arbitrumFork, address(guardianArbitrum))
+                : (avalancheFork, address(guardianAvalanche));
+    }
+
+    function _chainToAgEUR(uint256 chainId) internal pure returns (address) {
+        return
+            chainId == CHAIN_ETHEREUM ? address(agEUREthereum) : chainId == CHAIN_OPTIMISM
+                ? address(agEUROptimism)
+                : chainId == CHAIN_POLYGON
+                ? address(agEURPolygon)
+                : chainId == CHAIN_ARBITRUM
+                ? address(agEURArbitrum)
+                : address(agEURAvalanche);
     }
 
     function slice(bytes memory _bytes, uint256 _start, uint256 _length) internal pure returns (bytes memory) {

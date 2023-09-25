@@ -5,23 +5,33 @@ import { console } from "forge-std/console.sol";
 import { IVaultManagerFunctions } from "borrow/interfaces/IVaultManager.sol";
 import { IERC721Metadata } from "oz/token/ERC721/extensions/IERC721Metadata.sol";
 import { Enum } from "safe/Safe.sol";
-import { MultiSend, Utils } from "../Utils.s.sol";
+import { MultiSend, ITreasury, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract PauseVaultManagersOptimism is Utils {
+/** This script suppose that the state of all the vaultManager on the chain are identical (all paused or unpause) 
+/** Otherwise behaviour is chaotic
+*/
+contract PauseVaultManagers is Utils {
     function run() external {
         bytes memory transactions;
+        bytes memory additionalData;
         uint8 isDelegateCall = 0;
         uint256 value = 0;
 
+        /** TODO  complete */
+        uint256 chainId = CHAIN_ETHEREUM;
+        /** END  complete */
+
+        ITreasury treasury = _chainToTreasury(chainId);
         uint256 i;
         while (true) {
-            try treasuryOptimism.vaultManagerList(i) returns (address vault) {
+            try treasury.vaultManagerList(i) returns (address vault) {
                 string memory name = IERC721Metadata(vault).name();
                 console.log("Pausing %s", name);
                 {
                     address to = vault;
                     bytes memory data = abi.encodeWithSelector(IVaultManagerFunctions.togglePause.selector);
+                    additionalData = abi.encode(additionalData, data);
                     uint256 dataLength = data.length;
                     bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
                     transactions = abi.encodePacked(transactions, internalTx);
@@ -33,7 +43,7 @@ contract PauseVaultManagersOptimism is Utils {
         }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
-
-        _serializeJson(CHAIN_OPTIMISM, address(multiSendOptimism), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        address multiSend = address(_chainToMultiSend(chainId));
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, additionalData);
     }
 }

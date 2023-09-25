@@ -19,24 +19,21 @@ contract SetMinAmountsRewardToken is Utils {
         uint8 isDelegateCall = 0;
         uint256 value = 0;
 
-        // TODO complete for the tokens
-        
+        /** TODO  complete */
+        uint256 chainId = CHAIN_POLYGON;
         address[] memory tokens = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         uint256[] memory decimals = new uint256[](1);
 
-        uint256 CHAIN = CHAIN_POLYGON;
         tokens[0] = address(0x18e73A5333984549484348A94f4D219f4faB7b81);
         amounts[0] = 105;
-        // end TODO
+        /** END  complete */
 
         for (uint256 i = 0; i < tokens.length; i++) {
             decimals[i] = IERC20Metadata(tokens[i]).decimals();
-            amounts[i] = amounts[i] * 10**decimals[i];
+            amounts[i] = amounts[i] * 10 ** decimals[i];
         }
-        address multiSend = address(_chainToMultiSend(CHAIN));
-
-        console.log("Set min rewards amount on chain %s", CHAIN);
+        console.log("Set min rewards amount on chain %s", chainId);
         address to = distributionCreator;
         bytes memory data = abi.encodeWithSelector(
             IDistributionCreator.setRewardTokenMinAmounts.selector,
@@ -48,6 +45,7 @@ contract SetMinAmountsRewardToken is Utils {
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
-        _serializeJson(CHAIN, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        address multiSend = address(_chainToMultiSend(chainId));
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, data);
     }
 }

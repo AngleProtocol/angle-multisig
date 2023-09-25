@@ -23,6 +23,7 @@ contract SetMinRewardsAmount is Utils {
         address to = json.readAddress("$.to");
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
+        bytes memory additionalData = json.readBytes("$.additionalData");
 
         // Verify that the call will succeed
         MockSafe mockSafe = new MockSafe();
@@ -31,24 +32,13 @@ contract SetMinRewardsAmount is Utils {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        // TODO complete for the tokens
-        address[] memory tokens = new address[](1);
-        uint256[] memory amounts = new uint256[](1);
-
-        uint256 CHAIN = CHAIN_POLYGON;
-        tokens[0] = 0x18e73A5333984549484348A94f4D219f4faB7b81;
-        amounts[0] = 105 * 1e8;
-        // end TODO
+        /** Automatically detect what are the params set from your script */
+        additionalData = slice(additionalData, 4, additionalData.length - 4);
+        (address[] memory tokens, uint256[] memory amounts) = abi.decode(additionalData, (address[], uint256[]));
 
         for (uint256 i = 0; i < tokens.length; i++) {
-            console.log(
-                amounts[i],
-                tokens[i]
-            );
-            assertEq(
-                uint256(IDistributionCreator(distributionCreator).rewardTokenMinAmounts(tokens[i])),
-                amounts[i]
-            );
+            console.log(amounts[i], tokens[i]);
+            assertEq(uint256(IDistributionCreator(distributionCreator).rewardTokenMinAmounts(tokens[i])), amounts[i]);
         }
     }
 }
