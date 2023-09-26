@@ -16,20 +16,11 @@ contract SetRateSavings is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = chainId == 1
-            ? (ethereumFork, address(guardianEthereumSafe))
-            : chainId == 10
-            ? (optimismFork, address(guardianOptimismSafe))
-            : chainId == 137
-            ? (polygonFork, address(guardianPolygonSafe))
-            : chainId == 42161
-            ? (arbitrumFork, address(guardianArbitrumSafe))
-            : (avalancheFork, address(guardianAvalancheSafe));
-
+        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
         vm.selectFork(fork);
 
         address to = json.readAddress("$.to");
-        uint256 value = json.readUint("$.value");
+        // uint256 value = json.readUint("$.value");
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
 

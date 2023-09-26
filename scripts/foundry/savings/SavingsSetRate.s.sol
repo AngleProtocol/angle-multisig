@@ -8,26 +8,31 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract SavingsSetRateEthereum is Utils {
+contract SavingsSetRate is Utils {
     function run() external {
         bytes memory transactions;
         uint8 isDelegateCall = 0;
         uint256 value = 0;
 
+        /** TODO  complete */
+        uint256 chainId = CHAIN_ETHEREUM;
         uint208 rate = uint208(uint256(fourRate));
-        bytes memory data = abi.encodeWithSelector(ISavings.setRate.selector,rate);
+        /** END  complete */
+
+        bytes memory data = abi.encodeWithSelector(ISavings.setRate.selector, rate);
         uint256 dataLength = data.length;
-        address to=stEUR;
+        address to = stEUR;
         bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
         transactions = abi.encodePacked(transactions, internalTx);
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
         // Verify that the calls will succeed
-        vm.startBroadcast(address(guardianEthereumSafe));
-        address(multiSendEthereum).delegatecall(payloadMultiSend);
+        address multiSend = address(_chainToMultiSend(chainId));
+        address guardian = address(_chainToGuardian(chainId));
+        vm.startBroadcast(guardian);
+        address(multiSend).delegatecall(payloadMultiSend);
         vm.stopBroadcast();
-
-        _serializeJson(CHAIN_ETHEREUM, address(multiSendEthereum), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, data);
     }
 }

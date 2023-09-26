@@ -18,20 +18,12 @@ contract InitAndBoostrapTest is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = chainId == 1
-            ? (ethereumFork, address(governorEthereumSafe))
-            : chainId == 10
-            ? (optimismFork, address(governorOptimismSafe))
-            : chainId == 137
-            ? (polygonFork, address(governorPolygonSafe))
-            : chainId == 42161
-            ? (arbitrumFork, address(governorArbitrumSafe))
-            : (avalancheFork, address(governorAvalancheSafe));
-
+        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
+        address agEUR = _chainToAgEUR(chainId);
         vm.selectFork(fork);
 
         address to = json.readAddress("$.to");
-        uint256 value = json.readUint("$.value");
+        // uint256 value = json.readUint("$.value");
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
 
@@ -51,15 +43,15 @@ contract InitAndBoostrapTest is Utils {
         assertEq(transmuter.isPaused(address(0), Storage.ActionType.Redeem), false);
 
         // we ca do some quoteIn and quoteOut
-        transmuter.quoteOut(BASE_18, address(EUROC), address(agEUREthereum));
-        transmuter.quoteIn(10 ** 6, address(EUROC), address(agEUREthereum));
-        transmuter.quoteOut(BASE_18, address(BC3M), address(agEUREthereum));
-        transmuter.quoteIn(BASE_18, address(BC3M), address(agEUREthereum));
+        transmuter.quoteOut(BASE_18, address(EUROC), address(agEUR));
+        transmuter.quoteIn(10 ** 6, address(EUROC), address(agEUR));
+        transmuter.quoteOut(BASE_18, address(BC3M), address(agEUR));
+        transmuter.quoteIn(BASE_18, address(BC3M), address(agEUR));
         // burn
-        transmuter.quoteIn(BASE_18, address(agEUREthereum), address(EUROC));
-        transmuter.quoteOut(10 ** 6, address(agEUREthereum), address(EUROC));
-        transmuter.quoteIn(BASE_18, address(agEUREthereum), address(BC3M));
-        transmuter.quoteOut(BASE_18, address(agEUREthereum), address(BC3M));
+        transmuter.quoteIn(BASE_18, address(agEUR), address(EUROC));
+        transmuter.quoteOut(10 ** 6, address(agEUR), address(EUROC));
+        transmuter.quoteIn(BASE_18, address(agEUR), address(BC3M));
+        transmuter.quoteOut(BASE_18, address(agEUR), address(BC3M));
 
         // quoteRedeem To check if it is the right implementation
         transmuter.quoteRedemptionCurve(BASE_18);

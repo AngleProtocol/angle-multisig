@@ -19,6 +19,10 @@ contract InitAndBootstrap is Utils {
         uint256 value = 0;
         address to;
 
+        /** TODO  complete */
+        uint256 chainId = CHAIN_ETHEREUM;
+        /** END  complete */
+
         // Update Redeemer to non via ir implementation
         {
             Storage.FacetCut[] memory addCut = new Storage.FacetCut[](1);
@@ -96,7 +100,8 @@ contract InitAndBootstrap is Utils {
 
         // add transmuter as `agEUR` minter
         {
-            to = address(treasuryEthereum);
+            address treasury = address(_chainToTreasury(chainId));
+            to = address(treasury);
             bytes memory data = abi.encodeWithSelector(Treasury.addMinter.selector, address(transmuter));
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -104,7 +109,7 @@ contract InitAndBootstrap is Utils {
         }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
-        // console.logBytes(payloadMultiSend);
-        _serializeJson(CHAIN_ETHEREUM, address(multiSendEthereum), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        address multiSend = address(_chainToMultiSend(chainId));
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
     }
 }

@@ -15,6 +15,8 @@ contract PauseTransmuter is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
+        /** TODO  complete */
+        uint256 chainId = CHAIN_ETHEREUM;
         uint64[] memory xFee = new uint64[](2);
         int64[] memory yFee = new int64[](2);
 
@@ -22,6 +24,7 @@ contract PauseTransmuter is Utils {
         xFee[1] = uint64(BASE_9);
         yFee[0] = 0;
         yFee[1] = 0;
+        /** END  complete */
 
         bytes memory data = abi.encodeWithSelector(ISettersGuardian.setRedemptionCurveParams.selector, xFee, yFee);
         uint256 dataLength = data.length;
@@ -30,6 +33,7 @@ contract PauseTransmuter is Utils {
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
         // console.logBytes(payloadMultiSend);
-        _serializeJson(CHAIN_ETHEREUM, address(multiSendEthereum), 0, payloadMultiSend, Enum.Operation.DelegateCall);
+        address multiSend = address(_chainToMultiSend(chainId));
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
     }
 }
