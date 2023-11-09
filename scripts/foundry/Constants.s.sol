@@ -10,6 +10,8 @@ interface IVaultManagerGovernance {
     function setUint64(uint64 param, bytes32 what) external;
 
     function interestRate() external view returns (uint64);
+
+    function setDebtCeiling(uint256) external;
 }
 
 interface ISavings {
