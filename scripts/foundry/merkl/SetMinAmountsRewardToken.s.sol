@@ -20,13 +20,13 @@ contract SetMinAmountsRewardToken is Utils {
         uint256 value = 0;
 
         /** TODO  complete */
-        uint256 chainId = CHAIN_POLYGON;
+        uint256 chainId = CHAIN_ARBITRUM;
         address[] memory tokens = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         uint256[] memory decimals = new uint256[](1);
 
-        tokens[0] = address(0x18e73A5333984549484348A94f4D219f4faB7b81);
-        amounts[0] = 105;
+        tokens[0] = address(0x3E6648C5a70A150A88bCE65F4aD4d506Fe15d2AF);
+        amounts[0] = 3000;
         /** END  complete */
 
         for (uint256 i = 0; i < tokens.length; i++) {
