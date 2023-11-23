@@ -25,6 +25,7 @@ contract Utils is Test {
     uint256 public avalancheFork;
     uint256 public ethereumFork;
     uint256 public optimismFork;
+    uint256 public gnosisFork;
     uint256 public polygonFork;
     uint256 public localFork;
     string public json;
@@ -34,6 +35,7 @@ contract Utils is Test {
         avalancheFork = vm.createFork(vm.envString("ETH_NODE_URI_AVALANCHE"));
         ethereumFork = vm.createFork(vm.envString("ETH_NODE_URI_MAINNET"));
         optimismFork = vm.createFork(vm.envString("ETH_NODE_URI_OPTIMISM"));
+        gnosisFork = vm.createFork(vm.envString("ETH_NODE_URI_GNOSIS"));
         polygonFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON"));
         localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
 
@@ -50,6 +52,8 @@ contract Utils is Test {
                 ? (polygonFork, address(guardianPolygon))
                 : chainId == CHAIN_ARBITRUM
                 ? (arbitrumFork, address(guardianArbitrum))
+                : chainId == CHAIN_GNOSIS
+                ? (gnosisFork, address(guardianGnosis))
                 : (avalancheFork, address(guardianAvalanche));
     }
 
@@ -61,6 +65,8 @@ contract Utils is Test {
                 ? address(agEURPolygon)
                 : chainId == CHAIN_ARBITRUM
                 ? address(agEURArbitrum)
+                : chainId == CHAIN_GNOSIS
+                ? address(agEURGnosis)
                 : address(agEURAvalanche);
     }
 

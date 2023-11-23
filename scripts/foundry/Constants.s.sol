@@ -30,9 +30,11 @@ uint256 constant CHAIN_AVALANCHE = 43114;
 uint256 constant CHAIN_ETHEREUM = 1;
 uint256 constant CHAIN_OPTIMISM = 10;
 uint256 constant CHAIN_POLYGON = 137;
+uint256 constant CHAIN_GNOSIS = 100;
 
 uint64 constant twoPoint5Rate = 782997666703977344;
 uint64 constant fourRate = 1243680713969297408;
+uint64 constant fourPoint3Rate = 1335019428339023872;
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
@@ -43,6 +45,7 @@ ITreasury constant treasuryAvalanche = ITreasury(0xa014A485D64efb236423004AB1a99
 ITreasury constant treasuryEthereum = ITreasury(0x8667DBEBf68B0BFa6Db54f550f41Be16c4067d60);
 ITreasury constant treasuryPolygon = ITreasury(0x2F2e0ba9746aae15888cf234c4EB5B301710927e);
 ITreasury constant treasuryOptimism = ITreasury(0xe9f183FC656656f1F17af1F2b0dF79b8fF9ad8eD);
+ITreasury constant treasuryGnosis = ITreasury(0x5adDc89785D75C86aB939E9e15bfBBb7Fc086A87);
 
 Safe constant governorArbitrum = Safe(payable(0xAA2DaCCAb539649D1839772C625108674154df0B));
 Safe constant guardianArbitrum = Safe(payable(0x55F01DDaE74b60e3c255BD2f619FEbdFce560a9C));
@@ -54,18 +57,22 @@ Safe constant governorOptimism = Safe(payable(0x3245d3204EEB67afba7B0bA9143E8081
 Safe constant guardianOptimism = Safe(payable(0xD245678e417aEE2d91763F6f4eFE570FF52fD080));
 Safe constant governorPolygon = Safe(payable(0xdA2D2f638D6fcbE306236583845e5822554c02EA));
 Safe constant guardianPolygon = Safe(payable(0x3b9D32D0822A6351F415BeaB05251c1457FF6f8D));
+Safe constant governorGnosis = Safe(payable(0x0F70EeD1Bb51d5eDB1a2E46142638df959bAFD69));
+Safe constant guardianGnosis = Safe(payable(0xf0A31faec2B4fC6396c65B1aF1F6A71E653f11F0));
 
 MultiSend constant multiSendEthereum = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendArbitrum = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendOptimism = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B);
 MultiSend constant multiSendPolygon = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendAvalanche = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
+MultiSend constant multiSendGnosis = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 
 IAgToken constant agEUREthereum = IAgToken(0x1a7e4e63778B4f12a199C062f3eFdD288afCBce8);
 IAgToken constant agEURArbitrum = IAgToken(0xFA5Ed56A203466CbBC2430a43c66b9D8723528E7);
 IAgToken constant agEUROptimism = IAgToken(0x9485aca5bbBE1667AD97c7fE7C4531a624C8b1ED);
 IAgToken constant agEURPolygon = IAgToken(0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4);
 IAgToken constant agEURAvalanche = IAgToken(0xAEC8318a9a59bAEb39861d10ff6C7f7bf1F96C57);
+IAgToken constant agEURGnosis = IAgToken(0x4b1E2c2762667331Bc91648052F646d1b0d35984);
 
 ITransmuter constant transmuter = ITransmuter(0x00253582b2a3FE112feEC532221d9708c64cEFAb);
 
