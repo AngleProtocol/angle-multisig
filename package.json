@@ -4,11 +4,7 @@
   "description": "",
   "scripts": {
     "script:fork": "forge script --fork-url fork --broadcast",
-    "fork:arbitrum": "source .env && anvil --fork-url $ETH_NODE_URI_ARBITRUM",
-    "fork:avalanche": "source .env && anvil --fork-url $ETH_NODE_URI_AVALANCHE",
-    "fork:ethereum": "source .env && anvil --fork-url $ETH_NODE_URI_MAINNET",
-    "fork:optimism": "source .env && anvil --fork-url $ETH_NODE_URI_OPTIMISM",
-    "fork:polygon": "source .env && anvil --fork-url $ETH_NODE_URI_POLYGON",
+    "fork": "bash helpers/fork.sh",
     "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
     "test": "forge test -vvvv"
   },

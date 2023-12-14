@@ -31,6 +31,6 @@ contract SetRateSavings is Utils {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(ISavings(stEUR).rate()), fourRate);
+        assertEq(uint256(ISavings(stEUR).rate()), fourPoint3Rate);
     }
 }

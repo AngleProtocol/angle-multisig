@@ -23,8 +23,7 @@ SAFE = os.environ.get('SAFE')
 CHAIN_ID = os.environ.get('CHAIN_ID')
 DELEGATE_ADDRESS =  os.environ.get('DELEGATE_ADDRESS')
 DELEGATOR_ADDRESS =  os.environ.get('DELEGATOR_ADDRESS')
-# PRIVATE_KEY = os.environ.get('DELEGATOR_PRIVATE_KEY')
-PRIVATE_KEY = ""
+PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
 
 dict = {"1" : 'mainnet', "56" : "bsc", "42161" : "arbitrum", "10" : "optimism",
         "43114" : "avalanche", "137" : "polygon", "1313161554" : "aurora", "100" : "gnosis-chain"}

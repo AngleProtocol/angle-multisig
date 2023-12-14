@@ -15,8 +15,8 @@ contract SavingsSetRate is Utils {
         uint256 value = 0;
 
         /** TODO  complete */
-        uint256 chainId = CHAIN_ETHEREUM;
-        uint208 rate = uint208(uint256(fourRate));
+        uint256 chainId = CHAIN_GNOSIS;
+        uint208 rate = uint208(uint256(fourPoint3Rate));
         /** END  complete */
 
         bytes memory data = abi.encodeWithSelector(ISavings.setRate.selector, rate);

@@ -38,6 +38,7 @@ contract Utils is Script {
         else if (chain == CHAIN_ARBITRUM) return multiSendArbitrum;
         else if (chain == CHAIN_OPTIMISM) return multiSendOptimism;
         else if (chain == CHAIN_AVALANCHE) return multiSendAvalanche;
+        else if (chain == CHAIN_GNOSIS) return multiSendGnosis;
         else revert("chain not supported");
     }
 
@@ -47,6 +48,7 @@ contract Utils is Script {
         else if (chain == CHAIN_ARBITRUM) return treasuryArbitrum;
         else if (chain == CHAIN_OPTIMISM) return treasuryOptimism;
         else if (chain == CHAIN_AVALANCHE) return treasuryAvalanche;
+        else if (chain == CHAIN_GNOSIS) return treasuryGnosis;
         else revert("chain not supported");
     }
 
@@ -56,6 +58,7 @@ contract Utils is Script {
         else if (chain == CHAIN_ARBITRUM) return governorArbitrum;
         else if (chain == CHAIN_OPTIMISM) return governorOptimism;
         else if (chain == CHAIN_AVALANCHE) return governorAvalanche;
+        else if (chain == CHAIN_GNOSIS) return governorGnosis;
         else revert("chain not supported");
     }
 
@@ -65,6 +68,7 @@ contract Utils is Script {
         else if (chain == CHAIN_ARBITRUM) return guardianArbitrum;
         else if (chain == CHAIN_OPTIMISM) return guardianOptimism;
         else if (chain == CHAIN_AVALANCHE) return guardianAvalanche;
+        else if (chain == CHAIN_GNOSIS) return guardianGnosis;
         else revert("chain not supported");
     }
 }
