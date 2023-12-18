@@ -123,7 +123,27 @@ function main {
         uri=$(chain_to_uri $chain)
         export CHAIN_ID=$(chain_to_chainId $chain)
         forge script $script --fork-url $uri
-        yarn submit:foundry
+
+        if [ $? -ne 0 ]; then
+            echo ""
+            echo "Script failed"
+            continue
+        fi
+
+        testPath=$(echo $script | sed 's|scripts/foundry|test|g' | sed 's|.s.sol|.t.sol|g' | cut -d':' -f1)
+        if [ -f $testPath ]; then
+            echo ""
+            echo "Running test"
+            forge test --match-path $testPath -vvv
+        fi
+
+        echo ""
+        echo "Would you like to execute the script ? (yes/no)"
+        read $execute
+
+        if [[ $execute == "yes" ]]; then
+            yarn submit:foundry
+        fi
     done
 }
 
