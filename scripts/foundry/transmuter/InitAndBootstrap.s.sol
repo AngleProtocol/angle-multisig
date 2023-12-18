@@ -19,9 +19,7 @@ contract InitAndBootstrap is Utils {
         uint256 value = 0;
         address to;
 
-        /** TODO  complete */
-        uint256 chainId = CHAIN_ETHEREUM;
-        /** END  complete */
+        uint256 chainId = vm.envUint("CHAIN_ID");
 
         // Update Redeemer to non via ir implementation
         {

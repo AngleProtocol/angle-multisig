@@ -5,6 +5,7 @@
   "scripts": {
     "script:fork": "forge script --fork-url fork --broadcast",
     "fork": "bash helpers/fork.sh",
+    "create-tx": "bash helpers/createTx.sh",
     "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
     "test": "forge test -vvvv"
   },
