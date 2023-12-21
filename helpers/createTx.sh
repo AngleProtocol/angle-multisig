@@ -34,6 +34,9 @@ function chain_to_uri {
     "10")
         echo $ETH_NODE_URI_OPTIMISM
         ;;
+    "11")
+        echo $ETH_NODE_URI_LINEA
+        ;;
     *)
       ;;
   esac
@@ -73,6 +76,9 @@ function chain_to_chainId {
     "10")
         echo "10"
         ;;
+    "11")
+        echo "59144"
+        ;;
     *)
       ;;
   esac
@@ -93,6 +99,7 @@ function usage {
   echo -e "\t8: Celo"
   echo -e "\t9: Polygon ZkEvm"
   echo -e "\t10: Optimism"
+  echo -e "\t11: Linea"
   echo ""
 }
 
@@ -138,6 +145,7 @@ function main {
         echo "- 8: Celo"
         echo "- 9: Polygon ZkEvm"
         echo "- 10: Optimism"
+        echo "- 11: Linea"
 
         read chains
 
