@@ -14,8 +14,9 @@ contract SavingsSetRate is Utils {
         uint8 isDelegateCall = 0;
         uint256 value = 0;
 
+        uint256 chainId = vm.envUint("CHAIN_ID");
+
         /** TODO  complete */
-        uint256 chainId = CHAIN_GNOSIS;
         uint208 rate = uint208(uint256(fourPoint3Rate));
         /** END  complete */
 

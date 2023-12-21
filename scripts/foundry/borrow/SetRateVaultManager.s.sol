@@ -10,9 +10,7 @@ import "../Constants.s.sol";
 
 contract SetRateVaultManager is Utils {
     function run() external {
-        /** TODO  complete */
-        uint256 chainId = CHAIN_ARBITRUM;
-        /** END  complete */
+        uint256 chainId = vm.envUint("CHAIN_ID");
 
         ITreasury treasury = _chainToTreasury(chainId);
 

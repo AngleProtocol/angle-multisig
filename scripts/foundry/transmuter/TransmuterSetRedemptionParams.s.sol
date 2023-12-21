@@ -15,8 +15,9 @@ contract PauseTransmuter is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
+        uint256 chainId = vm.envUint("CHAIN_ID");
+
         /** TODO  complete */
-        uint256 chainId = CHAIN_ETHEREUM;
         uint64[] memory xFee = new uint64[](2);
         int64[] memory yFee = new int64[](2);
 

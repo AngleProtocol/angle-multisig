@@ -19,8 +19,9 @@ contract SetMinAmountsRewardToken is Utils {
         uint8 isDelegateCall = 0;
         uint256 value = 0;
 
+        uint256 chainId = vm.envUint("CHAIN_ID");
+
         /** TODO  complete */
-        uint256 chainId = CHAIN_ARBITRUM;
         address[] memory tokens = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         uint256[] memory decimals = new uint256[](1);

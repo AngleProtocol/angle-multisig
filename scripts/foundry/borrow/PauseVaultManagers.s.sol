@@ -18,9 +18,7 @@ contract PauseVaultManagers is Utils {
         uint8 isDelegateCall = 0;
         uint256 value = 0;
 
-        /** TODO  complete */
-        uint256 chainId = CHAIN_ETHEREUM;
-        /** END  complete */
+        uint256 chainId = vm.envUint("CHAIN_ID");
 
         ITreasury treasury = _chainToTreasury(chainId);
         uint256 i;

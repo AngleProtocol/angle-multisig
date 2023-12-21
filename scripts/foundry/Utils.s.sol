@@ -28,7 +28,6 @@ contract Utils is Script {
         vm.serializeBytes(json, "additionalData", additionalData);
         string memory finalJson = vm.serializeBytes(json, "data", data);
 
-        console.log(finalJson);
         vm.writeJson(finalJson, "./scripts/foundry/transaction.json");
     }
 

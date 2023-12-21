@@ -16,9 +16,7 @@ contract PauseTransmuter is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
-        /** TODO  complete */
-        uint256 chainId = CHAIN_ETHEREUM;
-        /** END  complete */
+        uint256 chainId = vm.envUint("CHAIN_ID");
 
         {
             bytes memory data = abi.encodeWithSelector(
