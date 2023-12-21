@@ -5,6 +5,7 @@ import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { Utils } from "../Utils.s.sol";
+import { ContractType } from "../../scripts/foundry/Constants.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
 contract PauseVaultManagers is Utils {
@@ -16,7 +17,8 @@ contract PauseVaultManagers is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
+        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+        uint256 fork = _chainToFork(chainId);
 
         vm.selectFork(fork);
 

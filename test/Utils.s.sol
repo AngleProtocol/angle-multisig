@@ -5,6 +5,7 @@ pragma solidity ^0.8.19;
 import { console } from "forge-std/console.sol";
 import { Test } from "forge-std/Test.sol";
 import "../scripts/foundry/Constants.s.sol";
+import { ContractType } from "../scripts/foundry/Constants.s.sol";
 
 struct TxJson {
     uint256 chainId;
@@ -44,30 +45,39 @@ contract Utils is Test {
         json = vm.readFile(path);
     }
 
-    function _chainToForkAndSafe(uint256 chainId) internal view returns (uint256, address) {
+    function _chainToFork(uint256 chainId) internal view returns (uint256) {
         return
-            chainId == CHAIN_ETHEREUM ? (ethereumFork, address(guardianEthereum)) : chainId == CHAIN_OPTIMISM
-                ? (optimismFork, address(guardianOptimism))
+            chainId == CHAIN_ETHEREUM ? ethereumFork : chainId == CHAIN_OPTIMISM
+                ? optimismFork
                 : chainId == CHAIN_POLYGON
-                ? (polygonFork, address(guardianPolygon))
+                ? polygonFork
                 : chainId == CHAIN_ARBITRUM
-                ? (arbitrumFork, address(guardianArbitrum))
+                ? arbitrumFork
                 : chainId == CHAIN_GNOSIS
-                ? (gnosisFork, address(guardianGnosis))
-                : (avalancheFork, address(guardianAvalanche));
+                ? gnosisFork
+                : avalancheFork;
     }
 
-    function _chainToAgEUR(uint256 chainId) internal pure returns (address) {
-        return
-            chainId == CHAIN_ETHEREUM ? address(agEUREthereum) : chainId == CHAIN_OPTIMISM
-                ? address(agEUROptimism)
-                : chainId == CHAIN_POLYGON
-                ? address(agEURPolygon)
-                : chainId == CHAIN_ARBITRUM
-                ? address(agEURArbitrum)
-                : chainId == CHAIN_GNOSIS
-                ? address(agEURGnosis)
-                : address(agEURAvalanche);
+    function _chainToContract(uint256 chainId, ContractType name) internal returns (address) {
+        string[] memory cmd = new string[](3);
+        cmd[0] = "node";
+        cmd[2] = vm.toString(chainId);
+        if (name == ContractType.AgEUR) cmd[1] = "utils/agEUR.js";
+        else if (name == ContractType.Angle) cmd[1] = "utils/angle.js";
+        else if (name == ContractType.CoreBorrow) cmd[1] = "utils/coreBorrow.js";
+        else if (name == ContractType.DistributionCreator) cmd[1] = "utils/distributionCreator.js";
+        else if (name == ContractType.GovernorMultisig) cmd[1] = "utils/governorMultisig.js";
+        else if (name == ContractType.GuardianMultisig) cmd[1] = "utils/guardianMultisig.js";
+        else if (name == ContractType.ProxyAdmin) cmd[1] = "utils/proxyAdmin.js";
+        else if (name == ContractType.StEUR) cmd[1] = "utils/stEUR.js";
+        else if (name == ContractType.TransmuterAgEUR) cmd[1] = "utils/transmuter.js";
+        else if (name == ContractType.TreasuryAgEUR) cmd[1] = "utils/treasury.js";
+        else revert("contract not supported");
+
+        bytes memory res = vm.ffi(cmd);
+        // When process exit code is 1, it will return an empty bytes "0x"
+        if (res.length == 0) revert("Chain not supported");
+        return address(bytes20(res));
     }
 
     function slice(bytes memory _bytes, uint256 _start, uint256 _length) internal pure returns (bytes memory) {

@@ -20,7 +20,7 @@ contract PauseVaultManagers is Utils {
 
         uint256 chainId = vm.envUint("CHAIN_ID");
 
-        ITreasury treasury = _chainToTreasury(chainId);
+        ITreasury treasury = ITreasury(_chainToContract(chainId, ContractType.TreasuryAgEUR));
         uint256 i;
         while (true) {
             try treasury.vaultManagerList(i) returns (address vault) {

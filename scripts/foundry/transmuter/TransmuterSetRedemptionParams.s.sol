@@ -10,11 +10,6 @@ import "../Constants.s.sol";
 
 contract PauseTransmuter is Utils {
     function run() external {
-        bytes memory transactions;
-        uint8 isDelegateCall = 0;
-        address to = address(transmuter);
-        uint256 value = 0;
-
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
@@ -26,6 +21,13 @@ contract PauseTransmuter is Utils {
         yFee[0] = 0;
         yFee[1] = 0;
         /** END  complete */
+
+        ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
+
+        bytes memory transactions;
+        uint8 isDelegateCall = 0;
+        address to = address(transmuter);
+        uint256 value = 0;
 
         bytes memory data = abi.encodeWithSelector(ISettersGuardian.setRedemptionCurveParams.selector, xFee, yFee);
         uint256 dataLength = data.length;

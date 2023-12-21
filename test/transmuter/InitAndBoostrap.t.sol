@@ -18,9 +18,13 @@ contract InitAndBoostrapTest is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
-        address agEUR = _chainToAgEUR(chainId);
+        uint256 fork = _chainToFork(chainId);
+        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+        address agEUR = _chainToContract(chainId, ContractType.AgEUR);
         vm.selectFork(fork);
+
+        ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
+        IAgToken agToken = IAgToken(_chainToContract(chainId, ContractType.AgEUR));
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");

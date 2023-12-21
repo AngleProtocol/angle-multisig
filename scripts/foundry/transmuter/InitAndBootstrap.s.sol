@@ -21,6 +21,7 @@ contract InitAndBootstrap is Utils {
 
         uint256 chainId = vm.envUint("CHAIN_ID");
 
+        ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
         // Update Redeemer to non via ir implementation
         {
             Storage.FacetCut[] memory addCut = new Storage.FacetCut[](1);
@@ -98,7 +99,7 @@ contract InitAndBootstrap is Utils {
 
         // add transmuter as `agEUR` minter
         {
-            address treasury = address(_chainToTreasury(chainId));
+            address treasury = address(_chainToContract(chainId, ContractType.TreasuryAgEUR));
             to = address(treasury);
             bytes memory data = abi.encodeWithSelector(Treasury.addMinter.selector, address(transmuter));
             uint256 dataLength = data.length;
