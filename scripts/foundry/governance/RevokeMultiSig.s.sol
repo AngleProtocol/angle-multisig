@@ -10,6 +10,12 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
+interface ITreasuryWithRole {
+    function addMinter(address minter) external;
+
+    function removeMinter(address minter) external;
+}
+
 contract RevokeMultiSig is Utils {
     address public gaugeSushiAngleAgEUR = 0xBa625B318483516F7483DD2c4706aC92d44dBB2B;
 
@@ -29,9 +35,9 @@ contract RevokeMultiSig is Utils {
 
         /** Add minting agEUR privilege to the on chain governance */
         {
-            to = _chainToContract(chainId, ContractType.AgEUR);
+            to = _chainToContract(chainId, ContractType.TreasuryAgEUR);
             bytes memory data = abi.encodeWithSelector(
-                IAgToken.addMinter.selector,
+                ITreasuryWithRole.addMinter.selector,
                 address(_chainToContract(chainId, ContractType.Governor))
             );
             uint256 dataLength = data.length;
@@ -41,9 +47,9 @@ contract RevokeMultiSig is Utils {
 
         /** Remove minting agEUR privilege from the governance multisig  */
         {
-            to = _chainToContract(chainId, ContractType.AgEUR);
+            to = _chainToContract(chainId, ContractType.TreasuryAgEUR);
             bytes memory data = abi.encodeWithSelector(
-                IAgToken.removeMinter.selector,
+                ITreasuryWithRole.removeMinter.selector,
                 address(_chainToContract(chainId, ContractType.GovernorMultisig))
             );
             uint256 dataLength = data.length;
@@ -107,18 +113,6 @@ contract RevokeMultiSig is Utils {
                 to = _chainToContract(chainId, ContractType.veANGLE);
                 bytes memory data = abi.encodeWithSelector(
                     IVeAngle.commit_transfer_ownership.selector,
-                    address(_chainToContract(chainId, ContractType.Governor))
-                );
-                uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-                transactions = abi.encodePacked(transactions, internalTx);
-            }
-
-            /** Change veANGLE boost admin */
-            {
-                to = _chainToContract(chainId, ContractType.veBoost);
-                bytes memory data = abi.encodeWithSelector(
-                    IVeBoost.commit_transfer_ownership.selector,
                     address(_chainToContract(chainId, ContractType.Governor))
                 );
                 uint256 dataLength = data.length;
@@ -200,19 +194,6 @@ contract RevokeMultiSig is Utils {
                 transactions = abi.encodePacked(transactions, internalTx);
             }
 
-            /** Remove the multisig as governor of Angle Distributor  */
-            {
-                to = _chainToContract(chainId, ContractType.AngleDistributor);
-                bytes memory data = abi.encodeWithSelector(
-                    IAccessControl.revokeRole.selector,
-                    governorRole,
-                    address(_chainToContract(chainId, ContractType.GovernorMultisig))
-                );
-                uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-                transactions = abi.encodePacked(transactions, internalTx);
-            }
-
             /** Remove the multisig as guardian of Angle Distributor  */
             {
                 to = _chainToContract(chainId, ContractType.AngleDistributor);
@@ -226,12 +207,25 @@ contract RevokeMultiSig is Utils {
                 transactions = abi.encodePacked(transactions, internalTx);
             }
 
+            /** Remove the multisig as governor of Angle Distributor  */
+            {
+                to = _chainToContract(chainId, ContractType.AngleDistributor);
+                bytes memory data = abi.encodeWithSelector(
+                    IAccessControl.revokeRole.selector,
+                    governorRole,
+                    address(_chainToContract(chainId, ContractType.GovernorMultisig))
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+
             /** Add the on chain governor as governor of Angle Middleman */
             {
                 to = _chainToContract(chainId, ContractType.AngleMiddleman);
                 bytes memory data = abi.encodeWithSelector(
                     IAccessControl.grantRole.selector,
-                    governorRole,
+                    guardianRole,
                     address(_chainToContract(chainId, ContractType.Governor))
                 );
                 uint256 dataLength = data.length;

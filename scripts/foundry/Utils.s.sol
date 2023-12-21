@@ -54,7 +54,9 @@ contract Utils is Script {
     function _chainToContract(uint256 chainId, ContractType name) internal returns (address) {
         string[] memory cmd = new string[](3);
         cmd[0] = "node";
-        cmd[2] = vm.toString(chainId);
+        // TODO remove for prod setup
+        if (name == ContractType.Governor) cmd[2] = vm.toString(CHAIN_GNOSIS);
+        else cmd[2] = vm.toString(chainId);
         if (name == ContractType.AgEUR) cmd[1] = "utils/agEUR.js";
         else if (name == ContractType.Angle) cmd[1] = "utils/angle.js";
         else if (name == ContractType.AngleDistributor) cmd[1] = "utils/angleDistributor.js";
