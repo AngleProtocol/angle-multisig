@@ -69,29 +69,29 @@ contract RevokeMultiSig is Utils {
             transactions = abi.encodePacked(transactions, internalTx);
         }
 
-        /** Remove coreBorrow privilege from the governor multisig */
-        {
-            to = _chainToContract(chainId, ContractType.CoreBorrow);
-            bytes memory data = abi.encodeWithSelector(
-                CoreBorrow.removeGovernor.selector,
-                address(_chainToContract(chainId, ContractType.GovernorMultisig))
-            );
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
+        // /** Remove coreBorrow privilege from the governor multisig */
+        // {
+        //     to = _chainToContract(chainId, ContractType.CoreBorrow);
+        //     bytes memory data = abi.encodeWithSelector(
+        //         CoreBorrow.removeGovernor.selector,
+        //         address(_chainToContract(chainId, ContractType.GovernorMultisig))
+        //     );
+        //     uint256 dataLength = data.length;
+        //     bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+        //     transactions = abi.encodePacked(transactions, internalTx);
+        // }
 
-        /** Remove proxy admin privilege from the governance multisig  */
-        {
-            to = _chainToContract(chainId, ContractType.ProxyAdmin);
-            bytes memory data = abi.encodeWithSelector(
-                Ownable.transferOwnership.selector,
-                address(_chainToContract(chainId, ContractType.Governor))
-            );
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
+        // /** Remove proxy admin privilege from the governance multisig  */
+        // {
+        //     to = _chainToContract(chainId, ContractType.ProxyAdmin);
+        //     bytes memory data = abi.encodeWithSelector(
+        //         Ownable.transferOwnership.selector,
+        //         address(_chainToContract(chainId, ContractType.Governor))
+        //     );
+        //     uint256 dataLength = data.length;
+        //     bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+        //     transactions = abi.encodePacked(transactions, internalTx);
+        // }
 
         if (chainId == CHAIN_ETHEREUM) {
             {
