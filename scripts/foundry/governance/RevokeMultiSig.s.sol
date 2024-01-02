@@ -246,17 +246,17 @@ contract RevokeMultiSig is Utils {
                 transactions = abi.encodePacked(transactions, internalTx);
             }
 
-            /** Change Fee Distributor admin */
-            {
-                to = _chainToContract(chainId, ContractType.FeeDistributor);
-                bytes memory data = abi.encodeWithSelector(
-                    IFeeDistributor.commit_admin.selector,
-                    address(_chainToContract(chainId, ContractType.Governor))
-                );
-                uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-                transactions = abi.encodePacked(transactions, internalTx);
-            }
+            // /** Change Fee Distributor admin */
+            // {
+            //     to = _chainToContract(chainId, ContractType.FeeDistributor);
+            //     bytes memory data = abi.encodeWithSelector(
+            //         IFeeDistributor.commit_admin.selector,
+            //         address(_chainToContract(chainId, ContractType.Governor))
+            //     );
+            //     uint256 dataLength = data.length;
+            //     bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            //     transactions = abi.encodePacked(transactions, internalTx);
+            // }
         }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
