@@ -16,8 +16,15 @@ ffi = true
 
 [rpc_endpoints]
 arbitrum = "${ETH_NODE_URI_ARBITRUM}"
+gnosis = "${ETH_NODE_URI_GNOSIS}"
 mainnet = "${ETH_NODE_URI_MAINNET}"
 optimism = "${ETH_NODE_URI_OPTIMISM}"
 polygon = "${ETH_NODE_URI_POLYGON}"
-linea = "${ETH_NODE_URI_LINEA}"
 fork = "${ETH_NODE_URI_FORK}"
+avalanche = "${ETH_NODE_URI_AVALANCHE}"
+celo = "${ETH_NODE_URI_CELO}"
+polygonzkevm = "${ETH_NODE_URI_POLYGONZKEVM}"
+bsc = "${ETH_NODE_URI_BSC}"
+base = "${ETH_NODE_URI_BASE}"
+linea = "${ETH_NODE_URI_LINEA}"
+mantle = "${ETH_NODE_URI_MANTLE}"

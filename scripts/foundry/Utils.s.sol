@@ -46,8 +46,8 @@ contract Utils is Script {
         else if (chain == CHAIN_POLYGONZKEVM) return multiSendPolygonZkEVM;
         else if (chain == CHAIN_BASE) return multiSendBase;
         else if (chain == CHAIN_CELO) return multiSendCelo;
-        // else if (chain == CHAIN_LINEA) return multiSendLinea;
-        // else if (chain == CHAIN_MANTLE) return multiSendMantle;
+        else if (chain == CHAIN_LINEA) return multiSendLinea;
+        else if (chain == CHAIN_MANTLE) return multiSendMantle;
         else revert("chain not supported");
     }
 

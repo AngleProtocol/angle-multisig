@@ -33,28 +33,37 @@ contract RevokeMultiSig is Utils {
         bytes32 governorRole = core.GOVERNOR_ROLE();
         bytes32 guardianRole = core.GUARDIAN_ROLE();
 
-        /** Add minting agEUR privilege to the on chain governance */
-        {
-            to = _chainToContract(chainId, ContractType.TreasuryAgEUR);
-            bytes memory data = abi.encodeWithSelector(
-                ITreasuryWithRole.addMinter.selector,
-                address(_chainToContract(chainId, ContractType.Governor))
-            );
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
+        if (
+            chain == CHAIN_ETHEREUM ||
+            chain == CHAIN_POLYGON ||
+            chain == CHAIN_ARBITRUM ||
+            chain == CHAIN_OPTIMISM ||
+            chain == CHAIN_AVALANCHE ||
+            chain == CHAIN_BNB
+        ) {
+            /** Add minting agEUR privilege to the on chain governance */
+            {
+                to = _chainToContract(chainId, ContractType.TreasuryAgEUR);
+                bytes memory data = abi.encodeWithSelector(
+                    ITreasuryWithRole.addMinter.selector,
+                    address(_chainToContract(chainId, ContractType.Governor))
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
 
-        /** Remove minting agEUR privilege from the governance multisig  */
-        {
-            to = _chainToContract(chainId, ContractType.TreasuryAgEUR);
-            bytes memory data = abi.encodeWithSelector(
-                ITreasuryWithRole.removeMinter.selector,
-                address(_chainToContract(chainId, ContractType.GovernorMultisig))
-            );
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
+            /** Remove minting agEUR privilege from the governance multisig  */
+            {
+                to = _chainToContract(chainId, ContractType.TreasuryAgEUR);
+                bytes memory data = abi.encodeWithSelector(
+                    ITreasuryWithRole.removeMinter.selector,
+                    address(_chainToContract(chainId, ContractType.GovernorMultisig))
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
         }
 
         /** Add coreBorrow privilege to the on chain governance */
