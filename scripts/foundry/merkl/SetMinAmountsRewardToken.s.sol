@@ -29,13 +29,16 @@ contract SetMinAmountsRewardToken is Utils {
         tokens[0] = address(0x3E6648C5a70A150A88bCE65F4aD4d506Fe15d2AF);
         amounts[0] = 3000;
         /** END  complete */
+        IDistributionCreator distributionCreator = IDistributionCreator(
+            _chainToContract(chainId, ContractType.DistributionCreator)
+        );
 
         for (uint256 i = 0; i < tokens.length; i++) {
             decimals[i] = IERC20Metadata(tokens[i]).decimals();
             amounts[i] = amounts[i] * 10 ** decimals[i];
         }
         console.log("Set min rewards amount on chain %s", chainId);
-        address to = distributionCreator;
+        address to = address(distributionCreator);
         bytes memory data = abi.encodeWithSelector(
             IDistributionCreator.setRewardTokenMinAmounts.selector,
             tokens,

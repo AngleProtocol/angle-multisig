@@ -17,8 +17,13 @@ contract SetMinRewardsAmount is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
+        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+        uint256 fork = _chainToFork(chainId);
         vm.selectFork(fork);
+
+        IDistributionCreator distributionCreator = IDistributionCreator(
+            _chainToContract(chainId, ContractType.DistributionCreator)
+        );
 
         address to = json.readAddress("$.to");
         uint256 operation = json.readUint("$.operation");
@@ -38,7 +43,7 @@ contract SetMinRewardsAmount is Utils {
 
         for (uint256 i = 0; i < tokens.length; i++) {
             console.log(amounts[i], tokens[i]);
-            assertEq(uint256(IDistributionCreator(distributionCreator).rewardTokenMinAmounts(tokens[i])), amounts[i]);
+            assertEq(uint256(distributionCreator.rewardTokenMinAmounts(tokens[i])), amounts[i]);
         }
     }
 }

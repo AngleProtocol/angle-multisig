@@ -16,8 +16,11 @@ contract SetRateSavings is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        (uint256 fork, address gnosisSafe) = _chainToForkAndSafe(chainId);
+        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+        uint256 fork = _chainToFork(chainId);
         vm.selectFork(fork);
+
+        ISavings stEUR = ISavings(_chainToContract(chainId, ContractType.StEUR));
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
@@ -31,6 +34,6 @@ contract SetRateSavings is Utils {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(ISavings(stEUR).rate()), fourPoint3Rate);
+        assertEq(uint256(stEUR.rate()), fourPoint3Rate);
     }
 }

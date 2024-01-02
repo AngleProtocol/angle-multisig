@@ -12,7 +12,7 @@ contract SetRateVaultManager is Utils {
     function run() external {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
-        ITreasury treasury = _chainToTreasury(chainId);
+        ITreasury treasury = ITreasury(_chainToContract(chainId, ContractType.TreasuryAgEUR));
 
         bytes memory transactions;
         uint8 isDelegateCall = 0;
@@ -47,7 +47,7 @@ contract SetRateVaultManager is Utils {
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
         address multiSend = address(_chainToMultiSend(chainId));
-        address guardian = address(_chainToGuardian(chainId));
+        address guardian = address(_chainToContract(chainId, ContractType.GuardianMultisig));
         // Verify that the calls will succeed
         vm.startBroadcast(guardian);
         address(multiSend).delegatecall(payloadMultiSend);

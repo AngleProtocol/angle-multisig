@@ -19,6 +19,7 @@ contract SavingsSetRate is Utils {
         /** TODO  complete */
         uint208 rate = uint208(uint256(fourPoint3Rate));
         /** END  complete */
+        address stEUR = _chainToContract(chainId, ContractType.StEUR);
 
         bytes memory data = abi.encodeWithSelector(ISavings.setRate.selector, rate);
         uint256 dataLength = data.length;
@@ -30,7 +31,7 @@ contract SavingsSetRate is Utils {
 
         // Verify that the calls will succeed
         address multiSend = address(_chainToMultiSend(chainId));
-        address guardian = address(_chainToGuardian(chainId));
+        address guardian = address(_chainToContract(chainId, ContractType.GuardianMultisig));
         vm.startBroadcast(guardian);
         address(multiSend).delegatecall(payloadMultiSend);
         vm.stopBroadcast();
