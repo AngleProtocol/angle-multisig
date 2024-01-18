@@ -10,9 +10,7 @@ import "../Constants.s.sol";
 
 contract PauseTransmuter is Utils {
     function run() external {
-        /** TODO  complete */
-        uint256 chainId = CHAIN_ETHEREUM;
-        /** END  complete */
+        uint256 chainId = vm.envUint("CHAIN_ID");
 
         ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
 
@@ -21,8 +19,6 @@ contract PauseTransmuter is Utils {
         uint8 isDelegateCall = 0;
         address to = address(transmuter);
         uint256 value = 0;
-
-        uint256 chainId = vm.envUint("CHAIN_ID");
 
         {
             bytes memory data = abi.encodeWithSelector(

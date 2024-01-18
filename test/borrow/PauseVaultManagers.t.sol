@@ -8,7 +8,7 @@ import { Utils } from "../Utils.s.sol";
 import { ContractType } from "../../scripts/foundry/Constants.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
-contract PauseVaultManagers is Utils {
+contract PauseVaultManagersTest is Utils {
     using stdJson for string;
 
     function setUp() public override {

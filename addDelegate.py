@@ -23,10 +23,11 @@ SAFE = os.environ.get('SAFE')
 CHAIN_ID = os.environ.get('CHAIN_ID')
 DELEGATE_ADDRESS =  os.environ.get('DELEGATE_ADDRESS')
 DELEGATOR_ADDRESS =  os.environ.get('DELEGATOR_ADDRESS')
-PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+PRIVATE_KEY = os.environ.get('PRIVATE_KEY_DELEGATOR')
 
 dict = {"1" : 'mainnet', "56" : "bsc", "42161" : "arbitrum", "10" : "optimism",
-        "43114" : "avalanche", "137" : "polygon", "1313161554" : "aurora", "100" : "gnosis-chain"}
+        "43114" : "avalanche", "137" : "polygon", "1313161554" : "aurora", "100" : "gnosis-chain",
+        "5000": "mantle", "59144": "linea", "8453":"base", "42220":"celo", "1101":"zkevm", }
 
 TX_SERVICE_BASE_URL = f'https://safe-transaction-{dict[CHAIN_ID]}.safe.global/api/v1'
 
@@ -94,10 +95,10 @@ def remove_delegate():
     return
 
 if __name__ == "__main__":
+    print(get_address().address)
     view_existing_delegates()
-    # print(get_address().address)
     # get_signature()
-    add_new_delegate()
+    # add_new_delegate()
     
     
     

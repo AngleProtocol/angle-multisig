@@ -7,7 +7,7 @@ import { MockSafe } from "../mock/MockSafe.sol";
 import { Utils } from "../Utils.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
-contract SetRateSavings is Utils {
+contract SavingsSetRateTest is Utils {
     using stdJson for string;
 
     function setUp() public override {

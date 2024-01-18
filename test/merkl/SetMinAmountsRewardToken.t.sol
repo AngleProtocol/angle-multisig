@@ -8,7 +8,7 @@ import { Utils } from "../Utils.s.sol";
 import { IDistributionCreator } from "../../scripts/foundry/merkl/SetMinAmountsRewardToken.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
-contract SetMinRewardsAmount is Utils {
+contract SetMinAmountsRewardTokenTest is Utils {
     using stdJson for string;
 
     function setUp() public override {
