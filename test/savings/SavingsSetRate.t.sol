@@ -4,10 +4,10 @@ pragma solidity ^0.8.19;
 import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
-import { Utils } from "../Utils.s.sol";
+import { BaseTest } from "../BaseTest.t.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
-contract SavingsSetRateTest is Utils {
+contract SavingsSetRateTest is BaseTest {
     using stdJson for string;
 
     function setUp() public override {
@@ -17,8 +17,7 @@ contract SavingsSetRateTest is Utils {
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
         address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
-        uint256 fork = _chainToFork(chainId);
-        vm.selectFork(fork);
+        vm.selectFork(forkIdentifier[chainId]);
 
         ISavings stEUR = ISavings(_chainToContract(chainId, ContractType.StEUR));
 

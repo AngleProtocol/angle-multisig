@@ -4,12 +4,12 @@ pragma solidity ^0.8.19;
 import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
-import { Utils } from "../Utils.s.sol";
+import { BaseTest } from "../BaseTest.t.sol";
 import "../../scripts/foundry/Constants.s.sol";
 import "transmuter/transmuter/Storage.sol" as Storage;
 import { IERC20 } from "oz/token/ERC20/IERC20.sol";
 
-contract InitAndBoostrapTest is Utils {
+contract InitAndBoostrapTest is BaseTest {
     using stdJson for string;
 
     function setUp() public override {
@@ -18,10 +18,10 @@ contract InitAndBoostrapTest is Utils {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        uint256 fork = _chainToFork(chainId);
+        vm.selectFork(forkIdentifier[chainId]);
+
         address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
         address agEUR = _chainToContract(chainId, ContractType.AgEUR);
-        vm.selectFork(fork);
 
         ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
         IAgToken agToken = IAgToken(_chainToContract(chainId, ContractType.AgEUR));
