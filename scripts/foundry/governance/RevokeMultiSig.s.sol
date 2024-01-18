@@ -34,12 +34,12 @@ contract RevokeMultiSig is Utils {
         bytes32 guardianRole = core.GUARDIAN_ROLE();
 
         if (
-            chain == CHAIN_ETHEREUM ||
-            chain == CHAIN_POLYGON ||
-            chain == CHAIN_ARBITRUM ||
-            chain == CHAIN_OPTIMISM ||
-            chain == CHAIN_AVALANCHE ||
-            chain == CHAIN_BNB
+            chainId == CHAIN_ETHEREUM ||
+            chainId == CHAIN_POLYGON ||
+            chainId == CHAIN_ARBITRUM ||
+            chainId == CHAIN_OPTIMISM ||
+            chainId == CHAIN_AVALANCHE ||
+            chainId == CHAIN_BNB
         ) {
             /** Add minting agEUR privilege to the on chain governance */
             {
