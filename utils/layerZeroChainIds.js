@@ -1,5 +1,4 @@
-const { registry } = require('@angleprotocol/sdk');
-const { ethers } = require('ethers');
+const { layerZeroChainIds } = require('@angleprotocol/sdk');
 
 // Ensure an argument has been provided
 if (process.argv.length < 3) {
@@ -14,11 +13,9 @@ if (process.argv.length < 3) {
 const chainInput = process.argv[2];
 
 // Try to parse the input as a number if possible
-if(isNaN(Number(chainInput))) process.exit(1);
+const parsedInput = isNaN(Number(chainInput)) ? chainInput : Number(chainInput);
 
-const parsedInput = Number(chainInput);
-const multisig = registry(parsedInput)?.AngleGovernor;
-if(!multisig) process.exit(1);
 // Call the function with the input
-const result = ethers.utils.getAddress(multisig)?.toString()?.slice(2);
+const result = layerZeroChainIds[parsedInput];
+if(!result) process.exit(1);
 console.log(result);

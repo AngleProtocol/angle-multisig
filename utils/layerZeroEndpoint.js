@@ -1,5 +1,5 @@
-const { registry } = require('@angleprotocol/sdk');
-const { ethers } = require('ethers');
+const { LZ_ADDRESS, ChainKey, ChainId } = require('@layerzerolabs/lz-sdk');
+const { layerZeroChainIds } = require('@angleprotocol/sdk');
 
 // Ensure an argument has been provided
 if (process.argv.length < 3) {
@@ -14,12 +14,9 @@ if (process.argv.length < 3) {
 const chainInput = process.argv[2];
 
 // Try to parse the input as a number if possible
-if(isNaN(Number(chainInput))) process.exit(1);
+const parsedInput = isNaN(Number(chainInput)) ? chainInput : Number(chainInput);
 
-const parsedInput = Number(chainInput);
-const boostProxy = registry(parsedInput)?.veBoost;
-
-if(!boostProxy) process.exit(1);
 // Call the function with the input
-const result = ethers.utils.getAddress(boostProxy)?.toString()?.slice(2);
+const result = LZ_ADDRESS[ChainKey[ChainId[layerZeroChainIds[parsedInput]]]];
+if(!result) process.exit(1);
 console.log(result);

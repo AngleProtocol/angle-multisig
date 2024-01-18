@@ -8,7 +8,7 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract PauseTransmuter is Utils {
+contract TransmuterPause is Utils {
     function run() external {
         uint256 chainId = vm.envUint("CHAIN_ID");
 

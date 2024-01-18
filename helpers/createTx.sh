@@ -95,21 +95,19 @@ function main {
             continue
         fi
 
-        # TODO make forks as sometimes we need to do on chain calls
-        testPath=$(echo "${script}Test" | sed 's|scripts/foundry|test|g' | sed 's|.s.sol|.t.sol|g' | cut -d':' -f1)
-        if [ -f $testPath ]; then
-            echo ""
-            echo "Running test"
-            forge test --match-path $testPath -vvv
-        fi
+        testContract="${script}Test"
+        echo ""
+        echo "Running test"
+        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
+
 
         echo ""
         echo "Would you like to execute the script ? (yes/no)"
         read $execute
 
-        if [[ $execute == "yes" ]]; then
-            yarn submit:foundry
-        fi
+        # if [[ $execute == "yes" ]]; then
+        #     yarn submit:foundry
+        # fi
     done
 }
 
