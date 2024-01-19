@@ -4,8 +4,9 @@ import { registry } from '@angleprotocol/sdk';
 
 async function main() {
   const chainId = transactionJson['chainId'];
+  delete transactionJson['additionalData'];
   console.log(transactionJson);
-  const safeAddress = registry(chainId).Guardian;
+  const safeAddress = registry(chainId).Governor;
   await submit(transactionJson, 0, chainId, safeAddress);
 }
 
