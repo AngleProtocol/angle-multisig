@@ -60,6 +60,7 @@ The reason for introducing a delegate is that the address of the delegate can be
 
 - Create a script in `scripts/foundry`. Take for example `scripts/foundry/borrow/SetRateVaultManager.s.sol` and the contract name is `SetRateVaultManager`
 - Create the associate test in `tests`. If the script contract name is `XXX` the test contract should be named `XXXTest`.
+- You may need to change in the `scripts/submitFoundryTx.ts` the safe on which you want to send the tx - `Governor` or `Guardian`
 - You can create, simulate and potentially send (you will be asked if you want) the proposals by running `yarn create-tx`. You will be prompted to specify the script you want to run, you should enter `XXX`. Then asks on which chains you want to run the script, and finally after tests are passing you are asked if you want to send the proposal to the on chain governance.
 
 
