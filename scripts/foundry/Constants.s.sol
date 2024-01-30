@@ -72,6 +72,7 @@ uint256 constant CHAIN_SOURCE = CHAIN_ETHEREUM;
 uint64 constant twoPoint5Rate = 782997666703977344;
 uint64 constant fourRate = 1243680713969297408;
 uint64 constant fourPoint3Rate = 1335019428339023872;
+uint64 constant threePointThirtyEightRate = 1182641540253826048;
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    

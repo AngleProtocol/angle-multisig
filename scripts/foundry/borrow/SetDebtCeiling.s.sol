@@ -2,11 +2,14 @@
 pragma solidity ^0.8.19;
 
 import { console } from "forge-std/console.sol";
-import { IVaultManagerFunctions } from "borrow/interfaces/IVaultManager.sol";
 import { IERC721Metadata } from "oz/token/ERC721/extensions/IERC721Metadata.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, ITreasury, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
+
+interface IVaultManager {
+ function setDebtCeiling(uint256 _debtCeiling) external;
+}
 
 contract SetDebtCeiling is Utils {
     function run() external {
@@ -29,7 +32,7 @@ contract SetDebtCeiling is Utils {
 
         for(uint256 i=0;i<vaults.length;++i) {
             address to = vaults[i];
-            bytes memory data = abi.encodeWithSelector(IVaultManagerGovernance.setDebtCeiling.selector, debtCeilings[i]);
+            bytes memory data = abi.encodeWithSelector(IVaultManager.setDebtCeiling.selector, debtCeilings[i]);
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
             transactions = abi.encodePacked(transactions, internalTx);
@@ -39,7 +42,7 @@ contract SetDebtCeiling is Utils {
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
         address multiSend = address(_chainToMultiSend(chainId));
-        address guardian = address(_chainToGuardian(chainId));
+        address guardian = address(_chainToContract(chainId, ContractType.GuardianMultisig));
         // Verify that the calls will succeed
         vm.startBroadcast(guardian);
         address(multiSend).delegatecall(payloadMultiSend);
