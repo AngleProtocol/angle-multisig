@@ -16,14 +16,11 @@ contract SetDebtCeiling is Utils {
 
         /** TODO  complete */
         uint256 chainId = CHAIN_ARBITRUM;
-        address[] memory vaults = new address[](2);
-        uint256[] memory debtCeilings = new uint256[](2);
-        // wETH
-        vaults[0] = 0xe9f183FC656656f1F17af1F2b0dF79b8fF9ad8eD;
-        debtCeilings[0] = 1500000000000000000000000;
-        // wBTC
-        vaults[1] = 0xF664118E79C0B34f1Ed20e6606a0068d213839b9;
-        debtCeilings[1] = 650000000000000000000000;
+        address[] memory vaults = new address[](1);
+        uint256[] memory debtCeilings = new uint256[](1);
+        // cvx-3CRV
+        vaults[0] = 0x7f27082EABddDC9dc3CC6632C9f594d210B9d43c;
+        debtCeilings[0] = 0;
         /** END  complete */
 
         bytes memory transactions;
