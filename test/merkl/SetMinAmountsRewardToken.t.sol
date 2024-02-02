@@ -38,7 +38,7 @@ contract SetMinAmountsRewardTokenTest is BaseTest {
         if (!success) revert();
 
         /** Automatically detect what are the params set from your script */
-        additionalData = slice(additionalData, 4, additionalData.length - 4);
+        additionalData = _slice(additionalData, 4, additionalData.length - 4);
         (address[] memory tokens, uint256[] memory amounts) = abi.decode(additionalData, (address[], uint256[]));
 
         for (uint256 i = 0; i < tokens.length; i++) {

@@ -6,7 +6,6 @@ import { console } from "forge-std/console.sol";
 import { Test } from "forge-std/Test.sol";
 import "../scripts/foundry/Constants.s.sol";
 import "../scripts/foundry/Utils.s.sol";
-import { ContractType } from "../scripts/foundry/Constants.s.sol";
 
 struct TxJson {
     uint256 chainId;

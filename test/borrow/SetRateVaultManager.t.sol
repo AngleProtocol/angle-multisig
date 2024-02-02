@@ -6,7 +6,6 @@ import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
 import "../../scripts/foundry/Constants.s.sol";
-import { ContractType } from "../../scripts/foundry/Constants.s.sol";
 
 contract SetRateVaultManagerTest is BaseTest {
     using stdJson for string;
