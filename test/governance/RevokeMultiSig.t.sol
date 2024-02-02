@@ -5,7 +5,6 @@ import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
-import { ContractType } from "../../scripts/foundry/Constants.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
 contract RevokeMultiSigTest is BaseTest {

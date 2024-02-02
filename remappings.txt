@@ -6,3 +6,4 @@ borrow/=lib/borrow-contracts/contracts
 transmuter/=lib/angle-transmuter/contracts
 merkl/=lib/merkl-contracts/contracts
 test/=test/
+utils/=lib/utils/
