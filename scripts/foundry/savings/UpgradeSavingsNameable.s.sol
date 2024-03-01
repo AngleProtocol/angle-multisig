@@ -20,9 +20,11 @@ contract UpgradeSavingsNameable is Utils {
 
         /** TODO  complete */
         address savingsImpl = address(0);
+        string name = "Staked EURA";
+        string symbol = "stEUR";
         /** END  complete */
 
-        bytes memory nameAndSymbolData = abi.encodeWithSelector(SavingsNameable.setNameAndSymbol.selector, "Staked EURA", "stEURA");
+        bytes memory nameAndSymbolData = abi.encodeWithSelector(SavingsNameable.setNameAndSymbol.selector, name, symbol);
         bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, 0, savingsImpl, _chainToContract(chainId, ContractType.StEUR), nameAndSymbolData);
         uint256 dataLength = data.length;
         address to = _chainToContract(chainId, ContractType.ProxyAdmin);
