@@ -12,6 +12,13 @@ interface ISavings {
     function rate() external view returns (uint208);
 }
 
+interface INameable {
+    function setNameAndSymbol(string memory name, string memory symbol) external;
+
+    function name() external view returns (string memory);
+    function symbol() external view returns (string memory);
+}
+
 interface IAngle {
     function setMinter(address minter) external;
 }

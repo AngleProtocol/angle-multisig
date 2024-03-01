@@ -8,7 +8,7 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract UpgradeSavingsNameable is Utils {
+contract UpgradeAgTokenNameable is Utils {
     function run() external {
         bytes memory transactions;
         uint8 isDelegateCall = 0;
@@ -17,14 +17,14 @@ contract UpgradeSavingsNameable is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        address stToken = _chainToContract(chainId, ContractType.StEUR);
-        address savingsImpl = address(0);
-        string memory name = "Staked EURA";
-        string memory symbol = "stEUR";
+        address agToken = _chainToContract(chainId, ContractType.AgEUR);
+        address agTokenImpl = address(0);
+        string memory name = "EURA";
+        string memory symbol = "EURA";
         /** END  complete */
 
         bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
-        bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, 0, savingsImpl, stToken, nameAndSymbolData);
+        bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, 0, agTokenImpl, agToken, nameAndSymbolData);
         uint256 dataLength = data.length;
         address to = _chainToContract(chainId, ContractType.ProxyAdmin);
         bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);

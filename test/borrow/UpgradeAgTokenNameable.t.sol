@@ -7,7 +7,7 @@ import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
-contract UpgradeSavingsNameableTest is BaseTest {
+contract UpgradeAgTokenNameableTest is BaseTest {
     using stdJson for string;
 
     function setUp() public override {
@@ -20,9 +20,9 @@ contract UpgradeSavingsNameableTest is BaseTest {
         vm.selectFork(forkIdentifier[chainId]);
 
         /** TODO  complete */
-        INameable stToken = INameable(_chainToContract(chainId, ContractType.StEUR));
-        string memory name = "Staked EURA";
-        string memory symbol = "stEUR";
+        INameable agToken = INameable(_chainToContract(chainId, ContractType.AgEUR));
+        string memory name = "EURA";
+        string memory symbol = "EURA";
         /** END  complete */
 
         address to = json.readAddress("$.to");
@@ -37,7 +37,7 @@ contract UpgradeSavingsNameableTest is BaseTest {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(stToken.name(), name);
-        assertEq(stToken.symbol(), symbol);
+        assertEq(agToken.name(), name);
+        assertEq(agToken.symbol(), symbol);
     }
 }
