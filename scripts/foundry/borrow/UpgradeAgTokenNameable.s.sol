@@ -19,8 +19,8 @@ contract UpgradeAgTokenNameable is Utils {
         /** TODO  complete */
         address agToken = _chainToContract(chainId, ContractType.AgEUR);
         address agTokenImpl = address(0);
-        string memory name = "EURA";
-        string memory symbol = "EURA";
+        string memory name = "EURA"; // Previously "AgEUR"
+        string memory symbol = "EURA"; // Previously "AgEUR"
         /** END  complete */
 
         bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);

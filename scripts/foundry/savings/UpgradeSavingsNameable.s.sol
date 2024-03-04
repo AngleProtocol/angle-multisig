@@ -19,8 +19,8 @@ contract UpgradeSavingsNameable is Utils {
         /** TODO  complete */
         address stToken = _chainToContract(chainId, ContractType.StEUR);
         address savingsImpl = address(0);
-        string memory name = "Staked EURA";
-        string memory symbol = "stEUR";
+        string memory name = "Staked EURA"; // Previously "Staked agEUR"
+        string memory symbol = "stEUR"; // Previously "stEUR"
         /** END  complete */
 
         bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
