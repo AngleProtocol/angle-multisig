@@ -5,6 +5,7 @@ import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
+import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
 contract UpgradeAgTokenNameableTest is BaseTest {
@@ -20,7 +21,7 @@ contract UpgradeAgTokenNameableTest is BaseTest {
         vm.selectFork(forkIdentifier[chainId]);
 
         /** TODO  complete */
-        INameable agToken = INameable(_chainToContract(chainId, ContractType.AgEUR));
+        IERC20Metadata agToken = IERC20Metadata(_chainToContract(chainId, ContractType.AgEUR));
         string memory name = "EURA";
         string memory symbol = "EURA";
         /** END  complete */

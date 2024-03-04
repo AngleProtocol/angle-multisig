@@ -14,9 +14,6 @@ interface ISavings {
 
 interface INameable {
     function setNameAndSymbol(string memory name, string memory symbol) external;
-
-    function name() external view returns (string memory);
-    function symbol() external view returns (string memory);
 }
 
 interface IAngle {
