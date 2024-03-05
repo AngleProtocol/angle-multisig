@@ -25,10 +25,11 @@ contract UpgradeSavingsNameable is Utils {
 
         bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
         bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, 0, savingsImpl, stToken, nameAndSymbolData);
-        uint256 dataLength = data.length;
         address to = _chainToContract(chainId, ContractType.ProxyAdmin);
-        bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+        bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+        bytes memory nameAndSymbolTx = abi.encodePacked(isDelegateCall, stToken, value, nameAndSymbolData.length, nameAndSymbolData);
         transactions = abi.encodePacked(transactions, internalTx);
+        transactions = abi.encodePacked(transactions, nameAndSymbolTx);
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 

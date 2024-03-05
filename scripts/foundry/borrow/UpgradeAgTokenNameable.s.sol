@@ -24,11 +24,12 @@ contract UpgradeAgTokenNameable is Utils {
         /** END  complete */
 
         bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
-        bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, 0, agTokenImpl, agToken, nameAndSymbolData);
-        uint256 dataLength = data.length;
+        bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, agToken, agTokenImpl, "");
         address to = _chainToContract(chainId, ContractType.ProxyAdmin);
-        bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+        bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+        bytes memory nameAndSymbolTx = abi.encodePacked(isDelegateCall, agToken, value, nameAndSymbolData.length, nameAndSymbolData);
         transactions = abi.encodePacked(transactions, internalTx);
+        transactions = abi.encodePacked(transactions, nameAndSymbolTx);
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
