@@ -21,7 +21,7 @@ contract SetExecutorTest is BaseTest {
 
         vm.selectFork(forkIdentifier[chainId]);
 
-        TimelockController timelock = TimelockController(_chainToContract(chainId, ContractType.Timelock));
+        TimelockController timelock = TimelockController(payable(_chainToContract(chainId, ContractType.Timelock)));
 
         address to = json.readAddress("$.to");
         uint256 operation = json.readUint("$.operation");

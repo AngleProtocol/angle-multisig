@@ -17,13 +17,13 @@ contract SetExecutor is Utils {
 
         uint256 chainId = vm.envUint("CHAIN_ID");
 
-        TimelockController timelock = TimelockController(_chainToContract(chainId, ContractType.Timelock));
+        TimelockController timelock = TimelockController(payable(_chainToContract(chainId, ContractType.Timelock)));
 
         /** TODO  complete */
         address target = address(timelock);
-        uint256 value = 0;
+        uint256 timelockValue = 0;
         bytes
-            memory payload = 0x2f2ff15dd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e630000000000000000000000000000000000000000000000000000000000000000;
+            memory payload = hex"2f2ff15dd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e630000000000000000000000000000000000000000000000000000000000000000";
         bytes32 predecessor = hex"";
         bytes32 salt = hex"";
         /** END  complete */
@@ -32,7 +32,7 @@ contract SetExecutor is Utils {
         bytes memory data = abi.encodeWithSelector(
             TimelockController.execute.selector,
             target,
-            value,
+            timelockValue,
             payload,
             predecessor,
             salt
