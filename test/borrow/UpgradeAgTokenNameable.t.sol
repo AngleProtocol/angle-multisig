@@ -11,19 +11,23 @@ import "../../scripts/foundry/Constants.s.sol";
 contract UpgradeAgTokenNameableTest is BaseTest {
     using stdJson for string;
 
+    address constant deployer = 0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185;
+
     function setUp() public override {
         super.setUp();
     }
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+
+        address gnosisSafe = address(_chainToContract(chainId, ContractType.GovernorMultisig));
+
         vm.selectFork(forkIdentifier[chainId]);
 
         /** TODO  complete */
-        IERC20Metadata agToken = IERC20Metadata(_chainToContract(chainId, ContractType.AgEUR));
-        string memory name = "EURA";
-        string memory symbol = "EURA";
+        IERC20Metadata agToken = IERC20Metadata(_chainToContract(chainId, ContractType.AgUSD));
+        string memory name = "USDA";
+        string memory symbol = "USDA";
         /** END  complete */
 
         address to = json.readAddress("$.to");
@@ -37,6 +41,9 @@ contract UpgradeAgTokenNameableTest is BaseTest {
         vm.prank(gnosisSafe);
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
+
+        vm.prank(deployer);
+        INameable(address(agToken)).setNameAndSymbol(name, symbol);
 
         assertEq(agToken.name(), name);
         assertEq(agToken.symbol(), symbol);

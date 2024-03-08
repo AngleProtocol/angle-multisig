@@ -1,0 +1,54 @@
+{
+    "EURA": {
+        "arbitrum": "0x1a23b27aC7775B6220dC4F816b5c6A629E371f19",
+        "avalanche": "0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C",
+        "base": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF",
+        "bsc": "0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C",
+        "celo": "0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4",
+        "ethereum": "0xc3ef7ed4F97450Ae8dA2473068375788BdeB5c5c",
+        "gnosis": "0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4",
+        "linea": "0xc42b7A34Cb37eE450cc8059B10D839e4753229d5",
+        "optimism": "0x67AA77342bE08935380eBece796A0F4f19F16444",
+        "polygon": "0x09f143d3Af1Af9af6AB6BCe1B53fc5a8dc1baA79",
+        "polygon_zkevm": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF"
+    },
+    "stEUR": {
+        "arbitrum": "0xDAcf64fe735F5333474C9aE8000120002327a55A",
+        "avalanche": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF",
+        "base": "0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee",
+        "bsc": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF",
+        "celo": "0xc42b7A34Cb37eE450cc8059B10D839e4753229d5",
+        "ethereum": "",
+        "gnosis": "0xc42b7A34Cb37eE450cc8059B10D839e4753229d5",
+        "linea": "0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C",
+        "optimism": "0xa25c30044142d2fA243E7Fd3a6a9713117b3c396",
+        "polygon": "0xA87D4F27F49D335ab1deEe6b9c43404414Bee214",
+        "polygon_zkevm": "0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee"
+    },
+    "USDA": {
+        "arbitrum": "0x1a23b27aC7775B6220dC4F816b5c6A629E371f19",
+        "avalanche": "0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C",
+        "base": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF",
+        "bsc": "0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C",
+        "celo": "0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4",
+        "ethereum": "0x028e1f0DB25DAF4ce8C895215deAfbCE7A873b24",
+        "gnosis": "0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4",
+        "linea": "0xc42b7A34Cb37eE450cc8059B10D839e4753229d5",
+        "optimism": "0x67AA77342bE08935380eBece796A0F4f19F16444",
+        "polygon": "0x04A7d169C5b14d2e29A3bA8b5071dDA5E365c199",
+        "polygon_zkevm": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF"
+    },
+    "stUSD": {
+        "arbitrum": "0xDAcf64fe735F5333474C9aE8000120002327a55A",
+        "avalanche": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF",
+        "base": "0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee",
+        "bsc": "0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF",
+        "celo": "0xc42b7A34Cb37eE450cc8059B10D839e4753229d5",
+        "ethereum": "",
+        "gnosis": "0xc42b7A34Cb37eE450cc8059B10D839e4753229d5",
+        "linea": "0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C",
+        "optimism": "0xa25c30044142d2fA243E7Fd3a6a9713117b3c396",
+        "polygon": "0xA87D4F27F49D335ab1deEe6b9c43404414Bee214",
+        "polygon_zkevm": "0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee"
+    }
+}

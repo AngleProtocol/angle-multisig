@@ -35,8 +35,11 @@ contract UpgradeSavingsNameable is Utils {
 
         // Verify that the calls will succeed
         address multiSend = address(_chainToMultiSend(chainId));
-        address guardian = address(_chainToContract(chainId, ContractType.GuardianMultisig));
-        vm.startBroadcast(guardian);
+        address safe;
+        if(chainId == CHAIN_BASE || chainId == CHAIN_POLYGONZKEVM) safe = address(_chainToContract(chainId, ContractType.GuardianMultisig));
+        else safe = address(_chainToContract(chainId, ContractType.GovernorMultisig));
+        vm.startBroadcast(safe);
+        
         address(multiSend).delegatecall(payloadMultiSend);
         vm.stopBroadcast();
         _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, data);

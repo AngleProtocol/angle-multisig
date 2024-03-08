@@ -17,7 +17,10 @@ contract UpgradeSavingsNameableTest is BaseTest {
 
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
-        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+        address gnosisSafe;
+        if(chainId == CHAIN_BASE || chainId == CHAIN_POLYGONZKEVM) gnosisSafe = address(_chainToContract(chainId, ContractType.GuardianMultisig));
+        else gnosisSafe = address(_chainToContract(chainId, ContractType.GovernorMultisig));
+
         vm.selectFork(forkIdentifier[chainId]);
 
         /** TODO  complete */

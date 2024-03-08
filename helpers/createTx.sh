@@ -18,6 +18,7 @@ function usage {
   echo -e "\t9: Polygon ZkEvm"
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
+  echo -e "\t100: All"
   echo ""
 }
 
@@ -64,6 +65,7 @@ function main {
         echo "- 9: Polygon ZkEvm"
         echo "- 10: Optimism"
         echo "- 11: Linea"
+        echo "- 100: All"
 
         read chains
 
@@ -73,7 +75,11 @@ function main {
         fi
     fi
 
-    # TODO make forks as sometimes we need to do on chain calls
+    if [[ "$chains" == "100" ]]; then
+        # If user entered 100 (All), loop from 1 to 11 and add all chains
+        chains="1,2,3,4,5,6,7,8,9,10,11"
+    fi
+
     for chain in $(echo $chains | sed "s/,/ /g")
     do
         echo ""
@@ -87,7 +93,7 @@ function main {
         fi
 
         export CHAIN_ID=$(chain_to_chainId $chain)
-        forge script $script --fork-url $uri
+        FOUNDRY_PROFILE=dev forge script $script --fork-url $uri
 
         if [ $? -ne 0 ]; then
             echo ""
@@ -100,14 +106,16 @@ function main {
         echo "Running test"
         FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
 
+        # echo ""
+        # echo "Would you like to execute the script ? (yes/no)"
+        # read execute
 
-        echo ""
-        echo "Would you like to execute the script ? (yes/no)"
-        read execute
+        # if [[ $execute == "yes" ]]; then
+        #     yarn submit:foundry
+        # fi
 
-        if [[ $execute == "yes" ]]; then
-            yarn submit:foundry
-        fi
+        yarn submit:foundry
+
     done
 }
 
