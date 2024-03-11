@@ -17,19 +17,24 @@ contract UpgradeSavingsNameable is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        address stToken = _chainToContract(chainId, ContractType.StEUR);
-        address savingsImpl = address(0);
-        string memory name = "Staked EURA"; // Previously "Staked agEUR"
-        string memory symbol = "stEUR"; // Previously "stEUR"
+        address stToken = _chainToContract(chainId, ContractType.StUSD);
+        address savingsImpl = implStakedStablecoin(chainId);
+        string memory name = "Staked USDA"; // Previously "Staked agEUR"
+        string memory symbol = "stUSD"; // Previously "stEUR"
         /** END  complete */
 
-        bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
-        bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, 0, savingsImpl, stToken, nameAndSymbolData);
-        address to = _chainToContract(chainId, ContractType.ProxyAdmin);
-        bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
-        bytes memory nameAndSymbolTx = abi.encodePacked(isDelegateCall, stToken, value, nameAndSymbolData.length, nameAndSymbolData);
-        transactions = abi.encodePacked(transactions, internalTx);
-        transactions = abi.encodePacked(transactions, nameAndSymbolTx);
+        {
+            bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgrade.selector, stToken,savingsImpl);
+            address to = _chainToContract(chainId, ContractType.ProxyAdmin);
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+        {
+            bytes memory data = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
+            address to = stToken;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
@@ -38,10 +43,10 @@ contract UpgradeSavingsNameable is Utils {
         address safe;
         if(chainId == CHAIN_BASE || chainId == CHAIN_POLYGONZKEVM) safe = address(_chainToContract(chainId, ContractType.GuardianMultisig));
         else safe = address(_chainToContract(chainId, ContractType.GovernorMultisig));
-        vm.startBroadcast(safe);
         
+        vm.startBroadcast(safe);
         address(multiSend).delegatecall(payloadMultiSend);
         vm.stopBroadcast();
-        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, data);
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
     }
 }

@@ -133,7 +133,7 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_BASE) return address(0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee);
         else if (chain == CHAIN_BNB) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
         else if (chain == CHAIN_CELO) return address(0xc42b7A34Cb37eE450cc8059B10D839e4753229d5);
-        else if (chain == CHAIN_ETHEREUM) return address(0);
+        else if (chain == CHAIN_ETHEREUM) return address(0x25B0a02C8050943483aE5d68165Ebcb47EB01148);
         else if (chain == CHAIN_GNOSIS) return address(0xc42b7A34Cb37eE450cc8059B10D839e4753229d5);
         else if (chain == CHAIN_LINEA) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
         else if (chain == CHAIN_OPTIMISM) return address(0xa25c30044142d2fA243E7Fd3a6a9713117b3c396);
