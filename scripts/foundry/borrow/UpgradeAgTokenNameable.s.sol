@@ -17,27 +17,24 @@ contract UpgradeAgTokenNameable is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        address agToken = _chainToContract(chainId, ContractType.AgUSD);
-        address agTokenImpl = implUSDA(chainId);
-        string memory name = "USDA"; // Previously "AgEUR"
-        string memory symbol = "USDA"; // Previously "AgEUR"
+        address agToken = _chainToContract(chainId, ContractType.AgEUR);
+        address agTokenImpl = implEURA(chainId);
+        string memory name = "EURA (previously agEUR)"; // Previously "AgEUR"
+        string memory symbol = "EURA"; // Previously "AgEUR"
         /** END  complete */
 
-        // // EUR
-        // bytes memory nameAndSymbolData = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
-        // bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgradeAndCall.selector, agToken, agTokenImpl, "");
-        // address to = _chainToContract(chainId, ContractType.ProxyAdmin);
-        // bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
-        // bytes memory nameAndSymbolTx = abi.encodePacked(isDelegateCall, agToken, value, nameAndSymbolData.length, nameAndSymbolData);
-        // transactions = abi.encodePacked(transactions, internalTx);
-        // transactions = abi.encodePacked(transactions, nameAndSymbolTx);
-
-        // USD
-        bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgrade.selector, agToken, agTokenImpl);
-        address to = _chainToContract(chainId, ContractType.ProxyAdmin);
-        bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
-        transactions = abi.encodePacked(transactions, internalTx);
-
+        {
+            bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgrade.selector, agToken, agTokenImpl);
+            address to = _chainToContract(chainId, ContractType.ProxyAdmin);
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+        {
+            bytes memory data = abi.encodeWithSelector(INameable.setNameAndSymbol.selector, name, symbol);
+            address to = agToken;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 
         // Verify that the calls will succeed
@@ -47,6 +44,6 @@ contract UpgradeAgTokenNameable is Utils {
         vm.startBroadcast(safe);
         address(multiSend).delegatecall(payloadMultiSend);
         vm.stopBroadcast();
-        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, data);
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
     }
 }

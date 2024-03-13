@@ -22,9 +22,9 @@ contract UpgradeSavingsNameableTest is BaseTest {
         vm.selectFork(forkIdentifier[chainId]);
 
         /** TODO  complete */
-        IERC20Metadata stToken = IERC20Metadata(_chainToContract(chainId, ContractType.StUSD));
-        string memory name = "Staked USDA";
-        string memory symbol = "stUSD";
+        IERC20Metadata stToken = IERC20Metadata(_chainToContract(chainId, ContractType.StEUR));
+        string memory name = "Staked EURA";
+        string memory symbol = "stEUR";
         /** END  complete */
 
         address to = json.readAddress("$.to");

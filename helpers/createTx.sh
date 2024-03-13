@@ -106,13 +106,15 @@ function main {
         echo "Running test"
         FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
 
-        echo ""
-        echo "Would you like to execute the script ? (yes/no)"
-        read execute
+        # echo ""
+        # echo "Would you like to execute the script ? (yes/no)"
+        # read execute
 
-        if [[ $execute == "yes" ]]; then
-            yarn submit:foundry
-        fi
+        # if [[ $execute == "yes" ]]; then
+        #     yarn submit:foundry
+        # fi
+        # yarn submit:foundry
+
 
     done
 }

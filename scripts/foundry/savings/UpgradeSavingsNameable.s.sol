@@ -17,10 +17,10 @@ contract UpgradeSavingsNameable is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        address stToken = _chainToContract(chainId, ContractType.StUSD);
+        address stToken = _chainToContract(chainId, ContractType.StEUR);
         address savingsImpl = implStakedStablecoin(chainId);
-        string memory name = "Staked USDA"; // Previously "Staked agEUR"
-        string memory symbol = "stUSD"; // Previously "stEUR"
+        string memory name = "Staked EURA"; // Previously "Staked agEUR"
+        string memory symbol = "stEUR"; // Previously "stEUR"
         /** END  complete */
 
         {

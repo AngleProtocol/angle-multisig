@@ -12,6 +12,7 @@ contract UpgradeAgTokenNameableTest is BaseTest {
     using stdJson for string;
 
     address constant deployer = 0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185;
+    address governor;
 
     function setUp() public override {
         super.setUp();
@@ -25,10 +26,12 @@ contract UpgradeAgTokenNameableTest is BaseTest {
         vm.selectFork(forkIdentifier[chainId]);
 
         /** TODO  complete */
-        IERC20Metadata agToken = IERC20Metadata(_chainToContract(chainId, ContractType.AgUSD));
-        string memory name = "USDA";
-        string memory symbol = "USDA";
+        IERC20Metadata agToken = IERC20Metadata(_chainToContract(chainId, ContractType.AgEUR));
+        string memory name = "EURA (previously agEUR)";
+        string memory symbol = "EURA";
         /** END  complete */
+
+        governor = _chainToContract(chainId, ContractType.GovernorMultisig);
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
@@ -41,9 +44,6 @@ contract UpgradeAgTokenNameableTest is BaseTest {
         vm.prank(gnosisSafe);
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
-
-        vm.prank(deployer);
-        INameable(address(agToken)).setNameAndSymbol(name, symbol);
 
         assertEq(agToken.name(), name);
         assertEq(agToken.symbol(), symbol);
