@@ -93,7 +93,7 @@ function main {
         fi
 
         export CHAIN_ID=$(chain_to_chainId $chain)
-        FOUNDRY_PROFILE=dev forge script $script --fork-url $uri
+        forge script $script --fork-url $uri
 
         if [ $? -ne 0 ]; then
             echo ""

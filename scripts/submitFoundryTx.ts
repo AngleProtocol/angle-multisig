@@ -7,7 +7,7 @@ async function main() {
   delete transactionJson['additionalData'];
   console.log(transactionJson);
   // TODO need to change the destination safe
-  const safeAddress = registry(chainId).Guardian;
+  const safeAddress = registry(chainId).Governor;
   await submit(transactionJson, 0, chainId, safeAddress);
 }
 
