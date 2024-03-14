@@ -23,3 +23,6 @@
 [submodule "lib/utils"]
 	path = lib/utils
 	url = https://github.com/AngleProtocol/utils
+[submodule "lib/angle-transmuter"]
+	path = lib/angle-transmuter
+	url = https://github.com/AngleProtocol/angle-transmuter
