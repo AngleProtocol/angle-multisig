@@ -93,7 +93,7 @@ function main {
         fi
 
         export CHAIN_ID=$(chain_to_chainId $chain)
-        FOUNDRY_PROFILE=dev forge script $script --fork-url $uri
+        forge script $script --fork-url $uri
 
         if [ $? -ne 0 ]; then
             echo ""
@@ -106,16 +106,14 @@ function main {
         echo "Running test"
         FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
 
-        # echo ""
-        # echo "Would you like to execute the script ? (yes/no)"
-        # read execute
 
-        # if [[ $execute == "yes" ]]; then
-        #     yarn submit:foundry
-        # fi
-        # yarn submit:foundry
+        echo ""
+        echo "Would you like to execute the script ? (yes/no)"
+        read execute
 
-
+        if [[ $execute == "yes" ]]; then
+            yarn submit:foundry
+        fi
     done
 }
 

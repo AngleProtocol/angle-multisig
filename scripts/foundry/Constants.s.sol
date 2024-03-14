@@ -47,8 +47,3 @@ MultiSend constant multiSendMantle = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F
 
 address constant EUROC = 0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c;
 address constant BC3M = 0x2F123cF3F37CE3328CC9B5b8415f9EC5109b45e7;
-
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                  DEPLOYED CONTRACTS                                                
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
