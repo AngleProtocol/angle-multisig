@@ -18,6 +18,7 @@ function usage {
   echo -e "\t9: Polygon ZkEvm"
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
+  echo -e "\t100: All"
   echo ""
 }
 
@@ -64,6 +65,7 @@ function main {
         echo "- 9: Polygon ZkEvm"
         echo "- 10: Optimism"
         echo "- 11: Linea"
+        echo "- 100: All"
 
         read chains
 
@@ -73,7 +75,11 @@ function main {
         fi
     fi
 
-    # TODO make forks as sometimes we need to do on chain calls
+    if [[ "$chains" == "100" ]]; then
+        # If user entered 100 (All), loop from 1 to 11 and add all chains
+        chains="1,2,3,4,5,6,7,8,9,10,11"
+    fi
+
     for chain in $(echo $chains | sed "s/,/ /g")
     do
         echo ""

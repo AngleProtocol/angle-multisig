@@ -96,4 +96,49 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_MANTLE) return multiSendMantle;
         else revert("chain not supported");
     }
+
+        function implEURA(uint256 chain) public view returns (address) {
+        if(chain == CHAIN_ARBITRUM) return address(0x1a23b27aC7775B6220dC4F816b5c6A629E371f19);
+        else if (chain == CHAIN_AVALANCHE) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
+        else if (chain == CHAIN_BASE) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
+        else if (chain == CHAIN_BNB) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
+        else if (chain == CHAIN_CELO) return address(0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4);
+        else if (chain == CHAIN_ETHEREUM) return address(0xc3ef7ed4F97450Ae8dA2473068375788BdeB5c5c);
+        else if (chain == CHAIN_GNOSIS) return address(0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4);
+        else if (chain == CHAIN_LINEA) return address(0xc42b7A34Cb37eE450cc8059B10D839e4753229d5);
+        else if (chain == CHAIN_OPTIMISM) return address(0x67AA77342bE08935380eBece796A0F4f19F16444);
+        else if (chain == CHAIN_POLYGON) return address(0x09f143d3Af1Af9af6AB6BCe1B53fc5a8dc1baA79);
+        else if (chain == CHAIN_POLYGONZKEVM) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
+        else revert("chain not supported");
+    }
+
+    function implUSDA(uint256 chain) public view returns (address) {
+        if(chain == CHAIN_ARBITRUM) return address(0x1a23b27aC7775B6220dC4F816b5c6A629E371f19);
+        else if (chain == CHAIN_AVALANCHE) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
+        else if (chain == CHAIN_BASE) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
+        else if (chain == CHAIN_BNB) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
+        else if (chain == CHAIN_CELO) return address(0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4);
+        else if (chain == CHAIN_ETHEREUM) return address(0x028e1f0DB25DAF4ce8C895215deAfbCE7A873b24);
+        else if (chain == CHAIN_GNOSIS) return address(0xA0E088Fb02A8d5a71d337B88B7629b0413f53de4);
+        else if (chain == CHAIN_LINEA) return address(0xc42b7A34Cb37eE450cc8059B10D839e4753229d5);
+        else if (chain == CHAIN_OPTIMISM) return address(0x67AA77342bE08935380eBece796A0F4f19F16444);
+        else if (chain == CHAIN_POLYGON) return address(0x04A7d169C5b14d2e29A3bA8b5071dDA5E365c199);
+        else if (chain == CHAIN_POLYGONZKEVM) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
+        else revert("chain not supported");
+    }
+
+    function implStakedStablecoin(uint256 chain) public view returns (address) {
+        if(chain == CHAIN_ARBITRUM) return address(0xDAcf64fe735F5333474C9aE8000120002327a55A);
+        else if (chain == CHAIN_AVALANCHE) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
+        else if (chain == CHAIN_BASE) return address(0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee);
+        else if (chain == CHAIN_BNB) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
+        else if (chain == CHAIN_CELO) return address(0xc42b7A34Cb37eE450cc8059B10D839e4753229d5);
+        else if (chain == CHAIN_ETHEREUM) return address(0x25B0a02C8050943483aE5d68165Ebcb47EB01148);
+        else if (chain == CHAIN_GNOSIS) return address(0xc42b7A34Cb37eE450cc8059B10D839e4753229d5);
+        else if (chain == CHAIN_LINEA) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
+        else if (chain == CHAIN_OPTIMISM) return address(0xa25c30044142d2fA243E7Fd3a6a9713117b3c396);
+        else if (chain == CHAIN_POLYGON) return address(0xA87D4F27F49D335ab1deEe6b9c43404414Bee214);
+        else if (chain == CHAIN_POLYGONZKEVM) return address(0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee);
+        else revert("chain not supported");
+    }
 }
