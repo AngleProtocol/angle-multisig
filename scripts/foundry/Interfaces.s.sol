@@ -61,9 +61,3 @@ interface IFeeDistributor {
 
     function accept_admin() external;
 }
-
-interface OldTransmuter {
-    function getOracle(
-        address
-    ) external view returns (Storage.OracleReadType, Storage.OracleReadType, bytes memory, bytes memory);
-}

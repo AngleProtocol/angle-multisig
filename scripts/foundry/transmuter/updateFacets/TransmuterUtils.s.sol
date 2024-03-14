@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.19;
 
-import "forge-std/Script.sol";
+import { Utils } from "../../Utils.s.sol";
 import { StdAssertions } from "forge-std/Test.sol";
 import "stringutils/strings.sol";
+import { console } from "forge-std/console.sol";
 
-import { CommonUtils } from "utils/src/CommonUtils.sol";
 import { ContractType, BASE_18 } from "utils/src/Constants.sol";
 
-contract TransmuterUtils is Script, CommonUtils {
+contract TransmuterUtils is Utils {
     using strings for *;
 
     string constant JSON_SELECTOR_PATH = "./scripts/foundry/transmuter/updateFacets/selectors.json";

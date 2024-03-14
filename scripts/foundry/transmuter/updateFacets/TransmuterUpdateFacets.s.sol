@@ -5,9 +5,8 @@ import { console } from "forge-std/console.sol";
 import { stdJson } from "forge-std/StdJson.sol";
 import { TransmuterUtils } from "./TransmuterUtils.s.sol";
 import "../../Constants.s.sol";
-import { OldTransmuter } from "../../Interfaces.s.sol";
 
-import { IERC20 } from "oz-v5/token/ERC20/IERC20.sol";
+import { IERC20 } from "oz/token/ERC20/IERC20.sol";
 import "transmuter/transmuter/Storage.sol" as Storage;
 import { DiamondCut } from "transmuter/transmuter/facets/DiamondCut.sol";
 import { DiamondEtherscan } from "transmuter/transmuter/facets/DiamondEtherscan.sol";
@@ -21,7 +20,13 @@ import { SettersGuardian } from "transmuter/transmuter/facets/SettersGuardian.so
 import { Swapper } from "transmuter/transmuter/facets/Swapper.sol";
 import { ITransmuter, IDiamondCut, ISettersGovernor } from "transmuter/interfaces/ITransmuter.sol";
 
-contract TransmuterUpdateFacets is Wrapper, TransmuterUtils {
+interface OldTransmuter {
+    function getOracle(
+        address
+    ) external view returns (Storage.OracleReadType, Storage.OracleReadType, bytes memory, bytes memory);
+}
+
+contract TransmuterUpdateFacets is TransmuterUtils {
     using stdJson for string;
 
     string[] replaceFacetNames;
@@ -33,9 +38,14 @@ contract TransmuterUpdateFacets is Wrapper, TransmuterUtils {
     IERC20 agEUR;
     address governor;
 
-    SubCall[] private subCalls;
+    function run() external {
+        bytes memory transactions;
+        uint8 isDelegateCall = 0;
+        uint256 value = 0;
+        address to;
 
-    function _updateFacets(uint256 chainId) private {
+        uint256 chainId = vm.envUint("CHAIN_ID");
+
         uint256 executionChainId = chainId;
         chainId = chainId != 0 ? chainId : CHAIN_SOURCE;
 
@@ -112,79 +122,58 @@ contract TransmuterUpdateFacets is Wrapper, TransmuterUtils {
         (, , , , uint256 currentBC3MPrice) = transmuter.getOracleValues(address(BC3M));
 
         bytes memory callData;
-        // set the right implementations
-        subCalls.push(
-            SubCall(
-                chainId,
-                address(transmuter),
-                0,
-                abi.encodeWithSelector(IDiamondCut.diamondCut.selector, replaceCut, address(0), callData)
-            )
-        );
-        subCalls.push(
-            SubCall(
-                chainId,
-                address(transmuter),
-                0,
-                abi.encodeWithSelector(IDiamondCut.diamondCut.selector, addCut, address(0), callData)
-            )
-        );
-
-        // update the oracles
-        subCalls.push(
-            SubCall(
-                chainId,
-                address(transmuter),
-                0,
-                abi.encodeWithSelector(
-                    ISettersGovernor.setOracle.selector,
-                    EUROC,
-                    abi.encode(
-                        oracleTypeEUROC,
-                        targetTypeEUROC,
-                        oracleDataEUROC,
-                        targetDataEUROC,
-                        abi.encode(FIREWALL_MINT_EUROC, USER_PROTECTION_EUROC)
-                    )
-                )
-            )
-        );
-
-        subCalls.push(
-            SubCall(
-                chainId,
-                address(transmuter),
-                0,
-                abi.encodeWithSelector(
-                    ISettersGovernor.setOracle.selector,
-                    BC3M,
-                    abi.encode(
-                        oracleTypeBC3M,
-                        Storage.OracleReadType.MAX,
-                        oracleDataBC3M,
-                        // We can hope that the oracleDataBC3M won't move much before the proposal is executed
-                        abi.encode(currentBC3MPrice, DEVIATION_THRESHOLD_BC3M, uint96(block.timestamp), HEARTBEAT),
-                        abi.encode(FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M)
-                    )
-                )
-            )
-        );
-    }
-
-    function run() external {
-        uint256[] memory chainIds = vm.envUint("CHAIN_IDS", ",");
-        string memory description = "ipfs://";
-
-        for (uint256 i = 0; i < chainIds.length; i++) {
-            _updateFacets(chainIds[i]);
+        to = address(transmuter);
+        {
+            bytes memory data = abi.encodeWithSelector(
+                IDiamondCut.diamondCut.selector,
+                replaceCut,
+                address(0),
+                callData
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+        {
+            bytes memory data = abi.encodeWithSelector(IDiamondCut.diamondCut.selector, addCut, address(0), callData);
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
         }
 
-        (
-            address[] memory targets,
-            uint256[] memory values,
-            bytes[] memory calldatas,
-            uint256[] memory chainIds2
-        ) = _wrap(subCalls);
-        _serializeJson(targets, values, calldatas, chainIds2, description);
+        // update the oracles
+        {
+            bytes memory data = abi.encodeWithSelector(
+                ISettersGovernor.setOracle.selector,
+                EUROC,
+                abi.encode(
+                    oracleTypeEUROC,
+                    targetTypeEUROC,
+                    oracleDataEUROC,
+                    targetDataEUROC,
+                    abi.encode(FIREWALL_MINT_EUROC, USER_PROTECTION_EUROC)
+                )
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+        {
+            bytes memory data = abi.encodeWithSelector(
+                ISettersGovernor.setOracle.selector,
+                BC3M,
+                abi.encode(
+                    oracleTypeBC3M,
+                    Storage.OracleReadType.MAX,
+                    oracleDataBC3M,
+                    // We can hope that the oracleDataBC3M won't move much before the proposal is executed
+                    abi.encode(currentBC3MPrice, DEVIATION_THRESHOLD_BC3M, uint96(block.timestamp), HEARTBEAT),
+                    abi.encode(FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M)
+                )
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
     }
 }
