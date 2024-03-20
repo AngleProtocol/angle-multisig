@@ -5,7 +5,7 @@ import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
-import { TransmuterUtils } from "../../scripts/foundry/transmuter/updateFacets/TransmuterUtils.s.sol";
+import { TransmuterUtils, Utils } from "../../scripts/foundry/transmuter/updateFacets/TransmuterUtils.s.sol";
 import "../../scripts/foundry/Constants.s.sol";
 import { OldTransmuter } from "../../scripts/foundry/transmuter/updateFacets/TransmuterUpdateFacets.s.sol";
 import "transmuter/transmuter/Storage.sol" as Storage;
@@ -15,33 +15,34 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     using stdJson for string;
 
     ITransmuter transmuter;
-    uint256[] chainIds;
 
     // TODO COMPLETE
     bytes public oracleConfigDataEUROC =
         hex"0000000000000000000000004305fb66699c3b2702d4d05cf36551390a4c69c600000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000276fa85158bf14ede77087fe3ae472f66213f6ea2f5b411cb2de472794990fa5ca995d00bb36a63cef7fd2c287dc105fc8f3d93779f062f09551b0af3e81ec30b000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000001275000000000000000000000000000000000000000000000000000000000000127500000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000";
+    bytes public oracleConfigDataBC3M =
+        hex"00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000160000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000006e27a25999b3c665e44d903b2139f5a4be2b6c260000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000003f4800000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008";
     //
 
-    function setUp() public override {
-        super.setUp();
+    function setUp() public override(Utils, BaseTest) {
+        BaseTest.setUp();
+
+        // special case as we rely on the fork state
+        vm.selectFork(forkIdentifier[CHAIN_FORK]);
+        // vm.selectFork(forkIdentifier[chainId]);
 
         // As there are calls to price feeds and there are delays to be respected we need to mock calls
         // to escape from `InvalidChainlinkRate()` error
         vm.mockCall(
             address(0x6E27A25999B3C665E44D903B2139F5a4Be2B6C26),
             abi.encodeWithSelector(AggregatorV3Interface.latestRoundData.selector),
-            abi.encode(uint80(0), int256(11949000000), uint256(1710857504), uint256(1710857504), uint80(0))
+            abi.encode(uint80(0), int256(11949000000), uint256(block.timestamp), uint256(block.timestamp), uint80(0))
         );
 
         uint256 chainId = json.readUint("$.chainId");
-        // special case as we rely on the fork state
-        vm.selectFork(forkIdentifier[CHAIN_FORK]);
-        // vm.selectFork(forkIdentifier[chainId]);
 
-        address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+        address gnosisSafe = _chainToContract(chainId, ContractType.GovernorMultisig);
 
-        ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
-        IAgToken agToken = IAgToken(_chainToContract(chainId, ContractType.AgEUR));
+        transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
@@ -58,16 +59,14 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
 
     function test_script() external {
         // Now test that everything is as expected
-        for (uint256 i; i < chainIds.length; i++) {
-            uint256 chainId = chainIds[i];
-            transmuter = ITransmuter(payable(_chainToContract(chainId, ContractType.TransmuterAgEUR)));
+        uint256 chainId = CHAIN_SOURCE;
+        transmuter = ITransmuter(payable(_chainToContract(chainId, ContractType.TransmuterAgEUR)));
 
-            _testAccessControlManager();
-            _testAgToken();
-            _testGetCollateralList();
-            _testGetCollateralInfo();
-            _testGetOracleValues();
-        }
+        _testAccessControlManager();
+        _testAgToken();
+        _testGetCollateralList();
+        _testGetCollateralInfo();
+        _testGetOracleValues();
     }
 
     function _testAccessControlManager() internal {
@@ -93,7 +92,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
             assertEq(collatInfoEUROC.isBurnLive, 1);
             assertEq(collatInfoEUROC.decimals, 6);
             assertEq(collatInfoEUROC.onlyWhitelisted, 0);
-            assertApproxEqRel(collatInfoEUROC.normalizedStables, 10450179 * BASE_18, 100 * BPS);
+            assertApproxEqRel(collatInfoEUROC.normalizedStables, 9981632 * BASE_18, 100 * BPS);
             {
                 (
                     Storage.OracleReadType oracleType,
@@ -105,12 +104,14 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
                         collatInfoEUROC.oracleConfig,
                         (Storage.OracleReadType, Storage.OracleReadType, bytes, bytes, bytes)
                     );
-
                 assertEq(uint8(oracleType), uint8(8));
                 assertEq(uint8(targetType), uint8(3));
-                assertEq(oracleData, hex"");
+                assertEq(oracleData, oracleConfigDataEUROC);
                 assertEq(targetData, hex"");
-                assertEq(hyperparams, abi.encode(FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M));
+                assertEq(
+                    hyperparams,
+                    abi.encode(USER_PROTECTION_EUROC, FIREWALL_MINT_EUROC, FIREWALL_BURN_RATIO_EUROC)
+                );
             }
             assertEq(collatInfoEUROC.whitelistData.length, 0);
             assertEq(collatInfoEUROC.managerData.subCollaterals.length, 0);
@@ -168,17 +169,13 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
 
                 assertEq(uint8(oracleType), uint8(0));
                 assertEq(uint8(targetType), uint8(9));
-                assertEq(oracleData, oracleConfigDataEUROC);
-                assertEq(
-                    hyperparams,
-                    abi.encode(FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M)
-                    // hex"0000000000000000000000000000000000000000000000000de0b6b3a7640000000000000000000000000000000000000000000000000000002386f26fc10000"
-                );
+                assertEq(oracleData, oracleConfigDataBC3M);
+                assertEq(hyperparams, abi.encode(USER_PROTECTION_BC3M, FIREWALL_MINT_BC3M, FIREWALL_BURN_RATIO_BC3M));
 
                 (uint256 maxValue, uint96 deviationThreshold, uint96 lastUpdateTimestamp, uint32 heartbeat) = abi
                     .decode(targetData, (uint256, uint96, uint96, uint32));
 
-                assertApproxEqRel(maxValue, (1195 * BASE_18) / 10, 10 * BPS);
+                assertApproxEqRel(maxValue, (1196 * BASE_18) / 10, 10 * BPS);
                 assertEq(deviationThreshold, DEVIATION_THRESHOLD_BC3M);
                 assertEq(heartbeat, HEARTBEAT);
             }
@@ -226,7 +223,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
 
     function _testGetOracleValues() internal {
         _checkOracleValues(address(EUROC), BASE_18, FIREWALL_MINT_EUROC, USER_PROTECTION_EUROC);
-        _checkOracleValues(address(BC3M), (11957 * BASE_18) / 100, FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M);
+        _checkOracleValues(address(BC3M), (11949 * BASE_18) / 100, FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M);
     }
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

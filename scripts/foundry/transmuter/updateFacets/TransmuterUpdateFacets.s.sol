@@ -108,19 +108,6 @@ contract TransmuterUpdateFacets is TransmuterUtils {
             }
         }
 
-        // Get the previous oracles configs
-        (
-            Storage.OracleReadType oracleTypeEUROC,
-            Storage.OracleReadType targetTypeEUROC,
-            bytes memory oracleDataEUROC,
-            bytes memory targetDataEUROC
-        ) = OldTransmuter(address(transmuter)).getOracle(address(EUROC));
-
-        (Storage.OracleReadType oracleTypeBC3M, , bytes memory oracleDataBC3M, ) = OldTransmuter(address(transmuter))
-            .getOracle(address(BC3M));
-
-        (, , , , uint256 currentBC3MPrice) = transmuter.getOracleValues(address(BC3M));
-
         bytes memory callData;
         to = address(transmuter);
         {
@@ -143,6 +130,14 @@ contract TransmuterUpdateFacets is TransmuterUtils {
 
         // update the oracles
         {
+            // Get the previous oracles configs
+            (
+                Storage.OracleReadType oracleTypeEUROC,
+                Storage.OracleReadType targetTypeEUROC,
+                bytes memory oracleDataEUROC,
+                bytes memory targetDataEUROC
+            ) = OldTransmuter(address(transmuter)).getOracle(address(EUROC));
+
             bytes memory data = abi.encodeWithSelector(
                 ISettersGovernor.setOracle.selector,
                 EUROC,
@@ -151,7 +146,7 @@ contract TransmuterUpdateFacets is TransmuterUtils {
                     targetTypeEUROC,
                     oracleDataEUROC,
                     targetDataEUROC,
-                    abi.encode(FIREWALL_MINT_EUROC, USER_PROTECTION_EUROC)
+                    abi.encode(USER_PROTECTION_EUROC, FIREWALL_MINT_EUROC, FIREWALL_BURN_RATIO_EUROC)
                 )
             );
             uint256 dataLength = data.length;
@@ -159,6 +154,11 @@ contract TransmuterUpdateFacets is TransmuterUtils {
             transactions = abi.encodePacked(transactions, internalTx);
         }
         {
+            // Get the previous oracles configs
+            (Storage.OracleReadType oracleTypeBC3M, , bytes memory oracleDataBC3M, ) = OldTransmuter(
+                address(transmuter)
+            ).getOracle(address(BC3M));
+            (, , , , uint256 currentBC3MPrice) = transmuter.getOracleValues(address(BC3M));
             bytes memory data = abi.encodeWithSelector(
                 ISettersGovernor.setOracle.selector,
                 BC3M,
@@ -168,12 +168,16 @@ contract TransmuterUpdateFacets is TransmuterUtils {
                     oracleDataBC3M,
                     // We can hope that the oracleDataBC3M won't move much before the proposal is executed
                     abi.encode(currentBC3MPrice, DEVIATION_THRESHOLD_BC3M, uint96(block.timestamp), HEARTBEAT),
-                    abi.encode(FIREWALL_MINT_BC3M, USER_PROTECTION_BC3M)
+                    abi.encode(USER_PROTECTION_BC3M, FIREWALL_MINT_BC3M, FIREWALL_BURN_RATIO_BC3M)
                 )
             );
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
+
+        bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
+        address multiSend = address(_chainToMultiSend(chainId));
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
     }
 }
