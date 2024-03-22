@@ -106,7 +106,7 @@ function main {
         testContract="${script}Test"
         echo ""
         echo "Running test"
-        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
+        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvvv
 
         # echo ""
         # echo "Would you like to execute the script ? (yes/no)"

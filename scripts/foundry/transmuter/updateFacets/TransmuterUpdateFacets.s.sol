@@ -18,7 +18,9 @@ import { RewardHandler } from "transmuter/transmuter/facets/RewardHandler.sol";
 import { SettersGovernor } from "transmuter/transmuter/facets/SettersGovernor.sol";
 import { SettersGuardian } from "transmuter/transmuter/facets/SettersGuardian.sol";
 import { Swapper } from "transmuter/transmuter/facets/Swapper.sol";
-import { ITransmuter, IDiamondCut, ISettersGovernor } from "transmuter/interfaces/ITransmuter.sol";
+import { AggregatorV3Interface } from "transmuter/interfaces/external/chainlink/AggregatorV3Interface.sol";
+import { ITransmuter, IDiamondCut, ISettersGovernor, ISettersGuardian } from "transmuter/interfaces/ITransmuter.sol";
+import { BASE_8, MAX_MINT_FEE, MAX_BURN_FEE } from "transmuter/utils/Constants.sol";
 
 interface OldTransmuter {
     function getOracle(
@@ -33,6 +35,7 @@ contract TransmuterUpdateFacets is TransmuterUtils {
     string[] addFacetNames;
     address[] replaceFacetAddressList;
     address[] addFacetAddressList;
+    bytes oracleConfigBERNX;
 
     ITransmuter transmuter;
     IERC20 agEUR;
@@ -129,6 +132,8 @@ contract TransmuterUpdateFacets is TransmuterUtils {
         }
 
         // update the oracles
+
+        // EURC
         {
             // Get the previous oracles configs
             (
@@ -153,6 +158,8 @@ contract TransmuterUpdateFacets is TransmuterUtils {
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
+
+        // BC3M
         {
             // Get the previous oracles configs
             (Storage.OracleReadType oracleTypeBC3M, , bytes memory oracleDataBC3M, ) = OldTransmuter(
@@ -174,6 +181,255 @@ contract TransmuterUpdateFacets is TransmuterUtils {
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
             transactions = abi.encodePacked(transactions, internalTx);
+        }
+
+        // Set the new collateral: bERNX
+        {
+            uint64[] memory xMintFeeERNX = new uint64[](3);
+            xMintFeeERNX[0] = uint64(0);
+            xMintFeeERNX[1] = uint64((49 * BASE_9) / 100);
+            xMintFeeERNX[2] = uint64((50 * BASE_9) / 100);
+
+            int64[] memory yMintFeeERNX = new int64[](3);
+            yMintFeeERNX[0] = int64(0);
+            yMintFeeERNX[1] = int64(0);
+            yMintFeeERNX[2] = int64(uint64(MAX_MINT_FEE));
+
+            uint64[] memory xBurnFeeERNX = new uint64[](3);
+            xBurnFeeERNX[0] = uint64(BASE_9);
+            xBurnFeeERNX[1] = uint64((26 * BASE_9) / 100);
+            xBurnFeeERNX[2] = uint64((25 * BASE_9) / 100);
+
+            int64[] memory yBurnFeeERNX = new int64[](3);
+            yBurnFeeERNX[0] = int64(uint64((50 * BASE_9) / 10000));
+            yBurnFeeERNX[1] = int64(uint64((50 * BASE_9) / 10000));
+            yBurnFeeERNX[2] = int64(uint64(MAX_BURN_FEE));
+
+            {
+                bytes memory readData;
+                {
+                    AggregatorV3Interface[] memory circuitChainlink = new AggregatorV3Interface[](1);
+                    uint32[] memory stalePeriods = new uint32[](1);
+                    uint8[] memory circuitChainIsMultiplied = new uint8[](1);
+                    uint8[] memory chainlinkDecimals = new uint8[](1);
+
+                    // Chainlink ERNX/EUR oracle
+                    circuitChainlink[0] = AggregatorV3Interface(0x475855DAe09af1e3f2d380d766b9E630926ad3CE);
+                    stalePeriods[0] = 3 days;
+                    circuitChainIsMultiplied[0] = 1;
+                    chainlinkDecimals[0] = 8;
+                    Storage.OracleQuoteType quoteType = Storage.OracleQuoteType.UNIT;
+                    readData = abi.encode(
+                        circuitChainlink,
+                        stalePeriods,
+                        circuitChainIsMultiplied,
+                        chainlinkDecimals,
+                        quoteType
+                    );
+                }
+
+                bytes memory targetData;
+                {
+                    (, int256 ratio, , uint256 updatedAt, ) = AggregatorV3Interface(
+                        0x475855DAe09af1e3f2d380d766b9E630926ad3CE
+                    ).latestRoundData();
+                    targetData = abi.encode(
+                        (uint256(ratio) * BASE_18) / BASE_8,
+                        uint96(DEVIATION_THRESHOLD_BERNX),
+                        uint96(block.timestamp),
+                        HEARTBEAT
+                    );
+                }
+
+                oracleConfigBERNX = abi.encode(
+                    Storage.OracleReadType.CHAINLINK_FEEDS,
+                    Storage.OracleReadType.MAX,
+                    readData,
+                    targetData,
+                    abi.encode(USER_PROTECTION_BERNX, FIREWALL_MINT_BERNX, FIREWALL_BURN_RATIO_BERNX)
+                );
+            }
+            {
+                bytes memory data = abi.encodeWithSelector(ISettersGovernor.addCollateral.selector, BERNX);
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGovernor.setOracle.selector,
+                    BERNX,
+                    oracleConfigBERNX
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                // Mint fees
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setFees.selector,
+                    BERNX,
+                    xMintFeeERNX,
+                    yMintFeeERNX,
+                    true
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                // Burn fees
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setFees.selector,
+                    BERNX,
+                    xBurnFeeERNX,
+                    yBurnFeeERNX,
+                    false
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.togglePause.selector,
+                    BERNX,
+                    Storage.ActionType.Mint
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.togglePause.selector,
+                    BERNX,
+                    Storage.ActionType.Burn
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                bytes memory data;
+                {
+                    // Set whitelist status for bC3M
+                    bytes memory whitelistData = abi.encode(
+                        Storage.WhitelistType.BACKED,
+                        // Keyring whitelist check
+                        abi.encode(address(0x9391B14dB2d43687Ea1f6E546390ED4b20766c46))
+                    );
+
+                    data = abi.encodeWithSelector(
+                        ISettersGovernor.setWhitelistStatus.selector,
+                        BERNX,
+                        1,
+                        whitelistData
+                    );
+                }
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+        }
+
+        // Set target exposures for EUROC
+        {
+            uint64[] memory xMintFeeEUROC = new uint64[](3);
+            xMintFeeEUROC[0] = uint64(0);
+            xMintFeeEUROC[1] = uint64((69 * BASE_9) / 100);
+            xMintFeeEUROC[2] = uint64((70 * BASE_9) / 100);
+
+            int64[] memory yMintFeeEUROC = new int64[](3);
+            yMintFeeEUROC[0] = int64(0);
+            yMintFeeEUROC[1] = int64(0);
+            yMintFeeEUROC[2] = int64(uint64(MAX_MINT_FEE));
+
+            uint64[] memory xBurnFeeEUROC = new uint64[](3);
+            xBurnFeeEUROC[0] = uint64(BASE_9);
+            xBurnFeeEUROC[1] = uint64((11 * BASE_9) / 100);
+            xBurnFeeEUROC[2] = uint64((10 * BASE_9) / 100);
+
+            int64[] memory yBurnFeeEUROC = new int64[](3);
+            yBurnFeeEUROC[0] = int64(0);
+            yBurnFeeEUROC[1] = int64(0);
+            yBurnFeeEUROC[2] = int64(uint64(MAX_BURN_FEE));
+            {
+                // Mint fees
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setFees.selector,
+                    EUROC,
+                    xMintFeeEUROC,
+                    yMintFeeEUROC,
+                    true
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                // Burn fees
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setFees.selector,
+                    EUROC,
+                    xBurnFeeEUROC,
+                    yBurnFeeEUROC,
+                    false
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+        }
+
+        // Set target exposures for bC3M
+        {
+            uint64[] memory xMintFeeC3M = new uint64[](3);
+            xMintFeeC3M[0] = uint64(0);
+            xMintFeeC3M[1] = uint64((49 * BASE_9) / 100);
+            xMintFeeC3M[2] = uint64((50 * BASE_9) / 100);
+
+            int64[] memory yMintFeeC3M = new int64[](3);
+            yMintFeeC3M[0] = int64(0);
+            yMintFeeC3M[1] = int64(0);
+            yMintFeeC3M[2] = int64(uint64(MAX_MINT_FEE));
+
+            uint64[] memory xBurnFeeC3M = new uint64[](3);
+            xBurnFeeC3M[0] = uint64(BASE_9);
+            xBurnFeeC3M[1] = uint64((26 * BASE_9) / 100);
+            xBurnFeeC3M[2] = uint64((25 * BASE_9) / 100);
+
+            int64[] memory yBurnFeeC3M = new int64[](3);
+            yBurnFeeC3M[0] = int64(uint64((50 * BASE_9) / 10000));
+            yBurnFeeC3M[1] = int64(uint64((50 * BASE_9) / 10000));
+            yBurnFeeC3M[2] = int64(uint64(MAX_BURN_FEE));
+            {
+                // Mint fees
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setFees.selector,
+                    BC3M,
+                    xMintFeeC3M,
+                    yMintFeeC3M,
+                    true
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                // Burn fees
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setFees.selector,
+                    BC3M,
+                    xBurnFeeC3M,
+                    yBurnFeeC3M,
+                    false
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
         }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);

@@ -21,20 +21,31 @@ contract TransmuterUtils is Utils {
     address constant EURE = 0x3231Cb76718CDeF2155FC47b5286d82e6eDA273f;
     address constant BC3M = 0x2F123cF3F37CE3328CC9B5b8415f9EC5109b45e7;
     address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    address constant BERNX = 0x3f95AA88dDbB7D9D484aa3D482bf0a80009c52c9;
 
-    uint80 constant FIREWALL_MINT_EUROC = 0;
-    uint80 constant FIREWALL_BURN_RATIO_EUROC = uint80(5 * BPS);
+    // EUROC
+    uint80 constant FIREWALL_MINT_EUROC = uint80(0);
+    uint80 constant FIREWALL_BURN_RATIO_EUROC = uint80(0);
     uint80 constant USER_PROTECTION_EUROC = uint80(5 * BPS);
-    uint80 constant FIREWALL_MINT_BC3M = uint80(BASE_18);
-    uint80 constant FIREWALL_BURN_RATIO_BC3M = uint80(300 * BPS);
-    uint80 constant USER_PROTECTION_BC3M = uint80(10 * BPS);
-    uint96 constant DEVIATION_THRESHOLD_BC3M = uint96(100 * BPS);
-    uint32 constant HEARTBEAT = uint32(1 days);
 
-    address constant GETTERS = 0xB55639FdcD12503fE85e3B4D4639142C9D7951aa;
-    address constant REDEEMER = 0xFE2Ff814800Bb1df4E415ac88338f07471C8c87B;
-    address constant SETTERS_GOVERNOR = 0xb3047F769f8ae481F99a71C488037D31e1dA6707;
-    address constant SWAPPER = 0xeF0B788D254a7CC0278FC61C52486Db56dd74308;
+    // BC3M
+    uint80 constant FIREWALL_MINT_BC3M = uint80(70 * BPS);
+    uint80 constant FIREWALL_BURN_RATIO_BC3M = uint80(50 * BPS);
+    uint80 constant USER_PROTECTION_BC3M = uint80(0);
+    uint96 constant DEVIATION_THRESHOLD_BC3M = uint96(50 * BPS);
+
+    // ERNX
+    uint80 constant FIREWALL_MINT_BERNX = uint80(120 * BPS);
+    uint80 constant FIREWALL_BURN_RATIO_BERNX = uint80(100 * BPS);
+    uint80 constant USER_PROTECTION_BERNX = uint80(0);
+    uint96 constant DEVIATION_THRESHOLD_BERNX = uint96(100 * BPS);
+
+    uint32 constant HEARTBEAT = uint32(7 days);
+
+    address constant GETTERS = 0x6E719cc6b49d68b190CC383d12B071FfD01CA581;
+    address constant REDEEMER = 0xB55639FdcD12503fE85e3B4D4639142C9D7951aa;
+    address constant SETTERS_GOVERNOR = 0xFE2Ff814800Bb1df4E415ac88338f07471C8c87B;
+    address constant SWAPPER = 0xb3047F769f8ae481F99a71C488037D31e1dA6707;
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         HELPERS                                                     
