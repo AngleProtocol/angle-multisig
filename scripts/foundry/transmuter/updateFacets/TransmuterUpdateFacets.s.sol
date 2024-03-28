@@ -151,7 +151,7 @@ contract TransmuterUpdateFacets is TransmuterUtils {
                     targetTypeEUROC,
                     oracleDataEUROC,
                     targetDataEUROC,
-                    abi.encode(USER_PROTECTION_EUROC, FIREWALL_MINT_EUROC, FIREWALL_BURN_RATIO_EUROC)
+                    abi.encode(USER_PROTECTION_EUROC, FIREWALL_BURN_RATIO_EUROC)
                 )
             );
             uint256 dataLength = data.length;
@@ -174,8 +174,8 @@ contract TransmuterUpdateFacets is TransmuterUtils {
                     Storage.OracleReadType.MAX,
                     oracleDataBC3M,
                     // We can hope that the oracleDataBC3M won't move much before the proposal is executed
-                    abi.encode(currentBC3MPrice, DEVIATION_THRESHOLD_BC3M, uint96(block.timestamp), HEARTBEAT),
-                    abi.encode(USER_PROTECTION_BC3M, FIREWALL_MINT_BC3M, FIREWALL_BURN_RATIO_BC3M)
+                    abi.encode(currentBC3MPrice),
+                    abi.encode(USER_PROTECTION_BC3M, FIREWALL_BURN_RATIO_BC3M)
                 )
             );
             uint256 dataLength = data.length;
@@ -233,12 +233,7 @@ contract TransmuterUpdateFacets is TransmuterUtils {
                     (, int256 ratio, , uint256 updatedAt, ) = AggregatorV3Interface(
                         0x475855DAe09af1e3f2d380d766b9E630926ad3CE
                     ).latestRoundData();
-                    targetData = abi.encode(
-                        (uint256(ratio) * BASE_18) / BASE_8,
-                        uint96(DEVIATION_THRESHOLD_BERNX),
-                        uint96(block.timestamp),
-                        HEARTBEAT
-                    );
+                    targetData = abi.encode((uint256(ratio) * BASE_18) / BASE_8);
                 }
 
                 oracleConfigBERNX = abi.encode(
@@ -246,7 +241,7 @@ contract TransmuterUpdateFacets is TransmuterUtils {
                     Storage.OracleReadType.MAX,
                     readData,
                     targetData,
-                    abi.encode(USER_PROTECTION_BERNX, FIREWALL_MINT_BERNX, FIREWALL_BURN_RATIO_BERNX)
+                    abi.encode(USER_PROTECTION_BERNX, FIREWALL_BURN_RATIO_BERNX)
                 );
             }
             {

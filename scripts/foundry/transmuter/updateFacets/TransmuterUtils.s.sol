@@ -24,21 +24,28 @@ contract TransmuterUtils is Utils {
     address constant BERNX = 0x3f95AA88dDbB7D9D484aa3D482bf0a80009c52c9;
 
     // EUROC
-    uint80 constant FIREWALL_MINT_EUROC = uint80(0);
-    uint80 constant FIREWALL_BURN_RATIO_EUROC = uint80(0);
-    uint80 constant USER_PROTECTION_EUROC = uint80(5 * BPS);
+    uint128 constant FIREWALL_BURN_RATIO_EUROC = uint128(0);
+    uint128 constant USER_PROTECTION_EUROC = uint128(10 * BPS);
 
     // BC3M
-    uint80 constant FIREWALL_MINT_BC3M = uint80(70 * BPS);
-    uint80 constant FIREWALL_BURN_RATIO_BC3M = uint80(50 * BPS);
-    uint80 constant USER_PROTECTION_BC3M = uint80(0);
-    uint96 constant DEVIATION_THRESHOLD_BC3M = uint96(50 * BPS);
+    uint128 constant FIREWALL_BURN_RATIO_BC3M = uint128(10 * BPS);
+    uint128 constant USER_PROTECTION_BC3M = uint128(0);
 
     // ERNX
-    uint80 constant FIREWALL_MINT_BERNX = uint80(120 * BPS);
-    uint80 constant FIREWALL_BURN_RATIO_BERNX = uint80(100 * BPS);
-    uint80 constant USER_PROTECTION_BERNX = uint80(0);
-    uint96 constant DEVIATION_THRESHOLD_BERNX = uint96(100 * BPS);
+    uint128 constant FIREWALL_BURN_RATIO_BERNX = uint128(20 * BPS);
+    uint128 constant USER_PROTECTION_BERNX = uint128(0);
+
+    // USDC
+    uint128 constant FIREWALL_BURN_RATIO_USDC = uint128(0);
+    uint128 constant USER_PROTECTION_USDC = uint128(5 * BPS);
+
+    // steakUSDC
+    uint128 constant FIREWALL_BURN_RATIO_STEAK_USDC = uint128(5 * BPS);
+    uint128 constant USER_PROTECTION_STEAK_USDC = uint128(0);
+
+    // IB01
+    uint128 constant FIREWALL_BURN_RATIO_IB01 = uint128(20 * BPS);
+    uint128 constant USER_PROTECTION_IB01 = uint128(0);
 
     uint32 constant HEARTBEAT = uint32(7 days);
 

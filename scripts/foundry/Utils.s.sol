@@ -38,30 +38,30 @@ contract Utils is Script, CommonUtils {
     uint256[] private chainIds;
 
     function setUp() public virtual {
-        // arbitrumFork = vm.createFork(vm.envString("ETH_NODE_URI_ARBITRUM"));
-        // avalancheFork = vm.createFork(vm.envString("ETH_NODE_URI_AVALANCHE"));
+        arbitrumFork = vm.createFork(vm.envString("ETH_NODE_URI_ARBITRUM"));
+        avalancheFork = vm.createFork(vm.envString("ETH_NODE_URI_AVALANCHE"));
         ethereumFork = vm.createFork(vm.envString("ETH_NODE_URI_MAINNET"));
-        // optimismFork = vm.createFork(vm.envString("ETH_NODE_URI_OPTIMISM"));
-        // polygonFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON"));
-        // gnosisFork = vm.createFork(vm.envString("ETH_NODE_URI_GNOSIS"));
-        // bnbFork = vm.createFork(vm.envString("ETH_NODE_URI_BSC"));
-        // celoFork = vm.createFork(vm.envString("ETH_NODE_URI_CELO"));
-        // polygonZkEVMFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON_ZKEVM"));
-        // baseFork = vm.createFork(vm.envString("ETH_NODE_URI_BASE"));
-        // lineaFork = vm.createFork(vm.envString("ETH_NODE_URI_LINEA"));
+        optimismFork = vm.createFork(vm.envString("ETH_NODE_URI_OPTIMISM"));
+        polygonFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON"));
+        gnosisFork = vm.createFork(vm.envString("ETH_NODE_URI_GNOSIS"));
+        bnbFork = vm.createFork(vm.envString("ETH_NODE_URI_BSC"));
+        celoFork = vm.createFork(vm.envString("ETH_NODE_URI_CELO"));
+        polygonZkEVMFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON_ZKEVM"));
+        baseFork = vm.createFork(vm.envString("ETH_NODE_URI_BASE"));
+        lineaFork = vm.createFork(vm.envString("ETH_NODE_URI_LINEA"));
         localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
 
-        // forkIdentifier[CHAIN_ARBITRUM] = arbitrumFork;
-        // forkIdentifier[CHAIN_AVALANCHE] = avalancheFork;
+        forkIdentifier[CHAIN_ARBITRUM] = arbitrumFork;
+        forkIdentifier[CHAIN_AVALANCHE] = avalancheFork;
         forkIdentifier[CHAIN_ETHEREUM] = ethereumFork;
-        // forkIdentifier[CHAIN_OPTIMISM] = optimismFork;
-        // forkIdentifier[CHAIN_POLYGON] = polygonFork;
-        // forkIdentifier[CHAIN_GNOSIS] = gnosisFork;
-        // forkIdentifier[CHAIN_BNB] = bnbFork;
-        // forkIdentifier[CHAIN_CELO] = celoFork;
-        // forkIdentifier[CHAIN_POLYGONZKEVM] = polygonZkEVMFork;
-        // forkIdentifier[CHAIN_BASE] = baseFork;
-        // forkIdentifier[CHAIN_LINEA] = lineaFork;
+        forkIdentifier[CHAIN_OPTIMISM] = optimismFork;
+        forkIdentifier[CHAIN_POLYGON] = polygonFork;
+        forkIdentifier[CHAIN_GNOSIS] = gnosisFork;
+        forkIdentifier[CHAIN_BNB] = bnbFork;
+        forkIdentifier[CHAIN_CELO] = celoFork;
+        forkIdentifier[CHAIN_POLYGONZKEVM] = polygonZkEVMFork;
+        forkIdentifier[CHAIN_BASE] = baseFork;
+        forkIdentifier[CHAIN_LINEA] = lineaFork;
         forkIdentifier[CHAIN_FORK] = localFork;
     }
 

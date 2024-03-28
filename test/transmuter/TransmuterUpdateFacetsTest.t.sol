@@ -40,7 +40,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
         vm.mockCall(
             address(0x6E27A25999B3C665E44D903B2139F5a4Be2B6C26),
             abi.encodeWithSelector(AggregatorV3Interface.latestRoundData.selector),
-            abi.encode(uint80(0), int256(11949000000), uint256(block.timestamp), uint256(block.timestamp), uint80(0))
+            abi.encode(uint80(0), int256(11951000000), uint256(block.timestamp), uint256(block.timestamp), uint80(0))
         );
 
         uint256 chainId = json.readUint("$.chainId");
@@ -117,10 +117,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
                 assertEq(uint8(targetType), uint8(3));
                 assertEq(oracleData, oracleConfigDataEUROC);
                 assertEq(targetData, hex"");
-                assertEq(
-                    hyperparams,
-                    abi.encode(USER_PROTECTION_EUROC, FIREWALL_MINT_EUROC, FIREWALL_BURN_RATIO_EUROC)
-                );
+                assertEq(hyperparams, abi.encode(USER_PROTECTION_EUROC, FIREWALL_BURN_RATIO_EUROC));
             }
             {
                 assertEq(collatInfoEUROC.xFeeMint.length, 3);
@@ -167,14 +164,10 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
                 assertEq(uint8(oracleType), uint8(0));
                 assertEq(uint8(targetType), uint8(9));
                 assertEq(oracleData, oracleConfigDataBC3M);
-                assertEq(hyperparams, abi.encode(USER_PROTECTION_BC3M, FIREWALL_MINT_BC3M, FIREWALL_BURN_RATIO_BC3M));
+                assertEq(hyperparams, abi.encode(USER_PROTECTION_BC3M, FIREWALL_BURN_RATIO_BC3M));
 
-                (uint256 maxValue, uint96 deviationThreshold, uint96 lastUpdateTimestamp, uint32 heartbeat) = abi
-                    .decode(targetData, (uint256, uint96, uint96, uint32));
-
+                uint256 maxValue = abi.decode(targetData, (uint256));
                 assertApproxEqRel(maxValue, (1196 * BASE_18) / 10, 10 * BPS);
-                assertEq(deviationThreshold, DEVIATION_THRESHOLD_BC3M);
-                assertEq(heartbeat, HEARTBEAT);
             }
 
             {
@@ -235,17 +228,11 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
                 assertEq(uint8(oracleType), uint8(0));
                 assertEq(uint8(targetType), uint8(9));
                 assertEq(oracleData, oracleConfigDataBERNX);
-                assertEq(
-                    hyperparams,
-                    abi.encode(USER_PROTECTION_BERNX, FIREWALL_MINT_BERNX, FIREWALL_BURN_RATIO_BERNX)
-                );
+                assertEq(hyperparams, abi.encode(USER_PROTECTION_BERNX, FIREWALL_BURN_RATIO_BERNX));
 
-                (uint256 maxValue, uint96 deviationThreshold, uint96 lastUpdateTimestamp, uint32 heartbeat) = abi
-                    .decode(targetData, (uint256, uint96, uint96, uint32));
+                uint256 maxValue = abi.decode(targetData, (uint256));
 
                 assertApproxEqRel(maxValue, (522 * BASE_18) / 100, 10 * BPS);
-                assertEq(deviationThreshold, DEVIATION_THRESHOLD_BERNX);
-                assertEq(heartbeat, HEARTBEAT);
             }
 
             {
@@ -288,27 +275,9 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
     function _testGetOracleValues() internal {
-        _checkOracleValues(
-            address(EUROC),
-            BASE_18,
-            USER_PROTECTION_EUROC,
-            FIREWALL_MINT_EUROC,
-            FIREWALL_BURN_RATIO_EUROC
-        );
-        _checkOracleValues(
-            address(BC3M),
-            (11949 * BASE_18) / 100,
-            USER_PROTECTION_BC3M,
-            FIREWALL_MINT_BC3M,
-            FIREWALL_BURN_RATIO_BC3M
-        );
-        _checkOracleValues(
-            address(BERNX),
-            (522 * BASE_18) / 100,
-            USER_PROTECTION_BERNX,
-            FIREWALL_MINT_BERNX,
-            FIREWALL_BURN_RATIO_BERNX
-        );
+        _checkOracleValues(address(EUROC), BASE_18, USER_PROTECTION_EUROC, FIREWALL_BURN_RATIO_EUROC);
+        _checkOracleValues(address(BC3M), (11949 * BASE_18) / 100, USER_PROTECTION_BC3M, FIREWALL_BURN_RATIO_BC3M);
+        _checkOracleValues(address(BERNX), (522 * BASE_18) / 100, USER_PROTECTION_BERNX, FIREWALL_BURN_RATIO_BERNX);
     }
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -318,9 +287,8 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     function _checkOracleValues(
         address collateral,
         uint256 targetValue,
-        uint80 userProtection,
-        uint80 firewallMint,
-        uint80 firewallBurn
+        uint128 userProtection,
+        uint128 firewallBurn
     ) internal {
         (uint256 mint, uint256 burn, uint256 ratio, uint256 minRatio, uint256 redemption) = transmuter.getOracleValues(
             collateral
@@ -337,9 +305,6 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
             targetValue * (BASE_18 - userProtection) < redemption * BASE_18 &&
             redemption * BASE_18 < targetValue * (BASE_18 + userProtection)
         ) {
-            assertEq(mint, targetValue);
-            assertEq(ratio, BASE_18);
-        } else if (redemption * BASE_18 > targetValue * (BASE_18 + firewallMint)) {
             assertEq(mint, targetValue);
             assertEq(ratio, BASE_18);
         } else if (redemption * BASE_18 < targetValue * (BASE_18 - firewallBurn)) {
