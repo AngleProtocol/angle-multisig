@@ -7,6 +7,7 @@ function usage {
   echo ""
   echo -e "script: path to the script to run"
   echo -e "chain: chain(s) to run the script on (separate with commas)"
+  echo -e "\t0: Fork"
   echo -e "\t1: Ethereum Mainnet"
   echo -e "\t2: Arbitrum"
   echo -e "\t3: Polygon"
@@ -54,6 +55,7 @@ function main {
         echo ""
 
         echo "Which chain(s) would you like to run the script on ? (separate with commas)"
+        echo "- 0: Fork"
         echo "- 1: Ethereum Mainnet"
         echo "- 2: Arbitrum"
         echo "- 3: Polygon"
@@ -93,7 +95,7 @@ function main {
         fi
 
         export CHAIN_ID=$(chain_to_chainId $chain)
-        forge script $script --fork-url $uri
+        forge script $script --fork-url $uri -vvv
 
         if [ $? -ne 0 ]; then
             echo ""
@@ -104,16 +106,15 @@ function main {
         testContract="${script}Test"
         echo ""
         echo "Running test"
-        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
+        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvvv
 
+        # echo ""
+        # echo "Would you like to execute the script ? (yes/no)"
+        # read execute
 
-        echo ""
-        echo "Would you like to execute the script ? (yes/no)"
-        read execute
-
-        if [[ $execute == "yes" ]]; then
-            yarn submit:foundry
-        fi
+        # if [[ $execute == "yes" ]]; then
+        #     yarn submit:foundry
+        # fi
     done
 }
 

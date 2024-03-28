@@ -16,6 +16,7 @@ import "./Interfaces.s.sol";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 uint256 constant CHAIN_SOURCE = CHAIN_ETHEREUM;
+uint256 constant CHAIN_FORK = 0;
 
 uint64 constant twoPoint5Rate = 782997666703977344;
 uint64 constant fourRate = 1243680713969297408;
