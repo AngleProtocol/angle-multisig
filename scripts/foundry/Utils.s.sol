@@ -49,7 +49,7 @@ contract Utils is Script, CommonUtils {
         polygonZkEVMFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON_ZKEVM"));
         baseFork = vm.createFork(vm.envString("ETH_NODE_URI_BASE"));
         lineaFork = vm.createFork(vm.envString("ETH_NODE_URI_LINEA"));
-        localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
+        // localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
 
         forkIdentifier[CHAIN_ARBITRUM] = arbitrumFork;
         forkIdentifier[CHAIN_AVALANCHE] = avalancheFork;
@@ -62,7 +62,7 @@ contract Utils is Script, CommonUtils {
         forkIdentifier[CHAIN_POLYGONZKEVM] = polygonZkEVMFork;
         forkIdentifier[CHAIN_BASE] = baseFork;
         forkIdentifier[CHAIN_LINEA] = lineaFork;
-        forkIdentifier[CHAIN_FORK] = localFork;
+        // forkIdentifier[CHAIN_FORK] = localFork;
     }
 
     function _serializeJson(

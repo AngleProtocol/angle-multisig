@@ -29,9 +29,11 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     function setUp() public override(Utils, BaseTest) {
         BaseTest.setUp();
 
+        uint256 chainId = json.readUint("$.chainId");
+
         // special case as we rely on the fork state
-        vm.selectFork(forkIdentifier[CHAIN_FORK]);
-        // vm.selectFork(forkIdentifier[chainId]);
+        // vm.selectFork(forkIdentifier[CHAIN_FORK]);
+        vm.selectFork(forkIdentifier[chainId]);
 
         vm.pauseGasMetering();
 
@@ -40,10 +42,8 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
         vm.mockCall(
             address(0x6E27A25999B3C665E44D903B2139F5a4Be2B6C26),
             abi.encodeWithSelector(AggregatorV3Interface.latestRoundData.selector),
-            abi.encode(uint80(0), int256(11951000000), uint256(block.timestamp), uint256(block.timestamp), uint80(0))
+            abi.encode(uint80(0), int256(11979000000), uint256(block.timestamp), uint256(block.timestamp), uint80(0))
         );
-
-        uint256 chainId = json.readUint("$.chainId");
 
         address gnosisSafe = _chainToContract(chainId, ContractType.GovernorMultisig);
 
@@ -98,7 +98,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
             assertEq(collatInfoEUROC.isBurnLive, 1);
             assertEq(collatInfoEUROC.decimals, 6);
             assertEq(collatInfoEUROC.onlyWhitelisted, 0);
-            assertApproxEqRel(collatInfoEUROC.normalizedStables, 10593543 * BASE_18, 100 * BPS);
+            assertApproxEqRel(collatInfoEUROC.normalizedStables, 9539025 * BASE_18, 100 * BPS);
             assertEq(collatInfoEUROC.whitelistData.length, 0);
             assertEq(collatInfoEUROC.managerData.subCollaterals.length, 0);
             assertEq(collatInfoEUROC.managerData.config.length, 0);
@@ -167,7 +167,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
                 assertEq(hyperparams, abi.encode(USER_PROTECTION_BC3M, FIREWALL_BURN_RATIO_BC3M));
 
                 uint256 maxValue = abi.decode(targetData, (uint256));
-                assertApproxEqRel(maxValue, (1196 * BASE_18) / 10, 10 * BPS);
+                assertApproxEqRel(maxValue, (1198 * BASE_18) / 10, 10 * BPS);
             }
 
             {
@@ -232,7 +232,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
 
                 uint256 maxValue = abi.decode(targetData, (uint256));
 
-                assertApproxEqRel(maxValue, (522 * BASE_18) / 100, 10 * BPS);
+                assertApproxEqRel(maxValue, (523 * BASE_18) / 100, 10 * BPS);
             }
 
             {
@@ -277,7 +277,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     function _testGetOracleValues() internal {
         _checkOracleValues(address(EUROC), BASE_18, USER_PROTECTION_EUROC, FIREWALL_BURN_RATIO_EUROC);
         _checkOracleValues(address(BC3M), (11949 * BASE_18) / 100, USER_PROTECTION_BC3M, FIREWALL_BURN_RATIO_BC3M);
-        _checkOracleValues(address(BERNX), (522 * BASE_18) / 100, USER_PROTECTION_BERNX, FIREWALL_BURN_RATIO_BERNX);
+        _checkOracleValues(address(BERNX), (523 * BASE_18) / 100, USER_PROTECTION_BERNX, FIREWALL_BURN_RATIO_BERNX);
     }
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
