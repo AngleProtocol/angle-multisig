@@ -13,9 +13,6 @@
 	path = lib/borrow-contracts
 	url = https://github.com/AngleProtocol/borrow-contracts
 	tags = v2.7
-[submodule "lib/angle-transmuter"]
-	path = lib/angle-transmuter
-	url = https://github.com/AngleProtocol/angle-transmuter
 [submodule "lib/openzeppelin-contracts"]
 	path = lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
@@ -26,3 +23,6 @@
 [submodule "lib/utils"]
 	path = lib/utils
 	url = https://github.com/AngleProtocol/utils
+[submodule "lib/angle-transmuter"]
+	path = lib/angle-transmuter
+	url = https://github.com/AngleProtocol/angle-transmuter

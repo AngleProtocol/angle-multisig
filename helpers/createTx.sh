@@ -7,6 +7,7 @@ function usage {
   echo ""
   echo -e "script: path to the script to run"
   echo -e "chain: chain(s) to run the script on (separate with commas)"
+  echo -e "\t0: Fork"
   echo -e "\t1: Ethereum Mainnet"
   echo -e "\t2: Arbitrum"
   echo -e "\t3: Polygon"
@@ -54,6 +55,7 @@ function main {
         echo ""
 
         echo "Which chain(s) would you like to run the script on ? (separate with commas)"
+        echo "- 0: Fork"
         echo "- 1: Ethereum Mainnet"
         echo "- 2: Arbitrum"
         echo "- 3: Polygon"

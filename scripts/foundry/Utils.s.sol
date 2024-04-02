@@ -29,6 +29,7 @@ contract Utils is Script, CommonUtils {
     uint256 public polygonZkEVMFork;
     uint256 public baseFork;
     uint256 public lineaFork;
+    uint256 public localFork;
 
     bytes[] private calldatas;
     string private description;
@@ -48,6 +49,7 @@ contract Utils is Script, CommonUtils {
         polygonZkEVMFork = vm.createFork(vm.envString("ETH_NODE_URI_POLYGON_ZKEVM"));
         baseFork = vm.createFork(vm.envString("ETH_NODE_URI_BASE"));
         lineaFork = vm.createFork(vm.envString("ETH_NODE_URI_LINEA"));
+        // localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
 
         forkIdentifier[CHAIN_ARBITRUM] = arbitrumFork;
         forkIdentifier[CHAIN_AVALANCHE] = avalancheFork;
@@ -60,6 +62,7 @@ contract Utils is Script, CommonUtils {
         forkIdentifier[CHAIN_POLYGONZKEVM] = polygonZkEVMFork;
         forkIdentifier[CHAIN_BASE] = baseFork;
         forkIdentifier[CHAIN_LINEA] = lineaFork;
+        // forkIdentifier[CHAIN_FORK] = localFork;
     }
 
     function _serializeJson(
@@ -97,8 +100,8 @@ contract Utils is Script, CommonUtils {
         else revert("chain not supported");
     }
 
-        function implEURA(uint256 chain) public view returns (address) {
-        if(chain == CHAIN_ARBITRUM) return address(0x1a23b27aC7775B6220dC4F816b5c6A629E371f19);
+    function implEURA(uint256 chain) public view returns (address) {
+        if (chain == CHAIN_ARBITRUM) return address(0x1a23b27aC7775B6220dC4F816b5c6A629E371f19);
         else if (chain == CHAIN_AVALANCHE) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
         else if (chain == CHAIN_BASE) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
         else if (chain == CHAIN_BNB) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
@@ -113,7 +116,7 @@ contract Utils is Script, CommonUtils {
     }
 
     function implUSDA(uint256 chain) public view returns (address) {
-        if(chain == CHAIN_ARBITRUM) return address(0x1a23b27aC7775B6220dC4F816b5c6A629E371f19);
+        if (chain == CHAIN_ARBITRUM) return address(0x1a23b27aC7775B6220dC4F816b5c6A629E371f19);
         else if (chain == CHAIN_AVALANCHE) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
         else if (chain == CHAIN_BASE) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
         else if (chain == CHAIN_BNB) return address(0xE9169817EdBFe5FCF629eD8b3C2a34E2a50ec84C);
@@ -128,7 +131,7 @@ contract Utils is Script, CommonUtils {
     }
 
     function implStakedStablecoin(uint256 chain) public view returns (address) {
-        if(chain == CHAIN_ARBITRUM) return address(0xDAcf64fe735F5333474C9aE8000120002327a55A);
+        if (chain == CHAIN_ARBITRUM) return address(0xDAcf64fe735F5333474C9aE8000120002327a55A);
         else if (chain == CHAIN_AVALANCHE) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
         else if (chain == CHAIN_BASE) return address(0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee);
         else if (chain == CHAIN_BNB) return address(0xb5eCAa1a867FeCCD6d87604bc16a2b6B53D706BF);
