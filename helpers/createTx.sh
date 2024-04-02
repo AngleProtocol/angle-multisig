@@ -95,7 +95,7 @@ function main {
         fi
 
         export CHAIN_ID=$(chain_to_chainId $chain)
-        forge script $script --fork-url $uri -vvv
+        forge script $script --fork-url $uri
 
         if [ $? -ne 0 ]; then
             echo ""
@@ -106,7 +106,8 @@ function main {
         testContract="${script}Test"
         echo ""
         echo "Running test"
-        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvvv
+        FOUNDRY_PROFILE=dev forge test --match-contract $testContract -vvv
+
 
         echo ""
         echo "Would you like to execute the script ? (yes/no)"

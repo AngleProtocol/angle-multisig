@@ -16,6 +16,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     using stdJson for string;
 
     ITransmuter transmuter;
+    uint256 chainId;
 
     // TODO COMPLETE
     bytes public oracleConfigDataEUROC =
@@ -29,7 +30,7 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
     function setUp() public override(Utils, BaseTest) {
         BaseTest.setUp();
 
-        uint256 chainId = json.readUint("$.chainId");
+        chainId = json.readUint("$.chainId");
 
         // special case as we rely on the fork state
         // vm.selectFork(forkIdentifier[CHAIN_FORK]);
@@ -64,7 +65,6 @@ contract TransmuterUpdateFacetsTest is BaseTest, TransmuterUtils {
 
     function test_script() external {
         // Now test that everything is as expected
-        uint256 chainId = CHAIN_SOURCE;
         transmuter = ITransmuter(payable(_chainToContract(chainId, ContractType.TransmuterAgEUR)));
 
         _testAccessControlManager();
