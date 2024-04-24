@@ -10,7 +10,7 @@
     "test": "forge test -vvvv"
   },
   "devDependencies": {
-    "@angleprotocol/sdk": "^0.25.0",
+    "@angleprotocol/sdk": "^2.0.0",
     "@chainlink/contracts": "0.2.1",
     "@metamask/detect-provider": "1.2.0",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
