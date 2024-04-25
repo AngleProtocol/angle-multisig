@@ -24,6 +24,12 @@ interface IVeAngle {
     function commit_transfer_ownership(address newAdmin) external;
 
     function apply_transfer_ownership() external;
+
+    function set_emergency_withdrawal() external;
+
+    function admin() external view returns (address);
+
+    function emergency_withdrawal() external view returns (bool);
 }
 
 interface IGaugeController {
