@@ -19,7 +19,7 @@ contract SavingsSetRateTest is BaseTest {
         address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
         vm.selectFork(forkIdentifier[chainId]);
 
-        ISavings stEUR = ISavings(_chainToContract(chainId, ContractType.StEUR));
+        ISavings savings = ISavings(_chainToContract(chainId, ContractType.StUSD));
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
@@ -33,6 +33,6 @@ contract SavingsSetRateTest is BaseTest {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(stEUR.rate()), fourPoint3Rate);
+        assertEq(uint256(savings.rate()), thirtyFiveRate);
     }
 }

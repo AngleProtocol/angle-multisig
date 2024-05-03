@@ -17,13 +17,13 @@ contract SavingsSetRate is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        uint208 rate = uint208(uint256(fourPoint3Rate));
+        uint208 rate = uint208(uint256(thirtyFiveRate));
         /** END  complete */
-        address stEUR = _chainToContract(chainId, ContractType.StEUR);
+        address savings = _chainToContract(chainId, ContractType.StUSD);
 
         bytes memory data = abi.encodeWithSelector(ISavings.setRate.selector, rate);
         uint256 dataLength = data.length;
-        address to = stEUR;
+        address to = savings;
         bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
         transactions = abi.encodePacked(transactions, internalTx);
 
