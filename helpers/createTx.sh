@@ -109,13 +109,13 @@ function main {
         forge test --match-contract $testContract -vvv
 
 
-        # echo ""
-        # echo "Would you like to execute the script ? (yes/no)"
-        # read execute
+        echo ""
+        echo "Would you like to execute the script ? (yes/no)"
+        read execute
 
-        # if [[ $execute == "yes" ]]; then
+        if [[ $execute == "yes" ]]; then
             yarn submit:foundry
-        # fi
+        fi
     done
 }
 
