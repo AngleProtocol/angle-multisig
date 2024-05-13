@@ -27,6 +27,16 @@ uint64 constant fifteenRate = 4431822020478648320;
 uint64 constant twentyFiveRate = 7075835695147247616;
 uint64 constant twentyRate = 5781378709102113792;
 
+string constant JSON_ADDRESSES_PATH = "lib/angle-tokens/scripts/addresses.json";
+
+struct Transaction {
+    bytes data;
+    address to;
+    uint256 value;
+    uint256 chainId;
+    uint256 operation;
+}
+
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/

@@ -26,3 +26,6 @@
 [submodule "lib/angle-transmuter"]
 	path = lib/angle-transmuter
 	url = https://github.com/AngleProtocol/angle-transmuter
+[submodule "lib/angle-tokens"]
+	path = lib/angle-tokens
+	url = https://github.com/AngleProtocol/angle-tokens

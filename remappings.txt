@@ -8,3 +8,4 @@ merkl/=lib/merkl-contracts/contracts
 test/=test/
 utils/=lib/utils/
 stringutils/=lib/solidity-stringutils
+angle-tokens/=lib/angle-tokens/contracts

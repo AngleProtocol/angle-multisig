@@ -7,7 +7,9 @@
     "fork": "bash helpers/fork.sh",
     "create-tx": "bash helpers/createTx.sh",
     "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
-    "test": "forge test -vvvv"
+    "submit-multiple:foundry": "hardhat run ./scripts/submitMultipleFoundryTx.ts",
+    "test": "forge test -vvvv",
+    "prettier": "prettier --write ."
   },
   "devDependencies": {
     "@angleprotocol/sdk": "^2.9.2",

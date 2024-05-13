@@ -3,16 +3,17 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
-import { ITreasury } from "borrow/interfaces/ITreasury.sol";
-import { IAgToken } from "borrow/interfaces/IAgToken.sol";
-import { MultiSend } from "safe/libraries/MultiSend.sol";
-import { Safe, Enum } from "safe/Safe.sol";
-import { ITransmuter } from "transmuter/interfaces/ITransmuter.sol";
+import {ITreasury} from "borrow/interfaces/ITreasury.sol";
+import {IAgToken} from "borrow/interfaces/IAgToken.sol";
+import {MultiSend} from "safe/libraries/MultiSend.sol";
+import {Safe, Enum} from "safe/Safe.sol";
+import {ITransmuter} from "transmuter/interfaces/ITransmuter.sol";
 import "./Constants.s.sol";
-import { IAngle } from "./Constants.s.sol";
-import { CoreBorrow } from "borrow/coreBorrow/CoreBorrow.sol";
-import { ProxyAdmin } from "oz/proxy/transparent/ProxyAdmin.sol";
-import { CommonUtils } from "utils/src/CommonUtils.sol";
+import {IAngle} from "./Constants.s.sol";
+import {CoreBorrow} from "borrow/coreBorrow/CoreBorrow.sol";
+import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
+import {CommonUtils} from "utils/src/CommonUtils.sol";
+import { MockSafe } from "../../test/mock/MockSafe.sol";
 
 /// @title Utils
 /// @author Angle Labs, Inc.
@@ -48,6 +49,145 @@ contract Utils is Script, CommonUtils {
         string memory finalJson = vm.serializeBytes(json, "data", data);
 
         vm.writeJson(finalJson, "./scripts/foundry/transaction.json");
+    }
+
+    function _wrap(Transaction[] memory transactions) internal returns (Transaction[] memory) {
+        // get all unique chainIds
+        uint256[] memory targetedChainIds = new uint256[](transactions.length);
+        uint256 targetedChainIdsLength = 0;
+        for (uint256 i = 0; i < transactions.length; ++i) {
+            bool found = false;
+            for (uint256 j = 0; j < targetedChainIds.length; ++j) {
+                if (targetedChainIds[j] == transactions[i].chainId) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                targetedChainIds[targetedChainIdsLength] = transactions[i].chainId;
+                targetedChainIdsLength++;
+            }
+        }
+        assembly ("memory-safe") {
+            mstore(targetedChainIds, targetedChainIdsLength)
+        }
+
+        Transaction[] memory multiSendTransactions = new Transaction[](targetedChainIdsLength);
+        for (uint256 i = 0; i < targetedChainIds.length; ++i) {
+            bytes memory chainTransactions;
+            uint256 totalValue;
+            for (uint256 y = 0; y < transactions.length; ++y) {
+                Transaction memory transaction = transactions[y];
+                if (transaction.chainId == targetedChainIds[i]) {
+                    totalValue += transaction.value;
+                    bytes memory internalTx = abi.encodePacked(
+                        uint8(0), transaction.to, transaction.value, transaction.data.length, transaction.data
+                    );
+                    chainTransactions = abi.encodePacked(chainTransactions, internalTx);
+                }
+            }
+            bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, chainTransactions);
+            multiSendTransactions[i] = Transaction(payloadMultiSend, multiSend, totalValue, targetedChainIds[i], uint256(Enum.Operation.DelegateCall));
+        }
+        return multiSendTransactions;
+    }
+
+    function _serializeJson(
+        Transaction[] memory transactions
+    ) internal {
+        string memory json = "chain";
+        string memory output;
+        {
+            string memory jsonTargets = "to";
+            string memory targetsOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                targetsOutput = vm.serializeAddress(jsonTargets, vm.toString(i), transactions[i].to);
+            }
+            vm.serializeString(json, "to", targetsOutput);
+        }
+        {
+            string memory jsonValues = "value";
+            string memory valuesOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                valuesOutput = vm.serializeUint(jsonValues, vm.toString(i), transactions[i].value);
+            }
+            vm.serializeString(json, "value", valuesOutput);
+        }
+        {
+            string memory jsonDatas = "data";
+            string memory datasOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                datasOutput = vm.serializeBytes(jsonDatas, vm.toString(i), transactions[i].data);
+            }
+            vm.serializeString(json, "data", datasOutput);
+        }
+        {
+            string memory jsonChainIds = "chainId";
+            string memory chainIdsOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                chainIdsOutput = vm.serializeUint(jsonChainIds, vm.toString(i), transactions[i].chainId);
+            }
+            vm.serializeString(json, "chainId", chainIdsOutput);
+        }
+        {
+            string memory jsonOperations = "operation";
+            string memory operationsOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                operationsOutput = vm.serializeUint(jsonOperations, vm.toString(i), transactions[i].operation);
+            }
+            output = vm.serializeString(json, "operation", operationsOutput);
+        }
+
+        vm.writeJson(output, "./scripts/foundry/transactions.json");
+    }
+
+    function _deserializeJson() internal returns(Transaction[] memory) {
+        string memory json = vm.readFile("./scripts/foundry/transactions.json");
+        {
+            string memory calldataKey = ".data";
+            string[] memory keys = vm.parseJsonKeys(json, calldataKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(calldataKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                calldatas.push(abi.decode(encodedStruct, (bytes)));
+            }
+        }
+        {
+            string memory targetsKey = ".to";
+            string[] memory keys = vm.parseJsonKeys(json, targetsKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(targetsKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                targets.push(abi.decode(encodedStruct, (address)));
+            }
+        }
+        {
+            string memory valuesKey = ".value";
+            string[] memory keys = vm.parseJsonKeys(json, valuesKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(valuesKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                values.push(abi.decode(encodedStruct, (uint256)));
+            }
+        }
+        {
+            string memory chainIdsKey = ".chainId";
+            string[] memory keys = vm.parseJsonKeys(json, chainIdsKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(chainIdsKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                chainIds.push(abi.decode(encodedStruct, (uint256)));
+            }
+        }
+        Transaction[] memory transactions = new Transaction[](calldatas.length);
+        for (uint256 i = 0; i < calldatas.length; i++) {
+            transactions[i] = Transaction(calldatas[i], targets[i], values[i], chainIds[i], uint256(Enum.Operation.DelegateCall));
+        }
+        return transactions;
     }
 
     function _chainToMultiSend(uint256 chain) internal pure returns (MultiSend) {
