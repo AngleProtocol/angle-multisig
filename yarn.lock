@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@angleprotocol/sdk@^0.25.0":
-  version "0.25.0"
-  resolved "https://npm.pkg.github.com/download/@angleprotocol/sdk/0.25.0/5ae64a565f6bfc3459ce1442360539fc9438decc#5ae64a565f6bfc3459ce1442360539fc9438decc"
-  integrity sha512-AX3MAfmLOrPnP/rfhWF6djEWlcFOIL/mEEKIJY6h8kKUMJjVm2NQyGmrryJD0aCyi5/0MaB9dQNOAqj5yhkx+w==
+"@angleprotocol/sdk@^2.0.0":
+  version "2.0.0"
+  resolved "https://npm.pkg.github.com/download/@angleprotocol/sdk/2.0.0/ad9abe640e359f4411575f0e8ca4e20f52b1d51c#ad9abe640e359f4411575f0e8ca4e20f52b1d51c"
+  integrity sha512-RTDYV2EyoWFBgTPdFd6mMdrFT7PuC9gyMKkOXgnutCBdrW+S4h2kLsTQzxcjli8eIw9LqYO9HVNFPQNfJbmd4Q==
   dependencies:
     "@apollo/client" "^3.7.17"
     "@typechain/ethers-v5" "^10.0.0"
@@ -18,7 +18,7 @@
     lodash "^4.17.21"
     merkletreejs "^0.3.10"
     tiny-invariant "^1.1.0"
-    typechain "^8.0.0"
+    typechain "^8.3.2"
 
 "@apollo/client@^3.7.17":
   version "3.8.9"
@@ -9952,10 +9952,10 @@ type@^2.5.0:
   resolved "https://registry.yarnpkg.com/type/-/type-2.6.0.tgz#3ca6099af5981d36ca86b78442973694278a219f"
   integrity sha512-eiDBDOmkih5pMbo9OqsqPRGMljLodLcwd5XD5JbtNB0o89xZAwynY9EdCDsJU7LtcVCClu9DvM7/0Ep1hYX3EQ==
 
-typechain@^8.0.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/typechain/-/typechain-8.2.0.tgz#bd4fc8f111d4405e36858bae6f744604617b60f3"
-  integrity sha512-tZqhqjxJ9xAS/Lh32jccTjMkpx7sTdUVVHAy5Bf0TIer5QFNYXotiX74oCvoVYjyxUKDK3MXHtMFzMyD3kE+jg==
+typechain@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/typechain/-/typechain-8.3.2.tgz#1090dd8d9c57b6ef2aed3640a516bdbf01b00d73"
+  integrity sha512-x/sQYr5w9K7yv3es7jo4KTX05CLxOf7TRWwoHlrjRh8H82G64g+k7VuWPJlgMo6qrjfCulOdfBjiaDtmhFYD/Q==
   dependencies:
     "@types/prettier" "^2.1.1"
     debug "^4.3.1"

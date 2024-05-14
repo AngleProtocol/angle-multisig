@@ -6,8 +6,9 @@ import { console } from "forge-std/console.sol";
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
 import "../../scripts/foundry/Constants.s.sol";
+import { IAngleRouter } from "../../scripts/foundry/router/RouterSetAggregator.s.sol";
 
-contract SavingsSetRateTest is BaseTest {
+contract RouterSetAggregatorTest is BaseTest {
     using stdJson for string;
 
     function setUp() public override {
@@ -19,13 +20,13 @@ contract SavingsSetRateTest is BaseTest {
         address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
         vm.selectFork(forkIdentifier[chainId]);
 
-        ISavings savings = ISavings(_chainToContract(chainId, ContractType.StUSD));
-        savings = ISavings(0x0022228a2cc5E7eF0274A7Baa600d44da5aB5776);
+        IAngleRouter angleRouter = IAngleRouter(_chainToContract(chainId, ContractType.AngleRouter));
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
+        bytes memory additionalData = json.readBytes("$.additionalData");
 
         // Verify that the call will succeed
         MockSafe mockSafe = new MockSafe();
@@ -34,6 +35,7 @@ contract SavingsSetRateTest is BaseTest {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(savings.rate()), thirtyTwoRate);
+        address supposedAddress = abi.decode(additionalData, (address));
+        assertEq(angleRouter.oneInch(), supposedAddress);
     }
 }

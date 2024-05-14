@@ -144,4 +144,16 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_POLYGONZKEVM) return address(0x1899D4cC1BFf96038f9E8f5ecc898c70E2ff72ee);
         else revert("chain not supported");
     }
+
+    function _chainTo1InchAggregator(uint256 chain) internal pure returns (address) {
+        if (
+            chain == CHAIN_ETHEREUM ||
+            chain == CHAIN_POLYGON ||
+            chain == CHAIN_ARBITRUM ||
+            chain == CHAIN_OPTIMISM ||
+            chain == CHAIN_AVALANCHE ||
+            chain == CHAIN_GNOSIS
+        ) return 0x111111125421cA6dc452d289314280a0f8842A65;
+        else revert("chain not supported");
+    }
 }
