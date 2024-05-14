@@ -53,7 +53,9 @@
     "web3": "^1.6.0",
     "yargs": "^17.2.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@layerzerolabs/lz-sdk": "^0.0.70"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"

@@ -1270,6 +1270,11 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
+"@layerzerolabs/lz-sdk@^0.0.70":
+  version "0.0.70"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-sdk/-/lz-sdk-0.0.70.tgz#4b3a4fbce10c5f781051638575b4328c678b12c0"
+  integrity sha512-hMRB7gkEXI18Mtc57pnkFY92tqR/XRbPoeF6KK1l0kLhO5K1HGSvakhQFIRv0ji/yqlWQuYjrUGJvjLAozJ07A==
+
 "@metamask/detect-provider@1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@metamask/detect-provider/-/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
