@@ -87,6 +87,7 @@ contract Utils is Script, CommonUtils {
                 }
             }
             bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, chainTransactions);
+            address multiSend = address(_chainToMultiSend(targetedChainIds[i]));
             multiSendTransactions[i] = Transaction(payloadMultiSend, multiSend, totalValue, targetedChainIds[i], uint256(Enum.Operation.DelegateCall));
         }
         return multiSendTransactions;
