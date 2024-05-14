@@ -34,6 +34,6 @@ contract SavingsSetRateTest is BaseTest {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
-        assertEq(uint256(savings.rate()), twentyFiveRate);
+        assertEq(uint256(savings.rate()), thirtyTwoRate);
     }
 }
