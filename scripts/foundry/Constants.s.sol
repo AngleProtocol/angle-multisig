@@ -37,6 +37,15 @@ struct Transaction {
     uint256 operation;
 }
 
+struct SafeTransaction {
+    bytes data;
+    address to;
+    uint256 value;
+    uint256 chainId;
+    uint256 operation;
+    address safe;
+}
+
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/

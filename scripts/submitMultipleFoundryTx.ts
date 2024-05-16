@@ -9,15 +9,14 @@ async function main() {
     const to = transactionsJson['to'][i.toString()];
     const value = transactionsJson['value'][i.toString()];
     const operation = transactionsJson['operation'][i.toString()];
+    const safeAddress = transactionsJson['safe'][i.toString()];
     const transaction = {
       chainId,
       data,
       to,
       value,
-      operation
+      operation,
     }
-    // TODO need to change the destination safe
-    const safeAddress = registry(chainId).Guardian;
     await submit(transaction, 0, chainId, safeAddress);
   }
 }

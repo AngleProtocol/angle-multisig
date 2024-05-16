@@ -25,6 +25,8 @@ contract Utils is Script, CommonUtils {
     address[] private targets;
     uint256[] private values;
     uint256[] private chainIds;
+    uint256[] private operations;
+    address[] private safes;
 
     function setUp() public virtual {
         setUpForks();
@@ -40,18 +42,33 @@ contract Utils is Script, CommonUtils {
         Enum.Operation operation,
         bytes memory additionalData
     ) internal {
+        _serializeJson(chainId, to, value, data, operation, additionalData, address(0));
+    }
+
+    function _serializeJson(
+        uint256 chainId,
+        address to,
+        uint256 value,
+        bytes memory data,
+        Enum.Operation operation,
+        bytes memory additionalData,
+        address safe
+    ) internal {
         string memory json = "";
         vm.serializeUint(json, "chainId", chainId);
         vm.serializeAddress(json, "to", to);
         vm.serializeUint(json, "value", value);
         vm.serializeUint(json, "operation", uint256(operation));
         vm.serializeBytes(json, "additionalData", additionalData);
+        if (safe != address(0)) {
+            vm.serializeAddress(json, "safe", safe);
+        }
         string memory finalJson = vm.serializeBytes(json, "data", data);
 
         vm.writeJson(finalJson, "./scripts/foundry/transaction.json");
     }
 
-    function _wrap(Transaction[] memory transactions) internal returns (Transaction[] memory) {
+    function _wrap(Transaction[] memory transactions, ContractType safeType) internal returns (SafeTransaction[] memory) {
         // get all unique chainIds
         uint256[] memory targetedChainIds = new uint256[](transactions.length);
         uint256 targetedChainIdsLength = 0;
@@ -72,7 +89,7 @@ contract Utils is Script, CommonUtils {
             mstore(targetedChainIds, targetedChainIdsLength)
         }
 
-        Transaction[] memory multiSendTransactions = new Transaction[](targetedChainIdsLength);
+        SafeTransaction[] memory multiSendTransactions = new SafeTransaction[](targetedChainIdsLength);
         for (uint256 i = 0; i < targetedChainIds.length; ++i) {
             bytes memory chainTransactions;
             uint256 totalValue;
@@ -81,20 +98,21 @@ contract Utils is Script, CommonUtils {
                 if (transaction.chainId == targetedChainIds[i]) {
                     totalValue += transaction.value;
                     bytes memory internalTx = abi.encodePacked(
-                        uint8(0), transaction.to, transaction.value, transaction.data.length, transaction.data
+                        transaction.operation, transaction.to, transaction.value, transaction.data.length, transaction.data
                     );
                     chainTransactions = abi.encodePacked(chainTransactions, internalTx);
                 }
             }
             bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, chainTransactions);
             address multiSend = address(_chainToMultiSend(targetedChainIds[i]));
-            multiSendTransactions[i] = Transaction(payloadMultiSend, multiSend, totalValue, targetedChainIds[i], uint256(Enum.Operation.DelegateCall));
+            address safe = _chainToContract(targetedChainIds[i], safeType);
+            multiSendTransactions[i] = SafeTransaction(payloadMultiSend, multiSend, totalValue, targetedChainIds[i], uint256(Enum.Operation.DelegateCall), safe);
         }
         return multiSendTransactions;
     }
 
     function _serializeJson(
-        Transaction[] memory transactions
+        SafeTransaction[] memory transactions
     ) internal {
         string memory json = "chain";
         string memory output;
@@ -138,11 +156,19 @@ contract Utils is Script, CommonUtils {
             }
             output = vm.serializeString(json, "operation", operationsOutput);
         }
+        {
+            string memory jsonSafes = "safe";
+            string memory safesOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                safesOutput = vm.serializeAddress(jsonSafes, vm.toString(i), transactions[i].safe);
+            }
+            output = vm.serializeString(json, "safe", safesOutput);
+        }
 
         vm.writeJson(output, "./scripts/foundry/transactions.json");
     }
 
-    function _deserializeJson() internal returns(Transaction[] memory) {
+    function _deserializeJson() internal returns(SafeTransaction[] memory) {
         string memory json = vm.readFile("./scripts/foundry/transactions.json");
         {
             string memory calldataKey = ".data";
@@ -184,9 +210,29 @@ contract Utils is Script, CommonUtils {
                 chainIds.push(abi.decode(encodedStruct, (uint256)));
             }
         }
-        Transaction[] memory transactions = new Transaction[](calldatas.length);
+        {
+            string memory operationsKey = ".operation";
+            string[] memory keys = vm.parseJsonKeys(json, operationsKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(operationsKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                operations.push(abi.decode(encodedStruct, (uint256)));
+            }
+        }
+        {
+            string memory safesKey = ".safe";
+            string[] memory keys = vm.parseJsonKeys(json, safesKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(safesKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                safes.push(abi.decode(encodedStruct, (address)));
+            }
+        }
+        SafeTransaction[] memory transactions = new SafeTransaction[](calldatas.length);
         for (uint256 i = 0; i < calldatas.length; i++) {
-            transactions[i] = Transaction(calldatas[i], targets[i], values[i], chainIds[i], uint256(Enum.Operation.DelegateCall));
+            transactions[i] = SafeTransaction(calldatas[i], targets[i], values[i], chainIds[i], operations[i], safes[i]);
         }
         return transactions;
     }

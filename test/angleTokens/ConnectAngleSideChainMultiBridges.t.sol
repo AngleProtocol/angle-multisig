@@ -10,16 +10,15 @@ import "../../scripts/foundry/Constants.s.sol";
 
 contract ConnectAngleSideChainMultiBridgesTest is BaseTest {
     function testScript() external {
-        (Transaction[] memory transactions) = _deserializeJson();
+        (SafeTransaction[] memory transactions) = _deserializeJson();
 
         for (uint256 i = 0; i < transactions.length; i++) {
-            Transaction memory transaction = transactions[i];
+            SafeTransaction memory transaction = transactions[i];
             address to = transaction.to;
             uint256 operation = transaction.operation;
             bytes memory payload = transaction.data;
             uint256 chainId = transaction.chainId;
-
-            address gnosisSafe = _chainToContract(chainId, ContractType.GuardianMultisig);
+            address gnosisSafe = transaction.safe;
 
             vm.selectFork(forkIdentifier[chainId]);
 

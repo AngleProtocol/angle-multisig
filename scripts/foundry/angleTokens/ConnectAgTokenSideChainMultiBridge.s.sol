@@ -93,7 +93,7 @@ contract ConnectAgTokenSideChainMultiBridge is Utils {
             }
         }
 
-        Transaction[] memory multiSendTransactions = _wrap(transactions);
+        SafeTransaction[] memory multiSendTransactions = _wrap(transactions, ContractType.GuardianMultisig);
         _serializeJson(multiSendTransactions);
     }
 }
