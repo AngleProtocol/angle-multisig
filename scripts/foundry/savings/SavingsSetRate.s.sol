@@ -20,7 +20,6 @@ contract SavingsSetRate is Utils {
         uint208 rate = uint208(uint256(fifteenRate));
         /** END  complete */
         address savings = _chainToContract(chainId, ContractType.StUSD);
-        savings = 0x0022228a2cc5E7eF0274A7Baa600d44da5aB5776;
 
         bytes memory data = abi.encodeWithSelector(ISavings.setRate.selector, rate);
         uint256 dataLength = data.length;
