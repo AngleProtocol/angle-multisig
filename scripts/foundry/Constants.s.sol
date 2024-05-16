@@ -21,9 +21,10 @@ uint256 constant CHAIN_FORK = 0;
 uint64 constant twoPoint5Rate = 782997666703977344;
 uint64 constant fourRate = 1243680713969297408;
 uint64 constant fourPoint3Rate = 1335019428339023872;
-uint64 constant thirtyFiveRate = 9516254229069432832;
-uint64 constant twentyFiveRate = 7075835695147247616;
 uint64 constant thirtyTwoRate = 8803644702126689280;
+uint64 constant thirtyFiveRate = 9516254229069432832;
+uint64 constant fifteenRate = 4431822020478648320;
+uint64 constant twentyFiveRate = 7075835695147247616;
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
