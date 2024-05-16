@@ -3,6 +3,8 @@ pragma solidity ^0.8.19;
 
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
+import { NonblockingLzApp } from "angle-tokens/agToken/layerZero/utils/NonblockingLzApp.sol";
+import { IERC20 } from "oz/token/ERC20/IERC20.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
 contract ConnectAgTokenSideChainMultiBridgesTest is BaseTest {
