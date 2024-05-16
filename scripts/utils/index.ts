@@ -32,6 +32,24 @@ export async function generic(toAddress: string, contractInterface, functionName
   return baseTxn;
 }
 
+export const gnosisGetPendingTransactions = async (safe: string, chainId: number): Promise<any> => {
+  const safeAPI = getSafeAPI(chainId);
+  try {
+    const resp = await axios.get(`${safeAPI}/safes/${
+      safe
+    }/all-transactions/?queued=True`);
+    console.log('');
+    console.log(resp.data);
+    return resp.data;
+  } catch (e) {
+    console.log('');
+    console.log('There has been an error getting the pending transactions');
+    console.log('');
+    console.log(JSON.stringify(e.response.data));
+    throw e;
+  }
+}
+
 export const gnosisEstimateTransaction = async (safe: string, chainId: number, tx: any): Promise<any> => {
   const safeAPI = getSafeAPI(chainId);
   try {
@@ -47,11 +65,20 @@ export const gnosisEstimateTransaction = async (safe: string, chainId: number, t
   }
 };
 
-export const gnosisEstimateNonce = async (safe: string, chainId: number): Promise<any> => {
+export const gnosisEstimateNonce = async (safe: string, chainId: number, pending = false): Promise<any> => {
   const safeAPI = getSafeAPI(chainId);
   try {
     const resp = await axios.post(`${safeAPI}/safes/${safe}`);
-    return resp.data;
+    let { nonce } = resp.data;
+    if (pending) {
+      const awaitTransactions = await gnosisGetPendingTransactions(safe, chainId);
+      for (let i = 0; i < awaitTransactions.results.length; i++) {
+        if (nonce < awaitTransactions.results[i].nonce) {
+          nonce = awaitTransactions.results[i].nonce;
+        }
+      }
+    }
+    return nonce;
   } catch (e) {
     console.log('');
     console.log('There has been an error estimating the nonce');
