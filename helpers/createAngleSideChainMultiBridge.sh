@@ -139,15 +139,22 @@ function main {
 
     if [[ "$mock" == "true" ]]; then
         echo ""
-        echo "Enter the real governor:"
-        read governor
+        echo "Change governor ? (yes/no)"
+        read changeGovernor
 
-        if [ -z "$governor" ]; then
-            echo "Missing governor"
-            exit 1
+        if [[ $changeGovernor == "yes" ]]; then
+            echo ""
+            echo "Enter the real governor:"
+            read governor
+
+            if [ -z "$governor" ]; then
+                echo "Missing governor"
+                exit 1
+            fi
+
+            export FINALIZE=true
+            export REAL_GOVERNOR=$governor
         fi
-
-        export REAL_GOVERNOR=$governor
     fi
 
     echo ""

@@ -94,6 +94,26 @@ function main {
     export CHAIN_TOTAL_HOURLY_LIMIT=$chainTotalHourlyLimit
     export STABLE_NAME=$stableName
 
+    if [[ "$mock" == "true" ]]; then
+        echo ""
+        echo "Change governor ? (yes/no)"
+        read changeGovernor
+
+        if [[ $changeGovernor == "yes" ]]; then
+            echo ""
+            echo "Enter the real governor:"
+            read governor
+
+            if [ -z "$governor" ]; then
+                echo "Missing governor"
+                exit 1
+            fi
+
+            export FINALIZE=true
+            export REAL_GOVERNOR=$governor
+        fi
+    fi
+
     echo ""
     echo "Running deployment on chain $chain for stable token $stableName"
 
