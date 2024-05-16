@@ -122,14 +122,16 @@ function main {
             exit 1
         fi
 
-        forge test --match-contract ConnectAgTokenTokenSideChainMultiBridgesTest
+        echo "Transaction created successfully"
+
+        forge test --match-contract ConnectAgTokenSideChainMultiBridge
         if [ $? -ne 0 ]; then
             echo ""
-            echo "Transaction test failed"
+            echo "Transaction tests failed"
             exit 1
         fi
 
-        echo "Transaction created successfully"
+        echo "Transaction tests successful"
 
         echo ""
         echo "Would you like to create the transaction ? (yes/no)"
