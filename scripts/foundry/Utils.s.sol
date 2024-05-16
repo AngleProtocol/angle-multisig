@@ -68,7 +68,7 @@ contract Utils is Script, CommonUtils {
         vm.writeJson(finalJson, "./scripts/foundry/transaction.json");
     }
 
-    function _wrap(Transaction[] memory transactions, ContractType safeType) internal returns (SafeTransaction[] memory) {
+    function _wrap(Transaction[] memory transactions, ContractType safeType, uint256 chainId, address chainSafe) internal returns (SafeTransaction[] memory) {
         // get all unique chainIds
         uint256[] memory targetedChainIds = new uint256[](transactions.length);
         uint256 targetedChainIdsLength = 0;
@@ -105,11 +105,21 @@ contract Utils is Script, CommonUtils {
             }
             bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, chainTransactions);
             address multiSend = address(_chainToMultiSend(targetedChainIds[i]));
-            address safe = _chainToContract(targetedChainIds[i], safeType);
+            address safe;
+            if (chainId != 0 && targetedChainIds[i] == chainId) {
+                safe = chainSafe;
+            } else {
+                safe = _chainToContract(targetedChainIds[i], safeType);
+            }
             multiSendTransactions[i] = SafeTransaction(payloadMultiSend, multiSend, totalValue, targetedChainIds[i], uint256(Enum.Operation.DelegateCall), safe);
         }
         return multiSendTransactions;
     }
+
+    function _wrap(Transaction[] memory transactions, ContractType safeType) internal returns (SafeTransaction[] memory) {
+        return _wrap(transactions, safeType, 0, address(0));
+    }
+
 
     function _serializeJson(
         SafeTransaction[] memory transactions
