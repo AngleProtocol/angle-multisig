@@ -1,6 +1,5 @@
 import { submit } from './utils/submitTx';
 import transactionsJson from './foundry/transactions.json';
-import { registry } from '@angleprotocol/sdk';
 
 async function main() {
   for (let i = 0; i < Object.keys(transactionsJson.chainId).length; i++) {

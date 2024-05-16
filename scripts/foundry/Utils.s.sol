@@ -98,7 +98,7 @@ contract Utils is Script, CommonUtils {
                 if (transaction.chainId == targetedChainIds[i]) {
                     totalValue += transaction.value;
                     bytes memory internalTx = abi.encodePacked(
-                        transaction.operation, transaction.to, transaction.value, transaction.data.length, transaction.data
+                        uint8(transaction.operation), transaction.to, transaction.value, transaction.data.length, transaction.data
                     );
                     chainTransactions = abi.encodePacked(chainTransactions, internalTx);
                 }

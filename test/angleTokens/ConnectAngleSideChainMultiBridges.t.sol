@@ -4,7 +4,8 @@ pragma solidity ^0.8.19;
 import { MockSafe } from "../mock/MockSafe.sol";
 import { BaseTest } from "../BaseTest.t.sol";
 import { console } from "forge-std/console.sol";
-import { NonblockingLzApp } from "angle-tokens/agToken/layerZero/utils/NonblockingLzApp.sol";
+import { LayerZeroBridgeToken } from "angle-tokens/agToken/layerZero/LayerZeroBridgeToken.sol";
+import { TokenSideChainMultiBridge } from "angle-tokens/agToken/TokenSideChainMultiBridge.sol";
 import { IERC20 } from "oz/token/ERC20/IERC20.sol";
 import "../../scripts/foundry/Constants.s.sol";
 
@@ -42,20 +43,20 @@ contract ConnectAngleSideChainMultiBridgesTest is BaseTest {
             }
 
             vm.selectFork(forkIdentifier[chainIds[i]]);
+            address targetToken = address(LayerZeroBridgeToken(contracts[i]).canonicalToken());
             uint256 amount = 1e18;
             address receiver = vm.addr(1);
             bytes memory payload = abi.encode(abi.encodePacked(receiver), amount);
 
             hoax(address(_lzEndPoint(chainIds[i])));
-            NonblockingLzApp(contracts[i]).lzReceive(
+            LayerZeroBridgeToken(contracts[i]).lzReceive(
                 _getLZChainId(chainId),
                 abi.encodePacked(lzToken, contracts[i]),
                 0,
                 payload
             );
 
-            address token = _chainToContract(chainIds[i], ContractType.Angle);
-            assertEq(IERC20(token).balanceOf(receiver), amount);
+            assertEq(IERC20(targetToken).balanceOf(receiver), amount);
         }
 
         vm.selectFork(forkIdentifier[chainId]);
@@ -64,12 +65,12 @@ contract ConnectAngleSideChainMultiBridgesTest is BaseTest {
                 continue;
             }
 
-            uint256 amount = 1e18;
+            (,uint256 amount,,,) = TokenSideChainMultiBridge(angle).bridges(lzToken);
             address receiver = vm.addr(1);
             bytes memory payload = abi.encode(abi.encodePacked(receiver), amount);
 
             hoax(address(_lzEndPoint(chainId)));
-            NonblockingLzApp(lzToken).lzReceive(
+            LayerZeroBridgeToken(lzToken).lzReceive(
                 _getLZChainId(chainIds[i]),
                 abi.encodePacked(contracts[i], lzToken),
                 0,
