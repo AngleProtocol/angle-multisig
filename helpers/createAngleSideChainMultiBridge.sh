@@ -94,6 +94,8 @@ function main {
     fi
     source .env
 
+    cp .env lib/angle-tokens/.env
+
     chainName=$(chain_to_name $chain)
     chainUri=$(chain_to_uri $chain)
     chainId=$(chain_to_chainId $chain)
@@ -160,7 +162,7 @@ function main {
     echo ""
     echo "Running deployment on chain $chainName with total limit: $totalLimit, hourly limit: $hourlyLimit and chain total hourly limit: $chainTotalHourlyLimit"
 
-    cd lib/angle-tokens && MNEMONIC_MAINNET=$MNEMONIC_MAINNET forge script DeployAngleSideChainMultiBridge --fork-url $chainUri --broadcast && cd ../..
+    cd lib/angle-tokens && forge script DeployAngleSideChainMultiBridge --fork-url $chainUri --broadcast --verify && cd ../..
 
     if [ $? -ne 0 ]; then
         echo ""

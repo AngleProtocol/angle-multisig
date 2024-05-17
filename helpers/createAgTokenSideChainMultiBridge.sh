@@ -51,6 +51,8 @@ function main {
     fi
     source .env
 
+    cp .env lib/angle-tokens/.env
+
     chainUri=$(chain_to_uri $chain)
     chainId=$(chain_to_chainId $chain)
     if [[ -z "$chainUri" || -z "$chainId" ]]; then
@@ -116,7 +118,7 @@ function main {
     echo ""
     echo "Running deployment on chain $chain for stable token $stableName"
 
-    cd lib/angle-tokens && MNEMONIC_MAINNET=$MNEMONIC_MAINNET forge script DeployAgTokenSideChainMultiBridge --fork-url $chainUri --verify --broadcast && cd ../..
+    cd lib/angle-tokens && forge script DeployAgTokenSideChainMultiBridge --fork-url $chainUri --broadcast --verify && cd ../..
 
     if [ $? -ne 0 ]; then
         echo ""

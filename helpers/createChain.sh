@@ -43,6 +43,8 @@ function main {
     fi
     source .env
 
+    cp .env lib/angle-tokens/.env
+
     chainUri=$(chain_to_uri $chain)
     chainId=$(chain_to_chainId $chain)
     if [ -z "$chainUri" ] || [ -z "$chainId" ]; then
@@ -61,7 +63,7 @@ function main {
     echo ""
     echo "Running deployment on chain $chain"
 
-    cd lib/angle-tokens && MNEMONIC_MAINNET=$MNEMONIC_MAINNET forge script DeployChain --fork-url $chainUri --verify --broadcast && cd ../..
+    cd lib/angle-tokens && forge script DeployChain --fork-url $chainUri --verify --broadcast && cd ../..
 
     if [ $? -ne 0 ]; then
         echo ""
