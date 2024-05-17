@@ -51,10 +51,9 @@ function main {
     fi
     source .env
 
-    chainName=$(chain_to_name $chain)
     chainUri=$(chain_to_uri $chain)
     chainId=$(chain_to_chainId $chain)
-    if [[ -z "$chainUri" || -z "$chainName" || -z "$chainId" ]]; then
+    if [[ -z "$chainUri" || -z "$chainId" ]]; then
         echo "Invalid chain"
         exit 1
     fi
