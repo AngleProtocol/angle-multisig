@@ -18,8 +18,6 @@ import { MockSafe } from "../../test/mock/MockSafe.sol";
 /// @title Utils
 /// @author Angle Labs, Inc.
 contract Utils is Script, CommonUtils {
-    uint256 public localFork;
-
     bytes[] private calldatas;
     string private description;
     address[] private targets;
@@ -30,8 +28,6 @@ contract Utils is Script, CommonUtils {
 
     function setUp() public virtual {
         setUpForks();
-        // localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
-        // forkIdentifier[CHAIN_FORK] = localFork;
     }
 
     function _serializeJson(
