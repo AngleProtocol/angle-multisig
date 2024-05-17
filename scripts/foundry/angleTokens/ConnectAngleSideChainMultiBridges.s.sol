@@ -41,7 +41,7 @@ contract ConnectAngleSideChainMultiBridge is Utils {
 
         // Set trusted remote from all connected chains
         for (uint256 i = 0; i < contracts.length; i++) {
-            if (chainIds[i] == chainId || chainIds[i] == CHAIN_ETHEREUM) {
+            if (chainIds[i] == chainId) {
                 continue;
             }
 
