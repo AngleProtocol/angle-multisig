@@ -71,6 +71,16 @@ function main {
 
     echo ""
     echo "Deployment successful"
+
+    forge test --match-contract DeployChainTest
+    if [ $? -ne 0 ]; then
+        echo ""
+        echo "Transaction tests failed"
+        exit 1
+    fi
+
+    echo ""
+    echo "Transaction tests successful"
 }
 
 main $@

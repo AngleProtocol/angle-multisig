@@ -142,6 +142,7 @@ function main {
             exit 1
         fi
 
+        echo ""
         echo "Transaction created successfully"
 
         forge test --match-contract ConnectAgTokenSideChainMultiBridge
@@ -151,6 +152,7 @@ function main {
             exit 1
         fi
 
+        echo ""
         echo "Transaction tests successful"
 
         echo ""
