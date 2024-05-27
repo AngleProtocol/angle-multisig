@@ -17,7 +17,7 @@ contract SavingsSetRate is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        uint208 rate = uint208(uint256(fifteenRate));
+        uint208 rate = uint208(uint256(twentyRate));
         /** END  complete */
         address savings = _chainToContract(chainId, ContractType.StUSD);
 
