@@ -26,6 +26,7 @@ contract Utils is Script, CommonUtils {
     uint256[] private chainIds;
 
     function setUp() public virtual {
+        setUpForks();
         // localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
         // forkIdentifier[CHAIN_FORK] = localFork;
     }
