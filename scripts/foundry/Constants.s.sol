@@ -25,6 +25,7 @@ uint64 constant thirtyTwoRate = 8803644702126689280;
 uint64 constant thirtyFiveRate = 9516254229069432832;
 uint64 constant fifteenRate = 4431822020478648320;
 uint64 constant twentyFiveRate = 7075835695147247616;
+uint64 constant twentyRate = 5781378709102113792;
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
