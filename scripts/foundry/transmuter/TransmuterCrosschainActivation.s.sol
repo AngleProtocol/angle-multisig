@@ -22,6 +22,8 @@ contract TransmuterCrosschainActivation is Utils {
     IAgToken public agToken;
     ITreasury public treasury;
     address[] public collateralList;
+    uint128 public userProtection;
+    uint256 constant BPS = 1e14;
 
     function run() external {
         uint256 chainId = vm.envUint("CHAIN_ID");
@@ -29,6 +31,7 @@ contract TransmuterCrosschainActivation is Utils {
         // TODO
         StablecoinType fiat = StablecoinType.USD;
         uint256 newCap = 2_000_000 ether;
+        userProtection = uint128(5 * BPS);
         // TODO END
 
         transmuter = _getTransmuter(chainId, fiat);
@@ -50,12 +53,32 @@ contract TransmuterCrosschainActivation is Utils {
             transactions = abi.encodePacked(transactions, internalTx);
         }
 
-        for (uint256 i = 0; i < collateralList.length; i++) {
+        {
             to = address(transmuter);
             bytes memory data = abi.encodeWithSelector(
                 ISetStablecoin.setStablecoinCap.selector,
-                collateralList[i],
+                collateralList[0],
                 newCap
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+
+        {
+            (
+                Storage.OracleReadType oracleType,
+                Storage.OracleReadType targetType,
+                bytes memory oracleData,
+                bytes memory targetData,
+
+            ) = transmuter.getOracle(collateralList[0]);
+
+            to = address(transmuter);
+            bytes memory data = abi.encodeWithSelector(
+                ISettersGovernor.setOracle.selector,
+                collateralList[0],
+                abi.encode(oracleType, targetType, oracleData, targetData, abi.encode(userProtection, uint128(0)))
             );
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
