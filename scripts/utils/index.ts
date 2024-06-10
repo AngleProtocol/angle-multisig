@@ -73,8 +73,8 @@ export const gnosisEstimateNonce = async (safe: string, chainId: number, pending
     if (pending) {
       const awaitTransactions = await gnosisGetPendingTransactions(safe, chainId);
       for (let i = 0; i < awaitTransactions.results.length; i++) {
-        if (nonce < awaitTransactions.results[i].nonce) {
-          nonce = awaitTransactions.results[i].nonce;
+        if (nonce <= awaitTransactions.results[i].nonce) {
+          nonce = awaitTransactions.results[i].nonce + 1;
         }
       }
     }
