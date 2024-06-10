@@ -16,7 +16,11 @@ async function main() {
       value,
       operation,
     }
-    await submit(transaction, 0, chainId, safeAddress);
+    try {
+      await submit(transaction, 0, chainId, safeAddress);
+    } catch (e) {
+      console.log(`failed to submit tx for ${chainId}`);
+    }
   }
 }
 
