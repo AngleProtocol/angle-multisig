@@ -2,51 +2,6 @@
 
 source lib/utils/helpers/common.sh
 
-function chain_to_name {
-  chain=$1
-
-  case $chain in
-    "0")
-      echo "Fork"
-      ;;
-    "1")
-      echo "Mainnet"
-      ;;
-    "2")
-      echo "Arbitrum"
-      ;;
-    "3")
-      echo "Polygon"
-      ;;
-    "4")
-      echo "Gnosis"
-      ;;
-    "5")
-      echo "Avalanche"
-      ;;
-    "6")
-      echo "Base"
-      ;;
-    "7")
-        echo "BinanceSmartChain"
-        ;;
-    "8")
-        echo "Celo"
-        ;;
-    "9")
-        echo "PolygonZkEvm"
-        ;;
-    "10")
-        echo "Optimism"
-        ;;
-    "11")
-        echo "Linea"
-        ;;
-    *)
-      ;;
-  esac
-}
-
 function usage {
   echo "bash createAngleSideChainMultiBridge.sh <chain> <totalLimit> <hourlyLimit> <chainTotalHourlyLimit> <mock> <?expectedAddress>"
   echo ""
@@ -96,10 +51,9 @@ function main {
 
     cp .env lib/angle-tokens/.env
 
-    chainName=$(chain_to_name $chain)
     chainUri=$(chain_to_uri $chain)
     chainId=$(chain_to_chainId $chain)
-    if [[ -z "$chainUri" || -z "$chainName" || -z "$chainId" ]]; then
+    if [[ -z "$chainUri" || -z "$chainId" ]]; then
         echo "Invalid chain"
         exit 1
     fi
@@ -134,7 +88,6 @@ function main {
     fi
 
     export CHAIN_ID=$chainId
-    export CHAIN_NAME=$chainName
     export TOTAL_LIMIT=$totalLimit
     export HOURLY_LIMIT=$hourlyLimit
     export CHAIN_TOTAL_HOURLY_LIMIT=$chainTotalHourlyLimit
@@ -160,7 +113,7 @@ function main {
     fi
 
     echo ""
-    echo "Running deployment on chain $chainName with total limit: $totalLimit, hourly limit: $hourlyLimit and chain total hourly limit: $chainTotalHourlyLimit"
+    echo "Running deployment on chain $chainId with total limit: $totalLimit, hourly limit: $hourlyLimit and chain total hourly limit: $chainTotalHourlyLimit"
 
     cd lib/angle-tokens && forge script DeployAngleSideChainMultiBridge --fork-url $chainUri --broadcast --verify && cd ../..
 
