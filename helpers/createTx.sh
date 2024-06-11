@@ -106,7 +106,7 @@ function main {
         testContract="${script}Test"
         echo ""
         echo "Running test"
-        forge test --match-contract $testContract -vvv
+        forge test --match-contract $testContract -vvvv
 
 
         echo ""

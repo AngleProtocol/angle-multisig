@@ -122,4 +122,21 @@ contract Utils is Script, CommonUtils {
         ) return 0x111111125421cA6dc452d289314280a0f8842A65;
         else revert("chain not supported");
     }
+
+    function _getTransmuter(uint256 chainId, StablecoinType fiat) internal returns (ITransmuter transmuter) {
+        if (fiat == StablecoinType.EUR)
+            transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
+        if (fiat == StablecoinType.USD)
+            transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgUSD));
+    }
+
+    function _getTreasury(uint256 chainId, StablecoinType fiat) internal returns (ITreasury treasury) {
+        if (fiat == StablecoinType.EUR) treasury = ITreasury(_chainToContract(chainId, ContractType.TreasuryAgEUR));
+        if (fiat == StablecoinType.USD) treasury = ITreasury(_chainToContract(chainId, ContractType.TreasuryAgUSD));
+    }
+
+    function _getAgToken(uint256 chainId, StablecoinType fiat) internal returns (IAgToken agToken) {
+        if (fiat == StablecoinType.EUR) agToken = IAgToken(_chainToContract(chainId, ContractType.AgEUR));
+        if (fiat == StablecoinType.USD) agToken = IAgToken(_chainToContract(chainId, ContractType.AgUSD));
+    }
 }
