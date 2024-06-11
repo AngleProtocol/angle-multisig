@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.19;
 
+import { OFTCore } from "angle-tokens/agToken/layerZero/utils/OFTCore.sol";
 import { NonblockingLzApp } from "angle-tokens/agToken/layerZero/utils/NonblockingLzApp.sol";
-import { OFTCore } from "lz/token/oft/v1/OFTCore.sol";
-import { AgTokenSideChainMultiBridge } from "borrow/agToken/AgTokenSideChainMultiBridge.sol";
+import { AgTokenSideChainMultiBridge } from "angle-tokens/agToken/AgTokenSideChainMultiBridge.sol";
 import "../Utils.s.sol";
 
 contract ConnectAgTokenSideChainMultiBridge is Utils {
@@ -53,7 +53,7 @@ contract ConnectAgTokenSideChainMultiBridge is Utils {
             }
 
             {
-                bytes memory data = abi.encodeWithSelector(OFTCore.setUseCustomAdapterParams.selector, 1);
+                bytes memory data = abi.encodeWithSelector(OFTCore.setUseCustomAdapterParams.selector, uint8(1));
                 address to = lzToken;
                 transactions.push(Transaction(data, to, 0, chainId, uint256(Enum.Operation.Call)));
             }

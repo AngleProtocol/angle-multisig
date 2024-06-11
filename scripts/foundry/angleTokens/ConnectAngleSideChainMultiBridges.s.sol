@@ -2,8 +2,8 @@
 pragma solidity ^0.8.19;
 
 import {console} from "forge-std/console.sol";
-import { OFTCore } from "lz/token/oft/v1/OFTCore.sol";
-import {NonblockingLzApp} from "angle-tokens/agToken/layerZero/utils/NonblockingLzApp.sol";
+import { OFTCore } from "angle-tokens/agToken/layerZero/utils/OFTCore.sol";
+import { NonblockingLzApp } from "angle-tokens/agToken/layerZero/utils/NonblockingLzApp.sol";
 import "../Utils.s.sol";
 
 contract ConnectAngleSideChainMultiBridge is Utils {
