@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import {console} from "forge-std/console.sol";
+import { OFTCore } from "lz/token/oft/v1/OFTCore.sol";
 import {NonblockingLzApp} from "angle-tokens/agToken/layerZero/utils/NonblockingLzApp.sol";
 import "../Utils.s.sol";
 
@@ -21,6 +22,12 @@ contract ConnectAngleSideChainMultiBridge is Utils {
         (uint256[] memory chainIds, address[] memory contracts) = _getConnectedChains("ANGLE");
 
         if (!mock) {
+            {
+                bytes memory data = abi.encodeWithSelector(OFTCore.setUseCustomAdapterParams.selector, 1);
+                address to = lzToken;
+                transactions.push(Transaction(data, to, 0, chainId, uint256(Enum.Operation.Call)));
+            }
+
             // Set trusted remote from current chain
             for (uint256 i = 0; i < contracts.length; i++) {
                 if (chainIds[i] == chainId) {
