@@ -62,6 +62,7 @@ MultiSend constant multiSendBase = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4A
 MultiSend constant multiSendPolygonZkEVM = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendLinea = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendMantle = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B);
+MultiSend constant multiSendMode = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 // MultiSend constant multiSendStarknet = MultiSend();
 // MultiSend constant multiSendNear = MultiSend();
 // MultiSend constant multiSendSolana = MultiSend();

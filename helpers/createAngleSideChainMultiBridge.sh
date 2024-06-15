@@ -18,6 +18,7 @@ function usage {
   echo -e "\t9: Polygon ZkEvm"
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
+  echo -e "\t12: Mode"
   echo -e "totalLimit: total limit for the token"
   echo -e "hourlyLimit: hourly limit for the token"
   echo -e "chainTotalHourlyLimit: total hourly limit for the chain"
@@ -98,17 +99,7 @@ function main {
         read changeGovernor
 
         if [[ $changeGovernor == "yes" ]]; then
-            echo ""
-            echo "Enter the real governor:"
-            read governor
-
-            if [ -z "$governor" ]; then
-                echo "Missing governor"
-                exit 1
-            fi
-
             export FINALIZE=true
-            export REAL_GOVERNOR=$governor
         fi
     fi
 
@@ -143,7 +134,7 @@ function main {
         echo ""
         echo "Transaction created successfully"
 
-        forge test --match-contract ConnectAngleSideChainMultiBridgesTest
+        forge test --match-contract ConnectAngleSideChainMultiBridgeTest
         if [ $? -ne 0 ]; then
             echo ""
             echo "Transaction tests failed"

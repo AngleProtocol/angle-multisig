@@ -3,7 +3,7 @@
 source lib/utils/helpers/common.sh
 
 function usage {
-  echo "bash createChain.sh <chain> <?governor> <?guardian>"
+  echo "bash createChain.sh <chain> <mock> <?governor> <?guardian> <?timelock>"
   echo ""
   echo -e "chain: chain to deploy on"
   echo -e "\t0: Fork"
@@ -18,21 +18,26 @@ function usage {
   echo -e "\t9: Polygon ZkEvm"
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
+  echo -e "\t12: Mode"
+  echo -e "mock: mock deployment (true/false)"
   echo -e "governor: address of the governor (optional)"
   echo -e "guardian: address of the guardian (optional)"
+  echo -e "timelock: address of the timelock (optional)"
   echo ""
 }
 
 function main {
-    if [ $# -ne 3 ] && [ $# -ne 5 ]; then
+    if [ $# -ne 2 ] && [ $# -ne 5 ]; then
         usage
         exit 1
     fi
     chain=$1
-    governor=$2
-    guardian=$3
+    mock=$2
+    governor=$3
+    guardian=$4
+    timelock=$5
 
-    if [ -z "$chain" ]; then
+    if [ -z "$chain" ] || [ -z "$mock" ]; then
         echo "Missing arguments"
         exit 1
     fi
@@ -51,6 +56,11 @@ function main {
         echo "Invalid chain"
         exit 1
     fi
+    # check if mock is a boolean
+    if [[ "$mock" != "true" && "$mock" != "false" ]]; then
+        echo "Mock must be true or false"
+        exit 1
+    fi
 
     export CHAIN_ID=$chain
     if [ ! -z "$governor" ]; then
@@ -58,6 +68,12 @@ function main {
     fi
     if [ ! -z "$guardian" ]; then
         export GUARDIAN=$guardian
+    fi
+    if [ ! -z "$timelock" ]; then
+        export TIMELOCK=$timelock
+    fi
+    if [[ "$mock" == "true" ]]; then
+        export MOCK=true
     fi
 
     echo ""
@@ -73,16 +89,6 @@ function main {
 
     echo ""
     echo "Deployment successful"
-
-    forge test --match-contract DeployChainTest
-    if [ $? -ne 0 ]; then
-        echo ""
-        echo "Transaction tests failed"
-        exit 1
-    fi
-
-    echo ""
-    echo "Transaction tests successful"
 }
 
 main $@

@@ -256,6 +256,7 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_CELO) return multiSendCelo;
         else if (chain == CHAIN_LINEA) return multiSendLinea;
         else if (chain == CHAIN_MANTLE) return multiSendMantle;
+        else if (chain == CHAIN_MODE) return multiSendMode;
         else revert("chain not supported");
     }
 

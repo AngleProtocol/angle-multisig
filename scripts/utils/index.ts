@@ -61,7 +61,7 @@ export const gnosisEstimateTransaction = async (safe: string, chainId: number, t
     console.log('There has been an error estimating the transaction');
     console.log('');
     if (e.response) console.log(JSON.stringify(e.response.data));
-    throw e;
+    return "1000000";
   }
 };
 

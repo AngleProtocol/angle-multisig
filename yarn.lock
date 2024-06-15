@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@angleprotocol/sdk@^2.9.2":
-  version "2.9.2"
-  resolved "https://npm.pkg.github.com/download/@angleprotocol/sdk/2.9.2/fa29572519485bbc233b870e61889c88e74a3b0c#fa29572519485bbc233b870e61889c88e74a3b0c"
-  integrity sha512-/AdAbjbRDjL3da1qybJZ3ICsbVI8i8viypp5DiPdNLXpEJ1RgwzcNzQblqSwR0rv7JewZ3zAxBk7i7cfmp/uBA==
+"@angleprotocol/sdk@^v2.10.2":
+  version "2.11.0"
+  resolved "https://npm.pkg.github.com/download/@angleprotocol/sdk/2.11.0/c551d4166b17e50781ce978e99f427896606860e#c551d4166b17e50781ce978e99f427896606860e"
+  integrity sha512-1lOwsmRdIG0xEVarW6fEFxp9Cv5soxL6kEePq5AwhYK7ilmTjbnUAA85FGAkLtuaV/KnJ0Io50CDD8RjL052uw==
   dependencies:
     "@apollo/client" "^3.7.17"
     "@typechain/ethers-v5" "^10.0.0"
@@ -1270,10 +1270,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
-"@layerzerolabs/lz-sdk@^0.0.70":
-  version "0.0.70"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-sdk/-/lz-sdk-0.0.70.tgz#4b3a4fbce10c5f781051638575b4328c678b12c0"
-  integrity sha512-hMRB7gkEXI18Mtc57pnkFY92tqR/XRbPoeF6KK1l0kLhO5K1HGSvakhQFIRv0ji/yqlWQuYjrUGJvjLAozJ07A==
+"@layerzerolabs/lz-sdk@^0.0.75":
+  version "0.0.75"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-sdk/-/lz-sdk-0.0.75.tgz#e8e2d1ba4704020b8c876b94b965da8a55a96f27"
+  integrity sha512-s8HCMwhPpXfSLkZDeWJ281q8sMZRSQlC5LieCmqIHnYAquCAke3/w+nRHuvnu/KtgE9i5Y9dc+mbOqNUTNGv2g==
 
 "@metamask/detect-provider@1.2.0":
   version "1.2.0"
