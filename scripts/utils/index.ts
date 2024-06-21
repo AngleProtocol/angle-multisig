@@ -38,8 +38,6 @@ export const gnosisGetPendingTransactions = async (safe: string, chainId: number
     const resp = await axios.get(`${safeAPI}/safes/${
       safe
     }/all-transactions/?queued=True`);
-    console.log('');
-    console.log(resp.data);
     return resp.data;
   } catch (e) {
     console.log('');
@@ -61,7 +59,7 @@ export const gnosisEstimateTransaction = async (safe: string, chainId: number, t
     console.log('There has been an error estimating the transaction');
     console.log('');
     if (e.response) console.log(JSON.stringify(e.response.data));
-    return "1000000";
+    return { safeTxGas: "1000000" };
   }
 };
 

@@ -63,7 +63,7 @@ contract ConnectAngleSideChainMultiBridge is Utils {
             }
         }
 
-        SafeTransaction[] memory multiSendTransactions;
+        MultiSendTransactions[] memory multiSendTransactions;
         if (vm.keyExists(json, ".guardian")) {
             address guardian = vm.parseJsonAddress(json, ".guardian");
             multiSendTransactions = _wrap(transactions, ContractType.GuardianMultisig, chainId, guardian);

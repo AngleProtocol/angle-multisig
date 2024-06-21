@@ -23,41 +23,6 @@ contract ConnectAgTokenSideChainMultiBridge is Utils {
 
         (uint256[] memory chainIds, address[] memory contracts) = _getConnectedChains(stableName);
         if (!mock) {
-            {
-                uint256 totalLimit = vm.envUint("TOTAL_LIMIT");
-                uint256 hourlyLimit = vm.envUint("HOURLY_LIMIT");
-                {
-                    bytes memory data = abi.encodeWithSelector(
-                        AgTokenSideChainMultiBridge.addBridgeToken.selector,
-                        lzToken,
-                        totalLimit,
-                        hourlyLimit,
-                        0,
-                        false
-                    );
-                    address to = token;
-                    transactions.push(Transaction(data, to, 0, chainId, uint256(Enum.Operation.Call)));
-                }
-            }
-
-            {
-                uint256 chainTotalHourlyLimit = vm.envUint("CHAIN_TOTAL_HOURLY_LIMIT");
-                {
-                    bytes memory data = abi.encodeWithSelector(
-                        AgTokenSideChainMultiBridge.setChainTotalHourlyLimit.selector,
-                        chainTotalHourlyLimit
-                    );
-                    address to = lzToken;
-                    transactions.push(Transaction(data, to, 0, chainId, uint256(Enum.Operation.Call)));
-                }
-            }
-
-            {
-                bytes memory data = abi.encodeWithSelector(OFTCore.setUseCustomAdapterParams.selector, uint8(1));
-                address to = lzToken;
-                transactions.push(Transaction(data, to, 0, chainId, uint256(Enum.Operation.Call)));
-            }
-
             // Set trusted remote from current chain
             for (uint256 i = 0; i < contracts.length; i++) {
                 if (chainIds[i] == chainId) {
@@ -93,7 +58,7 @@ contract ConnectAgTokenSideChainMultiBridge is Utils {
             }
         }
 
-        SafeTransaction[] memory multiSendTransactions;
+        MultiSendTransactions[] memory multiSendTransactions;
         if (vm.keyExists(json, ".guardian")) {
             address guardian = vm.parseJsonAddress(json, ".guardian");
             multiSendTransactions = _wrap(transactions, ContractType.GuardianMultisig, chainId, guardian);
