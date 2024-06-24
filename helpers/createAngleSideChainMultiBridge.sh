@@ -19,6 +19,7 @@ function usage {
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
   echo -e "\t12: Mode"
+  echo -e "\t13: Blast"
   echo -e "totalLimit: total limit for the token"
   echo -e "hourlyLimit: hourly limit for the token"
   echo -e "chainTotalHourlyLimit: total hourly limit for the chain"

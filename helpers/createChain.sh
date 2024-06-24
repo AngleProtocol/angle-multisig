@@ -19,6 +19,7 @@ function usage {
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
   echo -e "\t12: Mode"
+  echo -e "\t13: Blast"
   echo -e "mock: mock deployment (true/false)"
   echo -e "governor: address of the governor (optional)"
   echo -e "guardian: address of the guardian (optional)"
