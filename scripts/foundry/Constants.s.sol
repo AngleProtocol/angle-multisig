@@ -27,6 +27,30 @@ uint64 constant fifteenRate = 4431822020478648320;
 uint64 constant twentyFiveRate = 7075835695147247616;
 uint64 constant twentyRate = 5781378709102113792;
 
+string constant JSON_ADDRESSES_PATH = "lib/angle-tokens/scripts/addresses.json";
+
+struct Transaction {
+    bytes data;
+    address to;
+    uint256 value;
+    uint256 chainId;
+    uint256 operation;
+}
+
+struct SafeTransaction {
+    bytes data;
+    address to;
+    uint256 value;
+    uint256 chainId;
+    uint256 operation;
+    address safe;
+}
+
+struct MultiSendTransactions {
+    SafeTransaction transaction;
+    SafeTransaction[] internalTransactions;
+}
+
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     CONTRACTS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -43,6 +67,9 @@ MultiSend constant multiSendBase = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4A
 MultiSend constant multiSendPolygonZkEVM = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendLinea = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
 MultiSend constant multiSendMantle = MultiSend(0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B);
+MultiSend constant multiSendMode = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
+MultiSend constant multiSendBlast = MultiSend(0x40A2aCCbd92BCA938b02010E17A5b8929b49130D);
+
 // MultiSend constant multiSendStarknet = MultiSend();
 // MultiSend constant multiSendNear = MultiSend();
 // MultiSend constant multiSendSolana = MultiSend();

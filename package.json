@@ -7,10 +7,12 @@
     "fork": "bash helpers/fork.sh",
     "create-tx": "bash helpers/createTx.sh",
     "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
-    "test": "forge test -vvvv"
+    "submit-multiple:foundry": "hardhat run ./scripts/submitMultipleFoundryTx.ts",
+    "test": "forge test -vvvv",
+    "prettier": "prettier --write ."
   },
   "devDependencies": {
-    "@angleprotocol/sdk": "^2.9.2",
+    "@angleprotocol/sdk": "^v2.10.2",
     "@chainlink/contracts": "0.2.1",
     "@metamask/detect-provider": "1.2.0",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
@@ -51,7 +53,9 @@
     "web3": "^1.6.0",
     "yargs": "^17.2.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@layerzerolabs/lz-sdk": "^0.0.75"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"

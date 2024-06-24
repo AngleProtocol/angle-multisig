@@ -25,7 +25,7 @@ export const submit = async (baseTxn, nonceCustom = 0, chainId: number | null = 
   const safeTxGas = "1000000";
   */
   const { safeTxGas } = await gnosisEstimateTransaction(safe, chainId, baseTxn);
-  const { nonce: safeNonce } = await gnosisEstimateNonce(safe, chainId);
+  const safeNonce = await gnosisEstimateNonce(safe, chainId, true);
   console.log('safeTxGas', safeTxGas);
   console.log('Nonce', safeNonce);
   console.log('');

@@ -19,6 +19,8 @@ function usage {
   echo -e "\t9: Polygon ZkEvm"
   echo -e "\t10: Optimism"
   echo -e "\t11: Linea"
+  echo -e "\t12: Mode"
+  echo -e "\t13: Blast"
   echo -e "\t100: All"
   echo ""
 }

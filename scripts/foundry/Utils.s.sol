@@ -3,32 +3,31 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
-import { ITreasury } from "borrow/interfaces/ITreasury.sol";
-import { IAgToken } from "borrow/interfaces/IAgToken.sol";
-import { MultiSend } from "safe/libraries/MultiSend.sol";
-import { Safe, Enum } from "safe/Safe.sol";
-import { ITransmuter } from "transmuter/interfaces/ITransmuter.sol";
+import {ITreasury} from "borrow/interfaces/ITreasury.sol";
+import {IAgToken} from "borrow/interfaces/IAgToken.sol";
+import {MultiSend} from "safe/libraries/MultiSend.sol";
+import {Safe, Enum} from "safe/Safe.sol";
+import {ITransmuter} from "transmuter/interfaces/ITransmuter.sol";
 import "./Constants.s.sol";
-import { IAngle } from "./Constants.s.sol";
-import { CoreBorrow } from "borrow/coreBorrow/CoreBorrow.sol";
-import { ProxyAdmin } from "oz/proxy/transparent/ProxyAdmin.sol";
-import { CommonUtils } from "utils/src/CommonUtils.sol";
+import {IAngle} from "./Constants.s.sol";
+import {CoreBorrow} from "borrow/coreBorrow/CoreBorrow.sol";
+import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
+import {CommonUtils} from "utils/src/CommonUtils.sol";
+import { MockSafe } from "../../test/mock/MockSafe.sol";
 
 /// @title Utils
 /// @author Angle Labs, Inc.
 contract Utils is Script, CommonUtils {
-    uint256 public localFork;
-
     bytes[] private calldatas;
     string private description;
     address[] private targets;
     uint256[] private values;
     uint256[] private chainIds;
+    uint256[] private operations;
+    address[] private safes;
 
     function setUp() public virtual {
         setUpForks();
-        // localFork = vm.createFork(vm.envString("ETH_NODE_URI_FORK"));
-        // forkIdentifier[CHAIN_FORK] = localFork;
     }
 
     function _serializeJson(
@@ -39,15 +38,279 @@ contract Utils is Script, CommonUtils {
         Enum.Operation operation,
         bytes memory additionalData
     ) internal {
+        _serializeJson(chainId, to, value, data, operation, additionalData, address(0));
+    }
+
+    function _serializeJson(
+        uint256 chainId,
+        address to,
+        uint256 value,
+        bytes memory data,
+        Enum.Operation operation,
+        bytes memory additionalData,
+        address safe
+    ) internal {
         string memory json = "";
         vm.serializeUint(json, "chainId", chainId);
         vm.serializeAddress(json, "to", to);
         vm.serializeUint(json, "value", value);
         vm.serializeUint(json, "operation", uint256(operation));
         vm.serializeBytes(json, "additionalData", additionalData);
+        if (safe != address(0)) {
+            vm.serializeAddress(json, "safe", safe);
+        }
         string memory finalJson = vm.serializeBytes(json, "data", data);
 
         vm.writeJson(finalJson, "./scripts/foundry/transaction.json");
+    }
+
+    struct Args {
+        uint256 totalValue;
+        uint256[] targetedChainIds;
+        bytes chainTransactions;
+        uint256 currentChain;
+        address chainSafe;
+        ContractType safeType;
+        uint256 chainId;
+    }
+
+    function _createMultiSendTransaction(Args memory args) internal returns (SafeTransaction memory) {
+        bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, args.chainTransactions);
+        address multiSend = address(_chainToMultiSend(args.targetedChainIds[args.currentChain]));
+        address safe;
+        if (args.chainId != 0 && args.targetedChainIds[args.currentChain] == args.chainId) {
+            safe = args.chainSafe;
+        } else {
+            safe = _chainToContract(args.targetedChainIds[args.currentChain], args.safeType);
+        }
+        return SafeTransaction(payloadMultiSend, multiSend, args.totalValue, args.targetedChainIds[args.currentChain], uint256(Enum.Operation.DelegateCall), safe);
+    }
+
+    function _wrap(Transaction[] memory transactions, ContractType safeType, uint256 chainId, address chainSafe) internal returns (MultiSendTransactions[] memory) {
+        // get all unique chainIds
+        uint256[] memory targetedChainIds = new uint256[](transactions.length);
+        uint256 targetedChainIdsLength = 0;
+        for (uint256 i = 0; i < transactions.length; ++i) {
+            bool found = false;
+            for (uint256 j = 0; j < targetedChainIds.length; ++j) {
+                if (targetedChainIds[j] == transactions[i].chainId) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                targetedChainIds[targetedChainIdsLength] = transactions[i].chainId;
+                targetedChainIdsLength++;
+            }
+        }
+        assembly ("memory-safe") {
+            mstore(targetedChainIds, targetedChainIdsLength)
+        }
+        MultiSendTransactions[] memory multiSendTransactions = new MultiSendTransactions[](targetedChainIdsLength);
+        for (uint256 i = 0; i < targetedChainIds.length; ++i) {
+            bytes memory chainTransactions;
+            SafeTransaction[] memory internalTransactions = new SafeTransaction[](transactions.length);
+            uint256 count;
+            uint256 totalValue;
+            for (uint256 y = 0; y < transactions.length; ++y) {
+                Transaction memory transaction = transactions[y];
+                if (transaction.chainId == targetedChainIds[i]) {
+                    totalValue += transaction.value;
+                    bytes memory internalTx = abi.encodePacked(
+                        uint8(transaction.operation), transaction.to, transaction.value, transaction.data.length, transaction.data
+                    );
+                    chainTransactions = abi.encodePacked(chainTransactions, internalTx);
+                    internalTransactions[count++] = SafeTransaction(transaction.data, transaction.to, transaction.value, transaction.chainId, transaction.operation, chainSafe);
+                }
+            }
+            assembly ("memory-safe") {
+                mstore(internalTransactions, count)
+            }
+            multiSendTransactions[i].transaction = _createMultiSendTransaction(Args(totalValue, targetedChainIds, chainTransactions, i, chainSafe, safeType, chainId));
+            multiSendTransactions[i].internalTransactions = internalTransactions;
+        }
+        return multiSendTransactions;
+    }
+
+    function _wrap(Transaction[] memory transactions, ContractType safeType) internal returns (MultiSendTransactions[] memory) {
+        return _wrap(transactions, safeType, 0, address(0));
+    }
+
+    function _serializeJson(
+        MultiSendTransactions[] memory transactions
+    ) internal {
+        string memory txJson = "chain";
+        string memory json = "";
+        string memory output;
+        {
+            string memory jsonTargets = "to";
+            string memory targetsOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                targetsOutput = vm.serializeAddress(jsonTargets, vm.toString(i), transactions[i].transaction.to);
+            }
+            vm.serializeString(txJson, "to", targetsOutput);
+        }
+        {
+            string memory jsonValues = "value";
+            string memory valuesOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                valuesOutput = vm.serializeUint(jsonValues, vm.toString(i), transactions[i].transaction.value);
+            }
+            vm.serializeString(txJson, "value", valuesOutput);
+        }
+        {
+            string memory jsonDatas = "data";
+            string memory datasOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                datasOutput = vm.serializeBytes(jsonDatas, vm.toString(i), transactions[i].transaction.data);
+            }
+            vm.serializeString(txJson, "data", datasOutput);
+        }
+        {
+            string memory jsonChainIds = "chainId";
+            string memory chainIdsOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                chainIdsOutput = vm.serializeUint(jsonChainIds, vm.toString(i), transactions[i].transaction.chainId);
+            }
+            vm.serializeString(txJson, "chainId", chainIdsOutput);
+        }
+        {
+            string memory jsonOperations = "operation";
+            string memory operationsOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                operationsOutput = vm.serializeUint(jsonOperations, vm.toString(i), transactions[i].transaction.operation);
+            }
+            vm.serializeString(txJson, "operation", operationsOutput);
+        }
+        {
+            string memory jsonSafes = "safe";
+            string memory safesOutput;
+            for (uint256 i; i < transactions.length; i++) {
+                safesOutput = vm.serializeAddress(jsonSafes, vm.toString(i), transactions[i].transaction.safe);
+            }
+            output = vm.serializeString(txJson, "safe", safesOutput);
+        }
+
+
+        // internal txs
+        string memory internalTxJson = "internal";
+        string memory internalOutput;
+        for (uint256 i; i < transactions.length; i++) {
+            string memory jsonChain = string.concat("chain", ".", vm.toString(i));
+            string memory chainOutput;
+            {
+                vm.serializeUint(jsonChain, "chainId", transactions[i].transaction.chainId);
+            }
+            {
+                vm.serializeAddress(jsonChain, "safe", transactions[i].transaction.safe);
+            }
+            {
+                string memory jsonTargets = string.concat("to", ".", vm.toString(i));
+                string memory targetsOutput;
+                for (uint256 j; j < transactions[i].internalTransactions.length; j++) {
+                    targetsOutput = vm.serializeAddress(jsonTargets, vm.toString(j), transactions[i].internalTransactions[j].to);
+                }
+                chainOutput = vm.serializeString(jsonChain, "to", targetsOutput);
+            }
+            {
+                string memory jsonValues = string.concat("value", ".", vm.toString(i));
+                string memory valuesOutput;
+                for (uint256 j; j < transactions[i].internalTransactions.length; j++) {
+                    valuesOutput = vm.serializeUint(jsonValues, vm.toString(j), transactions[i].internalTransactions[j].value);
+                }
+                chainOutput = vm.serializeString(jsonChain, "value", valuesOutput);
+            }
+            {
+                string memory jsonDatas = string.concat("data", ".", vm.toString(i));
+                string memory datasOutput;
+                for (uint256 j; j < transactions[i].internalTransactions.length; j++) {
+                    datasOutput = vm.serializeBytes(jsonDatas, vm.toString(j), transactions[i].internalTransactions[j].data);
+                }
+                chainOutput = vm.serializeString(jsonChain, "data", datasOutput);
+            }
+            {
+                string memory jsonOperations = string.concat("operation", ".", vm.toString(i));
+                string memory operationsOutput;
+                for (uint256 j; j < transactions[i].internalTransactions.length; j++) {
+                    operationsOutput = vm.serializeUint(jsonOperations, vm.toString(j), transactions[i].internalTransactions[j].operation);
+                }
+                chainOutput = vm.serializeString(jsonChain, "operation", operationsOutput);
+            }
+            internalOutput = vm.serializeString(internalTxJson, vm.toString(i), chainOutput);
+        }
+
+        vm.serializeString(json, "internalTransactions", internalOutput);
+        string memory transactionOutput = vm.serializeString(json, "transaction", output);
+        vm.writeJson(transactionOutput, "./scripts/foundry/transactions.json");
+    }
+
+    function _deserializeJson() internal returns(SafeTransaction[] memory) {
+        string memory json = vm.readFile("./scripts/foundry/transactions.json");
+        {
+            string memory calldataKey = ".transaction.data";
+            string[] memory keys = vm.parseJsonKeys(json, calldataKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(calldataKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                calldatas.push(abi.decode(encodedStruct, (bytes)));
+            }
+        }
+        {
+            string memory targetsKey = ".transaction.to";
+            string[] memory keys = vm.parseJsonKeys(json, targetsKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(targetsKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                targets.push(abi.decode(encodedStruct, (address)));
+            }
+        }
+        {
+            string memory valuesKey = ".transaction.value";
+            string[] memory keys = vm.parseJsonKeys(json, valuesKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(valuesKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                values.push(abi.decode(encodedStruct, (uint256)));
+            }
+        }
+        {
+            string memory chainIdsKey = ".transaction.chainId";
+            string[] memory keys = vm.parseJsonKeys(json, chainIdsKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(chainIdsKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                chainIds.push(abi.decode(encodedStruct, (uint256)));
+            }
+        }
+        {
+            string memory operationsKey = ".transaction.operation";
+            string[] memory keys = vm.parseJsonKeys(json, operationsKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(operationsKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                operations.push(abi.decode(encodedStruct, (uint256)));
+            }
+        }
+        {
+            string memory safesKey = ".transaction.safe";
+            string[] memory keys = vm.parseJsonKeys(json, safesKey);
+            // Iterate over the encoded structs
+            for (uint256 i = 0; i < keys.length; ++i) {
+                string memory structKey = string.concat(safesKey, ".", keys[i]);
+                bytes memory encodedStruct = vm.parseJson(json, structKey);
+                safes.push(abi.decode(encodedStruct, (address)));
+            }
+        }
+        SafeTransaction[] memory transactions = new SafeTransaction[](calldatas.length);
+        for (uint256 i = 0; i < calldatas.length; i++) {
+            transactions[i] = SafeTransaction(calldatas[i], targets[i], values[i], chainIds[i], operations[i], safes[i]);
+        }
+        return transactions;
     }
 
     function _chainToMultiSend(uint256 chain) internal pure returns (MultiSend) {
@@ -63,6 +326,8 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_CELO) return multiSendCelo;
         else if (chain == CHAIN_LINEA) return multiSendLinea;
         else if (chain == CHAIN_MANTLE) return multiSendMantle;
+        else if (chain == CHAIN_MODE) return multiSendMode;
+        else if (chain == CHAIN_BLAST) return multiSendBlast;
         else revert("chain not supported");
     }
 
