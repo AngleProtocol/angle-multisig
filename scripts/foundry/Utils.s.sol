@@ -404,4 +404,7 @@ contract Utils is Script, CommonUtils {
         if (fiat == StablecoinType.EUR) agToken = IAgToken(_chainToContract(chainId, ContractType.AgEUR));
         if (fiat == StablecoinType.USD) agToken = IAgToken(_chainToContract(chainId, ContractType.AgUSD));
     }
+
+    function implRouter(uint256 chain) public view returns (address) {
+    }
 }
