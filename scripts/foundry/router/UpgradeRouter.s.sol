@@ -20,7 +20,7 @@ contract UpgradeRouter is Utils {
 
         {
             bytes memory data = abi.encodeWithSelector(ProxyAdmin.upgrade.selector, router, routerImpl);
-            address to = _chainToContract(chainId, ContractType.ProxyAdmin);
+            address to = _chainToContract(chainId, ContractType.ProxyAdminGuardian);
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
@@ -29,11 +29,11 @@ contract UpgradeRouter is Utils {
 
         // Verify that the calls will succeed
         address multiSend = address(_chainToMultiSend(chainId));
-        address safe = address(_chainToContract(chainId, ContractType.GovernorMultisig));
+        address safe = address(_chainToContract(chainId, ContractType.GuardianMultisig));
 
         vm.startBroadcast(safe);
         address(multiSend).delegatecall(payloadMultiSend);
         vm.stopBroadcast();
-        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"", safe);
     }
 }

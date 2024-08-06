@@ -406,5 +406,6 @@ contract Utils is Script, CommonUtils {
     }
 
     function implRouter(uint256 chain) public view returns (address) {
+        if (chain == CHAIN_ARBITRUM) return address(0x3Ee021f6f91911b8a2af6047889C54CC4983f78D);
     }
 }
