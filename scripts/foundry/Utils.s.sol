@@ -404,4 +404,16 @@ contract Utils is Script, CommonUtils {
         if (fiat == StablecoinType.EUR) agToken = IAgToken(_chainToContract(chainId, ContractType.AgEUR));
         if (fiat == StablecoinType.USD) agToken = IAgToken(_chainToContract(chainId, ContractType.AgUSD));
     }
+
+    function implRouter(uint256 chain) public view returns (address) {
+        if (chain == CHAIN_ARBITRUM) return address(0x3Ee021f6f91911b8a2af6047889C54CC4983f78D);
+        else if (chain == CHAIN_OPTIMISM) return address(0x4Fa745FCCC04555F2AFA8874cd23961636CdF982);
+        else if (chain == CHAIN_AVALANCHE) return address(0xFC48E39fed51F2937c8CE7eE95eD9181c2790ab1);
+        else if (chain == CHAIN_BASE) return address(0x874f1686E8F89374A40196B54F435Cc1A72d04e4);
+        else if (chain == CHAIN_CELO) return address(0x892bf71463Bd9fa57f3c2266aB74dbe1B96DECEa);
+        else if (chain == CHAIN_GNOSIS) return address(0xbDD9a43790BFe85DA12a9EfBf0eaFD8135538c99);
+        else if (chain == CHAIN_LINEA) return address(0x52F0C256E58c579Bf9E41e4332669b4f7C7209c5);
+        else if (chain == CHAIN_POLYGON) return address(0x05E08E1BF31C1882822Cc48D7d51d6fe49Bca9c2);
+        else revert("chain not supported");
+    }
 }
