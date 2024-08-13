@@ -11,6 +11,7 @@ import "../Constants.s.sol";
 contract TransmuterRevokeAddCollateral is Utils {
     address public constant COLLATERAL_TO_REMOVE = 0xCA30c93B02514f86d5C86a6e375E3A330B435Fb5;
     address public constant COLLATERAL_TO_ADD = 0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C;
+    uint256 constant BPS = 1e14;
 
     bytes oracleConfigCollatToAdd;
     uint64[] public xFeeMint;
@@ -23,7 +24,7 @@ contract TransmuterRevokeAddCollateral is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgUSD));
-        agToken = transmuter.agToken();
+        agToken = address(transmuter.agToken());
         bytes memory transactions;
         uint8 isDelegateCall = 0;
         address to = address(transmuter);
@@ -31,16 +32,29 @@ contract TransmuterRevokeAddCollateral is Utils {
 
         // TODO we should have a large enough USDA balance
 
+        // Whitelist governor multisig to receive bC3M
+        {
+            bytes memory data = abi.encodeWithSelector(
+                ISettersGuardian.toggleWhitelist.selector,
+                Storage.WhitelistType.BACKED,
+                _chainToContract(chainId, ContractType.GovernorMultisig)
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+
         // Empty the stables minted through the revoked collateral
         {
             (uint256 stablecoinsFromCollateral, ) = transmuter.getIssuedByCollateral(COLLATERAL_TO_REMOVE);
+            stablecoinsFromCollateral = (stablecoinsFromCollateral * 9) / 10;
             bytes memory data = abi.encodeWithSelector(
                 ISwapper.swapExactInput.selector,
                 stablecoinsFromCollateral,
                 (stablecoinsFromCollateral * 995) / 1000,
                 agToken,
                 COLLATERAL_TO_REMOVE,
-                _chainToContract(chainId, ContractType.TransmuterAgUSD),
+                _chainToContract(chainId, ContractType.GovernorMultisig),
                 block.timestamp + 1000
             );
             uint256 dataLength = data.length;

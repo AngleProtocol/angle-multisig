@@ -9,12 +9,14 @@ import "../../scripts/foundry/Constants.s.sol";
 import "transmuter/transmuter/Storage.sol" as Storage;
 import "transmuter/utils/Errors.sol" as Errors;
 import { ITransmuter, ISettersGovernor, ISettersGuardian, ISwapper, IGetters } from "transmuter/interfaces/ITransmuter.sol";
+import { MAX_MINT_FEE, MAX_BURN_FEE } from "transmuter/utils/Constants.sol";
 
 contract TransmuterRevokeAddCollateralTest is BaseTest {
     using stdJson for string;
 
+    uint256 constant BPS = 1e14;
     address collateralRevoked = BC3M;
-    ITransmuterExtended public transmuter;
+    ITransmuter public transmuter;
     IAgToken public agToken;
     address[] public collateralList;
 
@@ -25,6 +27,10 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
     function testScript() external {
         uint256 chainId = json.readUint("$.chainId");
         vm.selectFork(forkIdentifier[chainId]);
+
+        // TODO
+        StablecoinType fiat = StablecoinType.USD;
+        // TODO END
 
         address gnosisSafe = _chainToContract(chainId, ContractType.GovernorMultisig);
         transmuter = ITransmuter(address(_getTransmuter(chainId, fiat)));
@@ -37,7 +43,7 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         bytes memory payload = json.readBytes("$.data");
 
         // We fake a USDA balance (we need to send it to the governance multisig)
-        deal(agToken, address(gnosisSafe), 2_000_000 * BASE_18);
+        deal(address(agToken), address(gnosisSafe), 2_000_000 * BASE_18);
 
         // Verify that the call will succeed
         MockSafe mockSafe = new MockSafe();
@@ -58,22 +64,22 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         address newCollateral = collateralList[newCollateralIndex];
         {
             (
-                OracleReadType oracleType,
-                OracleReadType targetType,
+                Storage.OracleReadType oracleType,
+                Storage.OracleReadType targetType,
                 bytes memory oracleData,
                 bytes memory targetData,
                 bytes memory hyperparameters
             ) = transmuter.getOracle(newCollateral);
-            assertEq(oracleType, OracleReadType.None);
-            assertEq(targetType, OracleReadType.STABLE);
+            assertEq(uint256(oracleType), uint256(Storage.OracleReadType.NO_ORACLE));
+            assertEq(uint256(targetType), uint256(Storage.OracleReadType.STABLE));
             assertEq(oracleData.length, 0);
             assertEq(targetData.length, 0);
-            assertEq(hyperparameters.length, abi.encode(uint128(0), uint128(50 * BPS)));
+            assertEq(hyperparameters, abi.encode(uint128(0), uint128(50 * BPS)));
         }
 
         {
-            (xFeeMint, yFeeMint) = transmuter.getCollateralMintFees(newCollateral);
-            (xFeeBurn, yFeeBurn) = transmuter.getCollateralBurnFees(newCollateral);
+            (uint64[] memory xFeeMint, int64[] memory yFeeMint) = transmuter.getCollateralMintFees(newCollateral);
+            (uint64[] memory xFeeBurn, int64[] memory yFeeBurn) = transmuter.getCollateralBurnFees(newCollateral);
 
             assertEq(xFeeMint.length, 3);
             assertEq(yFeeMint.length, 3);
