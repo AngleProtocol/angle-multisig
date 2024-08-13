@@ -49,7 +49,7 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         MockSafe mockSafe = new MockSafe();
         vm.etch(gnosisSafe, address(mockSafe).code);
         vm.prank(gnosisSafe);
-        (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
+        (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e7));
         if (!success) revert();
 
         collateralList = transmuter.getCollateralList();
