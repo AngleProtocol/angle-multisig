@@ -35,7 +35,6 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         address gnosisSafe = _chainToContract(chainId, ContractType.GovernorMultisig);
         transmuter = ITransmuter(address(_getTransmuter(chainId, fiat)));
         agToken = _getAgToken(chainId, fiat);
-        collateralList = transmuter.getCollateralList();
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
@@ -44,6 +43,7 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
 
         // We fake a USDA balance (we need to send it to the governance multisig)
         deal(address(agToken), address(gnosisSafe), 2_000_000 * BASE_18);
+        deal(address(gnosisSafe), 2 ether);
 
         // Verify that the call will succeed
         MockSafe mockSafe = new MockSafe();
@@ -52,15 +52,16 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e6));
         if (!success) revert();
 
+        collateralList = transmuter.getCollateralList();
         assertEq(agToken.isMinter(address(transmuter)), true);
         assertEq(collateralList.length, 3);
         // USDC
         assertEq(collateralList[0], address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48));
-        assertEq(collateralList[1], address(0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C));
-        assertEq(collateralList[2], address(0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB));
+        assertEq(collateralList[1], address(0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB));
+        assertEq(collateralList[2], address(0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C));
 
         // Check parameters are correct for the new collateral
-        uint256 newCollateralIndex = 1;
+        uint256 newCollateralIndex = 2;
         address newCollateral = collateralList[newCollateralIndex];
         {
             (

@@ -30,7 +30,25 @@ contract TransmuterRevokeAddCollateral is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
-        // TODO we should have a large enough USDA balance
+        // Allow full burn of revoked collateral
+        {
+            uint64[] memory xFeeBurn = new uint64[](1);
+            xFeeBurn[0] = uint64(1000000000);
+            int64[] memory yFeeBurn = new int64[](1);
+            yFeeBurn[0] = 0;
+
+            // Burn fees
+            bytes memory data = abi.encodeWithSelector(
+                ISettersGuardian.setFees.selector,
+                COLLATERAL_TO_REMOVE,
+                xFeeBurn,
+                yFeeBurn,
+                false
+            );
+            uint256 dataLength = data.length;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
 
         // Whitelist governor multisig to receive bC3M
         {
@@ -47,11 +65,12 @@ contract TransmuterRevokeAddCollateral is Utils {
         // Empty the stables minted through the revoked collateral
         {
             (uint256 stablecoinsFromCollateral, ) = transmuter.getIssuedByCollateral(COLLATERAL_TO_REMOVE);
-            stablecoinsFromCollateral = (stablecoinsFromCollateral * 9) / 10;
+            (, , , , uint256 oraclePrice) = transmuter.getOracleValues(COLLATERAL_TO_REMOVE);
+
             bytes memory data = abi.encodeWithSelector(
                 ISwapper.swapExactInput.selector,
                 stablecoinsFromCollateral,
-                (stablecoinsFromCollateral * 995) / 1000,
+                (stablecoinsFromCollateral * BASE_18 * 995) / 1000 / oraclePrice,
                 agToken,
                 COLLATERAL_TO_REMOVE,
                 _chainToContract(chainId, ContractType.GovernorMultisig),
@@ -104,22 +123,12 @@ contract TransmuterRevokeAddCollateral is Utils {
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
-                bytes memory data = abi.encodeWithSelector(
-                    ISettersGovernor.setOracle.selector,
-                    COLLATERAL_TO_ADD,
-                    oracleConfigCollatToAdd
-                );
-                uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-                transactions = abi.encodePacked(transactions, internalTx);
-            }
-            {
                 // Mint fees
                 bytes memory data = abi.encodeWithSelector(
                     ISettersGuardian.setFees.selector,
                     COLLATERAL_TO_ADD,
                     xFeeMint,
-                    yFeeBurn,
+                    yFeeMint,
                     true
                 );
                 uint256 dataLength = data.length;
@@ -134,6 +143,16 @@ contract TransmuterRevokeAddCollateral is Utils {
                     xFeeBurn,
                     yFeeBurn,
                     false
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGovernor.setOracle.selector,
+                    COLLATERAL_TO_ADD,
+                    oracleConfigCollatToAdd
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
