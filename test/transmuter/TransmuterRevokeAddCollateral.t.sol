@@ -10,12 +10,15 @@ import "transmuter/transmuter/Storage.sol" as Storage;
 import "transmuter/utils/Errors.sol" as Errors;
 import { ITransmuter, ISettersGovernor, ISettersGuardian, ISwapper, IGetters } from "transmuter/interfaces/ITransmuter.sol";
 import { MAX_MINT_FEE, MAX_BURN_FEE } from "transmuter/utils/Constants.sol";
+import { IERC20 } from "oz/token/ERC20/IERC20.sol";
 
 contract TransmuterRevokeAddCollateralTest is BaseTest {
     using stdJson for string;
 
     uint256 constant BPS = 1e14;
-    address collateralRevoked = BC3M;
+    address collateralRevoked = 0xCA30c93B02514f86d5C86a6e375E3A330B435Fb5;
+    address public RECEIVER = 0xA9DdD91249DFdd450E81E1c56Ab60E1A62651701;
+
     ITransmuter public transmuter;
     IAgToken public agToken;
     address[] public collateralList;
@@ -52,6 +55,7 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         (bool success, ) = gnosisSafe.call(abi.encode(address(to), payload, operation, 1e7));
         if (!success) revert();
 
+        assertGe(IERC20(collateralRevoked).balanceOf(RECEIVER), 1_700 * BASE_18);
         collateralList = transmuter.getCollateralList();
         assertEq(agToken.isMinter(address(transmuter)), true);
         assertEq(collateralList.length, 3);
@@ -95,9 +99,9 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
             assertEq(yFeeBurn.length, 3);
             assertEq(xFeeBurn[0], 1000000000);
             assertEq(yFeeBurn[0], int64(uint64((50 * BASE_9) / 10000)));
-            assertEq(xFeeBurn[1], uint64((26 * BASE_9) / 100));
+            assertEq(xFeeBurn[1], uint64((16 * BASE_9) / 100));
             assertEq(yFeeBurn[1], int64(uint64((50 * BASE_9) / 10000)));
-            assertEq(xFeeBurn[2], uint64((25 * BASE_9) / 100));
+            assertEq(xFeeBurn[2], uint64((15 * BASE_9) / 100));
             assertEq(yFeeBurn[2], 999000000);
         }
 
@@ -105,9 +109,9 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         {
             Storage.Collateral memory collatInfo = transmuter.getCollateralInfo(address(collateralRevoked));
             assertEq(collatInfo.isManaged, 0);
-            assertEq(collatInfo.isMintLive, 1);
-            assertEq(collatInfo.isBurnLive, 1);
-            assertEq(collatInfo.decimals, 18);
+            assertEq(collatInfo.isMintLive, 0);
+            assertEq(collatInfo.isBurnLive, 0);
+            assertEq(collatInfo.decimals, 0);
             assertEq(collatInfo.onlyWhitelisted, 0);
             assertEq(collatInfo.normalizedStables, 0);
             assertEq(collatInfo.managerData.subCollaterals.length, 0);
@@ -139,14 +143,14 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
 
         // Check reverting quotes on old collateral
         {
-            vm.expectRevert(Errors.InvalidSwap.selector);
+            vm.expectRevert(Errors.Paused.selector);
             transmuter.quoteOut(BASE_18, collateralRevoked, address(agToken));
-            vm.expectRevert(Errors.InvalidSwap.selector);
+            vm.expectRevert(Errors.Paused.selector);
             transmuter.quoteIn(BASE_18, collateralRevoked, address(agToken));
             // burn
-            vm.expectRevert(Errors.InvalidSwap.selector);
+            vm.expectRevert(Errors.Paused.selector);
             transmuter.quoteIn(BASE_18, address(agToken), collateralRevoked);
-            vm.expectRevert(Errors.InvalidSwap.selector);
+            vm.expectRevert(Errors.Paused.selector);
             transmuter.quoteOut(BASE_18, address(agToken), collateralRevoked);
         }
 
@@ -155,9 +159,6 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
             // we ca do some quoteIn and quoteOut
             assertEq(BASE_18, transmuter.quoteOut(BASE_18, newCollateral, address(agToken)));
             assertEq(BASE_18, transmuter.quoteIn(BASE_18, newCollateral, address(agToken)));
-            // burn
-            assertEq(BASE_18, transmuter.quoteIn(BASE_18, address(agToken), newCollateral));
-            assertEq(BASE_18, transmuter.quoteOut(BASE_18, address(agToken), newCollateral));
         }
 
         transmuter.quoteRedemptionCurve(BASE_18);

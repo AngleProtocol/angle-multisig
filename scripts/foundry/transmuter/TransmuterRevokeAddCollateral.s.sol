@@ -11,6 +11,7 @@ import "../Constants.s.sol";
 contract TransmuterRevokeAddCollateral is Utils {
     address public constant COLLATERAL_TO_REMOVE = 0xCA30c93B02514f86d5C86a6e375E3A330B435Fb5;
     address public constant COLLATERAL_TO_ADD = 0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C;
+    address public RECEIVER = 0xA9DdD91249DFdd450E81E1c56Ab60E1A62651701;
     uint256 constant BPS = 1e14;
 
     bytes oracleConfigCollatToAdd;
@@ -50,12 +51,12 @@ contract TransmuterRevokeAddCollateral is Utils {
             transactions = abi.encodePacked(transactions, internalTx);
         }
 
-        // Whitelist governor multisig to receive bC3M
+        // Whitelist deployer multisig to receive bC3M
         {
             bytes memory data = abi.encodeWithSelector(
                 ISettersGuardian.toggleWhitelist.selector,
                 Storage.WhitelistType.BACKED,
-                _chainToContract(chainId, ContractType.GovernorMultisig)
+                RECEIVER
             );
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -73,7 +74,7 @@ contract TransmuterRevokeAddCollateral is Utils {
                 (stablecoinsFromCollateral * BASE_18 * 995) / 1000 / oraclePrice,
                 agToken,
                 COLLATERAL_TO_REMOVE,
-                _chainToContract(chainId, ContractType.GovernorMultisig),
+                RECEIVER,
                 block.timestamp + 1000
             );
             uint256 dataLength = data.length;
