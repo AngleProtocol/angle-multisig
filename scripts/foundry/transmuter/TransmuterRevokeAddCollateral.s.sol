@@ -75,7 +75,7 @@ contract TransmuterRevokeAddCollateral is Utils {
                 agToken,
                 COLLATERAL_TO_REMOVE,
                 RECEIVER,
-                block.timestamp + 1000
+                0
             );
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);

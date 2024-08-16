@@ -44,10 +44,6 @@ contract TransmuterRevokeAddCollateralTest is BaseTest {
         uint256 operation = json.readUint("$.operation");
         bytes memory payload = json.readBytes("$.data");
 
-        // We fake a USDA balance (we need to send it to the governance multisig)
-        deal(address(agToken), address(gnosisSafe), 2_000_000 * BASE_18);
-        deal(address(gnosisSafe), 2 ether);
-
         // Verify that the call will succeed
         MockSafe mockSafe = new MockSafe();
         vm.etch(gnosisSafe, address(mockSafe).code);
