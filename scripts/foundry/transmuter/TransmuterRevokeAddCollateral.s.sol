@@ -51,7 +51,7 @@ contract TransmuterRevokeAddCollateral is Utils {
             transactions = abi.encodePacked(transactions, internalTx);
         }
 
-        // Whitelist deployer multisig to receive bC3M
+        // Whitelist deployer multisig to receive bIB01
         {
             bytes memory data = abi.encodeWithSelector(
                 ISettersGuardian.toggleWhitelist.selector,
