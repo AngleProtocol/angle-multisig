@@ -37,7 +37,7 @@ export const gnosisGetPendingTransactions = async (safe: string, chainId: number
   try {
     const resp = await axios.get(`${safeAPI}/safes/${
       safe
-    }/all-transactions/?queued=True`);
+    }/multisig-transactions/?executed=False`);
     return resp.data;
   } catch (e) {
     console.log('');
