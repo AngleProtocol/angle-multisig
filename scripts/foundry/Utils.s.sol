@@ -414,6 +414,7 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_GNOSIS) return address(0xbDD9a43790BFe85DA12a9EfBf0eaFD8135538c99);
         else if (chain == CHAIN_LINEA) return address(0x52F0C256E58c579Bf9E41e4332669b4f7C7209c5);
         else if (chain == CHAIN_POLYGON) return address(0x05E08E1BF31C1882822Cc48D7d51d6fe49Bca9c2);
+        else if (chain == CHAIN_ETHEREUM) return address(0x042d98c63f642797C132B3e99C20fF6F751aaD3a);
         else revert("chain not supported");
     }
 }
