@@ -20,6 +20,7 @@ function usage {
   echo -e "\t11: Linea"
   echo -e "\t12: Mode"
   echo -e "\t13: Blast"
+  echo -e "\t14: XLayer"
   echo -e "totalLimit: total limit for the token"
   echo -e "hourlyLimit: hourly limit for the token"
   echo -e "chainTotalHourlyLimit: total hourly limit for the chain"
@@ -107,8 +108,7 @@ function main {
     echo ""
     echo "Running deployment on chain $chainId with total limit: $totalLimit, hourly limit: $hourlyLimit and chain total hourly limit: $chainTotalHourlyLimit"
 
-    cd lib/angle-tokens && forge script DeployAngleSideChainMultiBridge --fork-url $chainUri --broadcast --verify && cd ../..
-
+    cd lib/angle-tokens && forge script DeployAngleSideChainMultiBridge --fork-url $chainUri --broadcast --verify && cd ../.
     if [ $? -ne 0 ]; then
         echo ""
         echo "Deployment failed"
