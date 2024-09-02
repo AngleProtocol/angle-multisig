@@ -12,7 +12,7 @@
     "prettier": "prettier --write ."
   },
   "devDependencies": {
-    "@angleprotocol/sdk": "^v2.25.9",
+    "@angleprotocol/sdk": "^v2.28.7",
     "@chainlink/contracts": "0.2.1",
     "@metamask/detect-provider": "1.2.0",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
@@ -54,7 +54,7 @@
     "yargs": "^17.2.1"
   },
   "dependencies": {
-    "@layerzerolabs/lz-sdk": "^0.0.75"
+    "@layerzerolabs/lz-sdk": "^0.0.80"
   },
   "keywords": [],
   "author": "",

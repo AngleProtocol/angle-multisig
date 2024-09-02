@@ -20,6 +20,9 @@ function main {
     echo "- 9: Polygon ZkEvm"
     echo "- 10: Optimism"
     echo "- 11: Linea"
+    echo "- 12: Mode"
+    echo "- 13: Blast"
+    echo "- 14: XLayer"
 
     read option
 

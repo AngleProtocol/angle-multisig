@@ -20,6 +20,7 @@ function usage {
   echo -e "\t11: Linea"
   echo -e "\t12: Mode"
   echo -e "\t13: Blast"
+  echo -e "\t14: XLayer"
   echo -e "stableName: name of the stable token (ex: EUR)"
   echo -e "totalLimit: total limit of the bridge"
   echo -e "hourlyLimit: hourly limit of the bridge"

@@ -328,6 +328,7 @@ contract Utils is Script, CommonUtils {
         else if (chain == CHAIN_MANTLE) return multiSendMantle;
         else if (chain == CHAIN_MODE) return multiSendMode;
         else if (chain == CHAIN_BLAST) return multiSendBlast;
+        else if (chain == CHAIN_XLAYER) return multiSendXLayer;
         else revert("chain not supported");
     }
 
