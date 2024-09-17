@@ -3,7 +3,6 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
-import {ITreasury} from "borrow/interfaces/ITreasury.sol";
 import {IAgToken} from "borrow/interfaces/IAgToken.sol";
 import {MultiSend} from "safe/libraries/MultiSend.sol";
 import {Safe, Enum} from "safe/Safe.sol";

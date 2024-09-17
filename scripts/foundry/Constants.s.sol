@@ -1,6 +1,5 @@
 pragma solidity ^0.8.19;
 
-import { ITreasury } from "borrow/interfaces/ITreasury.sol";
 import { MultiSend } from "safe/libraries/MultiSend.sol";
 import { Safe, Enum } from "safe/Safe.sol";
 import { ITransmuter } from "transmuter/interfaces/ITransmuter.sol";

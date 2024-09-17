@@ -1,5 +1,7 @@
 pragma solidity ^0.8.19;
 
+import { ITreasury as IBorrowTreasury } from "borrow/interfaces/ITreasury.sol";
+
 interface IVaultManagerGovernance {
     function setUint64(uint64 param, bytes32 what) external;
 
@@ -10,6 +12,18 @@ interface ISavings {
     function setRate(uint208 newRate) external;
 
     function rate() external view returns (uint208);
+
+    function maxRate() external view returns (uint256);
+
+    function setMaxRate(uint256 newRate) external;
+
+    function toggleTrusted(address keeper) external;
+
+    function isTrustedUpdater(address keeper) external view returns (bool);
+}
+
+interface ITreasury is IBorrowTreasury {
+    function addMinter(address minter) external;
 }
 
 interface INameable {

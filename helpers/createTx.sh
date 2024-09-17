@@ -70,6 +70,9 @@ function main {
         echo "- 9: Polygon ZkEvm"
         echo "- 10: Optimism"
         echo "- 11: Linea"
+        echo "- 12: Mode"
+        echo "- 13: Blast"
+        echo "- 14: XLayer"
         echo "- 100: All"
 
         read chains
@@ -82,7 +85,7 @@ function main {
 
     if [[ "$chains" == "100" ]]; then
         # If user entered 100 (All), loop from 1 to 11 and add all chains
-        chains="1,2,3,4,5,6,7,8,9,10,11"
+        chains="1,2,3,4,5,6,7,8,9,10,11,12,13,14,100"
     fi
 
     for chain in $(echo $chains | sed "s/,/ /g")
