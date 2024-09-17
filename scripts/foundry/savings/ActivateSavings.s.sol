@@ -14,7 +14,7 @@ contract ActivateSavings is Utils {
         uint256 value = 0;
 
         /** TODO complete */
-        address stToken = 0x004626A008B1aCdC4c74ab51644093b155e59A23; // _chainToContract(chainId, ContractType.StEUR);
+        address stToken = _chainToContract(chainId, ContractType.StEUR);
         address treasury = _chainToContract(chainId, ContractType.TreasuryAgEUR);
         address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
         uint256 rate = 3022265993024575488;
