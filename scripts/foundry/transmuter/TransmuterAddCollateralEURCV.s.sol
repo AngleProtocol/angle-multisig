@@ -8,7 +8,7 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract TransmuterRevokeAddCollateralEURCV is Utils {
+contract TransmuterAddCollateralEURCV is Utils {
     address public constant COLLATERAL_TO_ADD = 0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2;
     uint256 constant BPS = 1e14;
 
