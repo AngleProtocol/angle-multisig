@@ -8,9 +8,8 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract TransmuterRevokeAddCollateral is Utils {
+contract TransmuterRevokeAddCollateralEURCV is Utils {
     address public constant COLLATERAL_TO_ADD = 0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2;
-    address public RECEIVER = 0xA9DdD91249DFdd450E81E1c56Ab60E1A62651701;
     uint256 constant BPS = 1e14;
 
     bytes oracleConfigCollatToAdd;
@@ -29,6 +28,9 @@ contract TransmuterRevokeAddCollateral is Utils {
         uint8 isDelegateCall = 0;
         address to = address(transmuter);
         uint256 value = 0;
+
+        (uint64[] memory xFeeMint, int64[] memory yFeeMint) = transmuter.getCollateralMintFees(EUROC);
+        (uint64[] memory xFeeBurn, int64[] memory yFeeBurn) = transmuter.getCollateralBurnFees(EUROC);
 
         // Add the new collateral
         {
