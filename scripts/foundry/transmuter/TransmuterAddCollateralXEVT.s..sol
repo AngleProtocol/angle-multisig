@@ -8,9 +8,8 @@ import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import "../Constants.s.sol";
 
-contract TransmuterRevokeAddCollateral is Utils {
-    address public constant COLLATERAL_TO_ADD = 0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2;
-    address public RECEIVER = 0xA9DdD91249DFdd450E81E1c56Ab60E1A62651701;
+contract TransmuterAddCollateralEURCV is Utils {
+    address public constant COLLATERAL_TO_ADD = 0x3Ee320c9F73a84D1717557af00695A34b26d1F1d;
     uint256 constant BPS = 1e14;
 
     bytes oracleConfigCollatToAdd;
@@ -30,17 +29,36 @@ contract TransmuterRevokeAddCollateral is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
+        uint64[] memory xFeeBurn = new uint64[](3);
+        uint64[] memory xFeeMint = new uint64[](3);
+        int64[] memory yFeeMint = new int64[](xFeeMint.length);
+        int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
+        xFeeMint[0] = 0;
+        xFeeMint[1] = 190000000;
+        xFeeMint[2] = 200000000;
+        xFeeBurn[0] = 1000000000;
+        xFeeBurn[1] = 60000000;
+        xFeeBurn[2] = 50000000;
+
+        yFeeBurn[0] = 5000000;
+        yFeeBurn[1] = 5000000;
+        yFeeBurn[2] = 999000000;
+        yFeeMint[0] = 0;
+        yFeeMint[1] = 0;
+        yFeeMint[2] = 999999999999;
+
         // Add the new collateral
         {
             {
+                address oracle;
+                uint256 normalizationFactor;
                 bytes memory readData;
-                bytes memory targetData;
+                bytes memory targetData = abi.encode(oracle, normalizationFactor);
                 oracleConfigCollatToAdd = abi.encode(
                     Storage.OracleReadType.NO_ORACLE,
-                    Storage.OracleReadType.STABLE,
+                    Storage.OracleReadType.MORPHO_ORACLE,
                     readData,
                     targetData,
-                    // With no oracle the below oracles are useless
                     abi.encode(uint128(0), uint128(50 * BPS))
                 );
             }
