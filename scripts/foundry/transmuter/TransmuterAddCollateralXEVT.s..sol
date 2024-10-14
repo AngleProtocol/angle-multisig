@@ -50,8 +50,8 @@ contract TransmuterAddCollateralXEVT is Utils {
         // Add the new collateral
         {
             {
-                address oracle; // TODO: Set the oracle address
-                uint256 normalizationFactor; // TODO: Set the normalization factor
+                address oracle = 0x6B102047A4bB943DE39233E44487F2d57bDCb33e;
+                uint256 normalizationFactor = 18;
                 bytes memory readData;
                 bytes memory targetData = abi.encode(oracle, normalizationFactor);
                 oracleConfigCollatToAdd = abi.encode(
