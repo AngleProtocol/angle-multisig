@@ -34,24 +34,24 @@ contract TransmuterAddCollateralEURCV is Utils {
         int64[] memory yFeeMint = new int64[](xFeeMint.length);
         int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
         xFeeMint[0] = 0;
-        xFeeMint[1] = 190000000;
-        xFeeMint[2] = 200000000;
-        xFeeBurn[0] = 1000000000;
-        xFeeBurn[1] = 60000000;
-        xFeeBurn[2] = 50000000;
+        xFeeMint[1] = 0.19e9;
+        xFeeMint[2] = 0.20e9;
+        xFeeBurn[0] = 1e9;
+        xFeeBurn[1] = 0.06e9;
+        xFeeBurn[2] = 0.05e9;
 
-        yFeeBurn[0] = 5000000;
-        yFeeBurn[1] = 5000000;
-        yFeeBurn[2] = 999000000;
+        yFeeBurn[0] = 0.005e9;
+        yFeeBurn[1] = 0.005e9;
+        yFeeBurn[2] = 0.999e9;
         yFeeMint[0] = 0;
         yFeeMint[1] = 0;
-        yFeeMint[2] = 999999999999;
+        yFeeMint[2] = 100e9 - 1;
 
         // Add the new collateral
         {
             {
-                address oracle;
-                uint256 normalizationFactor;
+                address oracle; // TODO: Set the oracle address
+                uint256 normalizationFactor; // TODO: Set the normalization factor
                 bytes memory readData;
                 bytes memory targetData = abi.encode(oracle, normalizationFactor);
                 oracleConfigCollatToAdd = abi.encode(
