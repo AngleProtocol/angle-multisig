@@ -38,7 +38,7 @@ contract TransmuterAddCollateralEURCV is Utils {
         xFeeMint[2] = 0.30e9;
         xFeeBurn[0] = 1e9;
 
-        yFeeBurn[0] = 0.9995e9;
+        yFeeBurn[0] = 0.9995e9; // 5BPS positive burning fee as we get rev share from it
         yFeeMint[0] = 0;
         yFeeMint[1] = 0;
         yFeeMint[2] = 100e9 - 1;
