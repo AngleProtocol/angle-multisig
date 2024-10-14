@@ -29,8 +29,19 @@ contract TransmuterAddCollateralEURCV is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
-        (uint64[] memory xFeeMint, int64[] memory yFeeMint) = transmuter.getCollateralMintFees(EUROC);
-        (uint64[] memory xFeeBurn, int64[] memory yFeeBurn) = transmuter.getCollateralBurnFees(EUROC);
+        uint64[] memory xFeeBurn = new uint64[](1);
+        uint64[] memory xFeeMint = new uint64[](3);
+        int64[] memory yFeeMint = new int64[](xFeeMint.length);
+        int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
+        xFeeMint[0] = 0;
+        xFeeMint[1] = 0.29e9;
+        xFeeMint[2] = 0.30e9;
+        xFeeBurn[0] = 1e9;
+
+        yFeeBurn[0] = -0.0001e9;
+        yFeeMint[0] = 0;
+        yFeeMint[1] = 0;
+        yFeeMint[2] = 0;
 
         // Add the new collateral
         {
