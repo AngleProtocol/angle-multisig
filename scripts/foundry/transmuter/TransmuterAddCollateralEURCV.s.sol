@@ -38,10 +38,10 @@ contract TransmuterAddCollateralEURCV is Utils {
         xFeeMint[2] = 0.30e9;
         xFeeBurn[0] = 1e9;
 
-        yFeeBurn[0] = -0.0001e9;
+        yFeeBurn[0] = 0.9995e9;
         yFeeMint[0] = 0;
         yFeeMint[1] = 0;
-        yFeeMint[2] = 0;
+        yFeeMint[2] = 100e9 - 1;
 
         // Add the new collateral
         {

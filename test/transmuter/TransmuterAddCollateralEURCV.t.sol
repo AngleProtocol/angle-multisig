@@ -73,25 +73,23 @@ contract TransmuterAddCollateralEURCVTest is BaseTest {
         }
 
         {
-            (uint64[] memory xFeeMintExpected, int64[] memory yFeeMintExpected) = transmuter.getCollateralMintFees(EUROC);
-            (uint64[] memory xFeeBurnExpected, int64[] memory yFeeBurnExpected) = transmuter.getCollateralBurnFees(EUROC);
-
             (uint64[] memory xFeeMint, int64[] memory yFeeMint) = transmuter.getCollateralMintFees(newCollateral);
             (uint64[] memory xFeeBurn, int64[] memory yFeeBurn) = transmuter.getCollateralBurnFees(newCollateral);
 
-            assertEq(xFeeMint.length, xFeeMintExpected.length);
-            assertEq(yFeeMint.length, yFeeMintExpected.length);
-            assertEq(xFeeBurn.length, xFeeBurnExpected.length);
-            assertEq(yFeeBurn.length, yFeeBurnExpected.length);
+            assertEq(xFeeMint.length, 3);
+            assertEq(yFeeMint.length, 3);
+            assertEq(xFeeBurn.length, 1);
+            assertEq(yFeeBurn.length, 1);
 
-            for (uint256 i = 0; i < xFeeMint.length; i++) {
-                assertEq(xFeeMint[i], xFeeMintExpected[i]);
-                assertEq(yFeeMint[i], yFeeMintExpected[i]);
-            }
-            for (uint256 i = 0; i < xFeeBurn.length; i++) {
-                assertEq(xFeeBurn[i], xFeeBurnExpected[i]);
-                assertEq(yFeeBurn[i], yFeeBurnExpected[i]);
-            }
+            assertEq(xFeeMint[0], 0);
+            assertEq(xFeeMint[1], 0.29e9);
+            assertEq(xFeeMint[2], 0.30e9);
+            assertEq(xFeeBurn[0], 1e9);
+
+            assertEq(yFeeBurn[0], 0.9995e9);
+            assertEq(yFeeMint[0], 0);
+            assertEq(yFeeMint[1], 0);
+            assertEq(yFeeMint[2], 100e9 - 1);
         }
 
         // Check storage new collat
