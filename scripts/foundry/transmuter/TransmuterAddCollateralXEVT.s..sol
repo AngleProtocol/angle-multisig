@@ -51,7 +51,7 @@ contract TransmuterAddCollateralXEVT is Utils {
         {
             {
                 address oracle = 0x6B102047A4bB943DE39233E44487F2d57bDCb33e;
-                uint256 normalizationFactor = 18;
+                uint256 normalizationFactor = 18; // price == 36 decimals
                 bytes memory readData;
                 bytes memory targetData = abi.encode(oracle, normalizationFactor);
                 oracleConfigCollatToAdd = abi.encode(
