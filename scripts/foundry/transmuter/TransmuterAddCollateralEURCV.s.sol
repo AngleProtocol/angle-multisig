@@ -10,7 +10,6 @@ import "../Constants.s.sol";
 
 contract TransmuterAddCollateralEURCV is Utils {
     address public constant COLLATERAL_TO_ADD = 0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2;
-    uint256 constant BPS = 1e14;
 
     bytes oracleConfigCollatToAdd;
     uint64[] public xFeeMint;
@@ -38,7 +37,7 @@ contract TransmuterAddCollateralEURCV is Utils {
         xFeeMint[2] = 0.30e9;
         xFeeBurn[0] = 1e9;
 
-        yFeeBurn[0] = 0.9995e9; // 5BPS positive burning fee as we get rev share from it
+        yFeeBurn[0] = 0.0005e9;
         yFeeMint[0] = 0;
         yFeeMint[1] = 0;
         yFeeMint[2] = 100e9 - 1;
@@ -54,7 +53,7 @@ contract TransmuterAddCollateralEURCV is Utils {
                     readData,
                     targetData,
                     // With no oracle the below oracles are useless
-                    abi.encode(uint128(0), uint128(50 * BPS))
+                    abi.encode(uint128(0), uint128(0))
                 );
             }
             {

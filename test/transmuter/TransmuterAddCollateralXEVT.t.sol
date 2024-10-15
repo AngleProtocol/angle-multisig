@@ -16,8 +16,6 @@ import { IERC4626 } from "oz/token/ERC20/extensions/ERC4626.sol";
 contract TransmuterAddCollateralXEVTTest is BaseTest {
     using stdJson for string;
 
-    uint256 constant BPS = 1e14;
-
     ITransmuter public transmuter;
     IAgToken public agToken;
     address[] public collateralList;
@@ -70,7 +68,7 @@ contract TransmuterAddCollateralXEVTTest is BaseTest {
             assertEq(uint256(targetType), uint256(Storage.OracleReadType.MORPHO_ORACLE));
             assertEq(oracleData.length, 0);
             assertNotEq(targetData.length, 0);
-            assertEq(hyperparameters, abi.encode(uint128(0), uint128(50 * BPS)));
+            assertEq(hyperparameters, abi.encode(uint128(0), uint128(0)));
         }
 
         {
