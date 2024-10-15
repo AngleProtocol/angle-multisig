@@ -15,8 +15,6 @@ import { IERC20 } from "oz/token/ERC20/IERC20.sol";
 contract TransmuterAddCollateralEURCVTest is BaseTest {
     using stdJson for string;
 
-    uint256 constant BPS = 1e14;
-
     ITransmuter public transmuter;
     IAgToken public agToken;
     address[] public collateralList;
@@ -69,7 +67,7 @@ contract TransmuterAddCollateralEURCVTest is BaseTest {
             assertEq(uint256(targetType), uint256(Storage.OracleReadType.STABLE));
             assertEq(oracleData.length, 0);
             assertEq(targetData.length, 0);
-            assertEq(hyperparameters, abi.encode(uint128(0), uint128(50 * BPS)));
+            assertEq(hyperparameters, abi.encode(uint128(0), uint128(0)));
         }
 
         {
@@ -86,7 +84,7 @@ contract TransmuterAddCollateralEURCVTest is BaseTest {
             assertEq(xFeeMint[2], 0.30e9);
             assertEq(xFeeBurn[0], 1e9);
 
-            assertEq(yFeeBurn[0], 0.9995e9);
+            assertEq(yFeeBurn[0], 0.0005e9);
             assertEq(yFeeMint[0], 0);
             assertEq(yFeeMint[1], 0);
             assertEq(yFeeMint[2], 100e9 - 1);
