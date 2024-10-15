@@ -11,6 +11,7 @@ import "transmuter/utils/Errors.sol" as Errors;
 import { ITransmuter, ISettersGovernor, ISettersGuardian, ISwapper, IGetters } from "transmuter/interfaces/ITransmuter.sol";
 import { MAX_MINT_FEE, MAX_BURN_FEE } from "transmuter/utils/Constants.sol";
 import { IERC20 } from "oz/token/ERC20/IERC20.sol";
+import { IERC4626 } from "oz/token/ERC20/extensions/ERC4626.sol";
 
 contract TransmuterAddCollateralXEVTTest is BaseTest {
     using stdJson for string;
@@ -66,9 +67,9 @@ contract TransmuterAddCollateralXEVTTest is BaseTest {
                 bytes memory hyperparameters
             ) = transmuter.getOracle(newCollateral);
             assertEq(uint256(oracleType), uint256(Storage.OracleReadType.NO_ORACLE));
-            assertEq(uint256(targetType), uint256(Storage.OracleReadType.STABLE));
+            assertEq(uint256(targetType), uint256(Storage.OracleReadType.MORPHO_ORACLE));
             assertEq(oracleData.length, 0);
-            assertEq(targetData.length, 0);
+            assertNotEq(targetData.length, 0);
             assertEq(hyperparameters, abi.encode(uint128(0), uint128(50 * BPS)));
         }
 
@@ -102,7 +103,7 @@ contract TransmuterAddCollateralXEVTTest is BaseTest {
             assertEq(collatInfo.isManaged, 0);
             assertEq(collatInfo.isMintLive, 1);
             assertEq(collatInfo.isBurnLive, 1);
-            assertEq(collatInfo.decimals, 18);
+            assertEq(collatInfo.decimals, 6);
             assertEq(collatInfo.onlyWhitelisted, 0);
             assertEq(collatInfo.normalizedStables, 0);
             assertEq(collatInfo.managerData.subCollaterals.length, 0);
@@ -110,20 +111,21 @@ contract TransmuterAddCollateralXEVTTest is BaseTest {
         }
 
         // Test oracle values returned
+        uint256 value = IERC4626(newCollateral).convertToAssets(1e6) * 1e12;
         {
             (uint256 mint, uint256 burn, uint256 ratio, uint256 minRatio, uint256 redemption) = transmuter
                 .getOracleValues(newCollateral);
-            // assertEq(mint, BASE_18);
-            // assertEq(burn, BASE_18);
-            // assertEq(ratio, BASE_18);
-            // assertEq(redemption, BASE_18);
+            assertEq(mint, value);
+            assertEq(burn, value);
+            assertEq(ratio, BASE_18);
+            assertEq(redemption, value);
         }
 
         // Check quotes are working on the added collateral
         {
             // we ca do some quoteIn and quoteOut
-            transmuter.quoteOut(BASE_18, newCollateral, address(agToken);
-            transmuter.quoteIn(BASE_18, newCollateral, address(agToken)));
+            transmuter.quoteOut(value, newCollateral, address(agToken));
+            transmuter.quoteIn(value, newCollateral, address(agToken));
         }
 
         transmuter.quoteRedemptionCurve(BASE_18);
