@@ -21,29 +21,29 @@ contract TransmuterAddCollateralEURCV is Utils {
     function run() external {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
+        address safe = _chainToContract(chainId, ContractType.GovernorMultisig);
         ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
         agToken = address(transmuter.agToken());
         bytes memory transactions;
-        uint8 isDelegateCall = 0;
-        address to = address(transmuter);
-        uint256 value = 0;
 
         uint64[] memory xFeeBurn = new uint64[](1);
         uint64[] memory xFeeMint = new uint64[](3);
         int64[] memory yFeeMint = new int64[](xFeeMint.length);
         int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
+        xFeeBurn[0] = 1e9;
+        yFeeBurn[0] = 0.0005e9;
+
         xFeeMint[0] = 0;
         xFeeMint[1] = 0.29e9;
         xFeeMint[2] = 0.30e9;
-        xFeeBurn[0] = 1e9;
-
-        yFeeBurn[0] = 0.0005e9;
         yFeeMint[0] = 0;
         yFeeMint[1] = 0;
         yFeeMint[2] = 100e9 - 1;
 
         // Add the new collateral
         {
+            address to = address(transmuter);
+            uint8 isDelegateCall = 0;
             {
                 bytes memory readData;
                 bytes memory targetData;
@@ -59,7 +59,7 @@ contract TransmuterAddCollateralEURCV is Utils {
             {
                 bytes memory data = abi.encodeWithSelector(ISettersGovernor.addCollateral.selector, COLLATERAL_TO_ADD);
                 uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
@@ -72,7 +72,7 @@ contract TransmuterAddCollateralEURCV is Utils {
                     true
                 );
                 uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
@@ -85,7 +85,7 @@ contract TransmuterAddCollateralEURCV is Utils {
                     false
                 );
                 uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
@@ -95,7 +95,7 @@ contract TransmuterAddCollateralEURCV is Utils {
                     oracleConfigCollatToAdd
                 );
                 uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
@@ -105,7 +105,7 @@ contract TransmuterAddCollateralEURCV is Utils {
                     Storage.ActionType.Mint
                 );
                 uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
@@ -115,13 +115,12 @@ contract TransmuterAddCollateralEURCV is Utils {
                     Storage.ActionType.Burn
                 );
                 uint256 dataLength = data.length;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
         }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
-        address multiSend = address(_chainToMultiSend(chainId));
-        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
+        _serializeJson(chainId, address(_chainToMultiSend(chainId)), uint256(0), payloadMultiSend, Enum.Operation.DelegateCall, hex"", safe);
     }
 }
