@@ -32,16 +32,16 @@ contract TransmuterAddCollateralXEVT is Utils {
         uint64[] memory xFeeMint = new uint64[](3);
         int64[] memory yFeeMint = new int64[](xFeeMint.length);
         int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
-        xFeeMint[0] = 0;
-        xFeeMint[1] = 0.19e9;
-        xFeeMint[2] = 0.20e9;
         xFeeBurn[0] = 1e9;
         xFeeBurn[1] = 0.06e9;
         xFeeBurn[2] = 0.05e9;
-
         yFeeBurn[0] = 0.005e9;
         yFeeBurn[1] = 0.005e9;
         yFeeBurn[2] = 0.999e9;
+
+        xFeeMint[0] = 0;
+        xFeeMint[1] = 0.19e9;
+        xFeeMint[2] = 0.20e9;
         yFeeMint[0] = 0;
         yFeeMint[1] = 0;
         yFeeMint[2] = 100e9 - 1;
@@ -127,6 +127,6 @@ contract TransmuterAddCollateralXEVT is Utils {
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
         address multiSend = address(_chainToMultiSend(chainId));
-        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"");
+        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"", _chainToContract(chainId, ContractType.GovernorMultisig));
     }
 }
