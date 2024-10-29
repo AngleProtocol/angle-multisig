@@ -9,7 +9,7 @@ gas_reports = ["*"]
 via_ir = false
 sizes = true
 optimizer_runs=1000
-solc_version = '0.8.22'
+solc_version = '0.8.25'
 fs_permissions = [{ access = "read-write", path = "./scripts/foundry/transaction.json"}, { access = "read-write", path = "./scripts/foundry/transactions.json"}, { access = "read-write", path = "./lib/angle-tokens/scripts"}, { access = "read-write", path = "./scripts/proposals/transmuter/selectors.json"}, { access = "read-write", path = "./scripts/foundry/transmuter/updateFacets/selectors_replace.json"}, { access = "read-write", path = "./scripts/foundry/transmuter/updateFacets/selectors_add.json"}]
 
 ffi = true
