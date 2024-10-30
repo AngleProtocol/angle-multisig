@@ -19,8 +19,8 @@ contract SetupHarvestersScript is Utils {
 
         /** TODO  complete */
         address genericHarvesterUSD = 0x54b96Fee8208Ea7aCe3d415e5c14798112909794;
-        address multiBlockHarvesterUSD = 0x51401aD6023755237ffb0EF0c9bD1379355f6a7b;
-        address multiBlockHarvesterEUR = 0x27042f1B94e4F56d00c1aD21F4Ee66816587989b;
+        address multiBlockHarvesterUSD = 0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D;
+        address multiBlockHarvesterEUR = 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77;
         address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
         /** END  complete */
 
