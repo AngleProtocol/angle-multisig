@@ -16,11 +16,27 @@ contract SetupHarvestersTest is BaseTest {
         address safe = json.readAddress("$.safe");
         vm.selectFork(forkIdentifier[chainId]);
 
-         /** TODO  complete */
+        /** TODO  complete */
         address genericHarvesterUSD = 0x54b96Fee8208Ea7aCe3d415e5c14798112909794;
         address multiBlockHarvesterUSD = 0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D;
         address multiBlockHarvesterEUR = 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77;
         address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
+        address depositAddressUSDM = 0x78A42Aa9b25Cd00823Ebb34DDDCF38224D99e0C8;
+
+        // steaksUSDC
+        uint64 targetExposureSteakUSDC = 0.35e9;
+        uint64 minExposureSteakUSDC = 0.3e9;
+        uint64 maxExposureSteakUSDC = 0.79e9;
+
+        // USDM
+        uint64 targetExposureUSDM = 0.50e9;
+        uint64 minExposureUSDM = 0.3e9;
+        uint64 maxExposureUSDM = 0.79e9;
+
+        // XEVT
+        uint64 targetExposureXEVT = 0.125e9;
+        uint64 minExposureXEVT = 0.06e9;
+        uint64 maxExposureXEVT = 0.19e9;
         /** END  complete */
 
         address to = json.readAddress("$.to");
@@ -38,25 +54,29 @@ contract SetupHarvestersTest is BaseTest {
         assertEq(BaseHarvester(multiBlockHarvesterEUR).isTrusted(keeper), true);
         assertEq(BaseHarvester(multiBlockHarvesterUSD).isTrusted(keeper), true);
 
-        (address asset, uint64 target,,, uint64 overrideExp) = BaseHarvester(multiBlockHarvesterUSD).yieldBearingData(
-            address(USDM)
-        );
+        (address asset, uint64 target, uint64 minExposure, uint256 minExposure, uint64 overrideExp) = BaseHarvester(
+            multiBlockHarvesterUSD
+        ).yieldBearingData(address(USDM));
         assertEq(asset, address(USDC));
-        assertEq(target, 0.125e9);
-        assertEq(overrideExp, 0);
+        assertEq(target, targetExposureUSDM);
+        assertEq(yieldBearingData.minExposure, minExposureUSDM);
+        assertEq(yieldBearingData.maxExposure, maxExposureUSDM);
+        assertEq(overrideExp, 2);
+        assertEq(harvester.yieldBearingToDepositAddress(USDM), depositAddressUSDM);
 
-        (asset, target,,, overrideExp) = BaseHarvester(multiBlockHarvesterEUR).yieldBearingData(
-            address(XEVT)
-        );
+        (asset, target,uint64 minExposure, uint256 minExposure , overrideExp) = BaseHarvester(multiBlockHarvesterEUR).yieldBearingData(address(XEVT));
         assertEq(asset, address(EUROC));
-        assertEq(target, 0.125e9);
-        assertEq(overrideExp, 0);
+        assertEq(target, targetExposureXEVT);
+        assertEq(overrideExp, 2);
+        assertEq(yieldBearingData.minExposure, minExposureXEVT);
+        assertEq(yieldBearingData.maxExposure, maxExposureXEVT);
+        assertEq(harvester.yieldBearingToDepositAddress(XEVT), XEVT);
 
-        (asset, target,,, overrideExp) = BaseHarvester(genericHarvesterUSD).yieldBearingData(
-            address(STEAK_USDC)
-        );
+        (asset, target, uint64 minExposure, uint256 minExposure, overrideExp) = BaseHarvester(genericHarvesterUSD).yieldBearingData(address(STEAK_USDC));
         assertEq(asset, address(USDC));
-        assertEq(target, 0.13e9);
-        assertEq(overrideExp, 0);
+        assertEq(target, targetExposureSteakUSDC);
+        assertEq(overrideExp, 2);
+        assertEq(yieldBearingData.minExposure, minExposureSteakUSDC);
+        assertEq(yieldBearingData.maxExposure, maxExposureSteakUSDC);
     }
 }
