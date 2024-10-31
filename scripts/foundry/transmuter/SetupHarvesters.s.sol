@@ -47,24 +47,6 @@ contract SetupHarvesters is Utils {
         uint64 targetExposureXEVT = 0.125e9;
         /** END  complete */
 
-        // Modify EURC exposure
-        {
-            uint64[] memory xFeeMint = new uint64[](1);
-            uint64[] memory xFeeBurn = new uint64[](1);
-            xFeeMint[0] = 0;
-            xFeeBurn[0] = 0;
-            bytes memory data = abi.encodeWithSelector(
-                ISettersGuardian.setFees.selector,
-                EUROC,
-                xFeeMint,
-                xFeeBurn,
-                true
-            );
-            address to = _chainToContract(chainId, ContractType.TransmuterAgEUR);
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
-
         // Add keeper to trusted
         {
             address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
