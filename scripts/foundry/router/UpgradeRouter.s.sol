@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.19;
 
-import {TransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
+import { TransparentUpgradeableProxy, ITransparentUpgradeableProxy } from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import { Enum } from "safe/Safe.sol";
 import "../Constants.s.sol";
@@ -21,7 +21,7 @@ contract UpgradeRouter is Utils {
 
         if (chainId == CHAIN_LINEA) {
             {
-                bytes memory data = abi.encodeWithSelector(TransparentUpgradeableProxy.upgradeTo.selector, routerImpl);
+                bytes memory data = abi.encodeWithSelector(ITransparentUpgradeableProxy.upgradeTo.selector, routerImpl);
                 address to = router;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
                 transactions = abi.encodePacked(transactions, internalTx);
@@ -34,7 +34,6 @@ contract UpgradeRouter is Utils {
                 transactions = abi.encodePacked(transactions, internalTx);
             }
         }
-
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
 

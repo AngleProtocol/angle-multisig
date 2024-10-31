@@ -6,10 +6,32 @@ import { IVaultManagerFunctions } from "borrow/interfaces/IVaultManager.sol";
 import { IERC721Metadata } from "oz/token/ERC721/extensions/IERC721Metadata.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
-import { BaseHarvester } from "transmuter/helpers/BaseHarvester.sol";
+import { BaseHarvester, YieldBearingParams } from "transmuter/helpers/BaseHarvester.sol";
+import { ISettersGuardian } from "transmuter/interfaces/ITransmuter.sol";
 import "../Constants.s.sol";
 
-contract SetupHarvestersScript is Utils {
+interface IHarvester {
+    function setYieldBearingToDepositAddress(address yieldBearingAsset, address newDepositAddress) external;
+
+    function setYieldBearingAssetData(
+        address yieldBearingAsset,
+        address asset,
+        uint64 targetExposure,
+        uint64 minExposure,
+        uint64 maxExposure,
+        uint64 overrideExposures
+    ) external;
+
+    function toggleTrusted(address trusted) external;
+
+    function isTrusted(address trusted) external returns (bool);
+
+    function yieldBearingData(address asset) external returns (YieldBearingParams memory);
+
+    function yieldBearingToDepositAddress(address) external returns (address);
+}
+
+contract SetupHarvesters is Utils {
     function run() external {
         bytes memory transactions;
         uint8 isDelegateCall = 0;
@@ -18,58 +40,73 @@ contract SetupHarvestersScript is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        address genericHarvesterUSD = 0x54b96Fee8208Ea7aCe3d415e5c14798112909794;
         address multiBlockHarvesterUSD = 0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D;
         address multiBlockHarvesterEUR = 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77;
-        address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
-        address depositAddressUSDM = 0x78A42Aa9b25Cd00823Ebb34DDDCF38224D99e0C8;
         uint64 targetExposureSteakUSDC = 0.35e9;
         uint64 targetExposureUSDM = 0.50e9;
         uint64 targetExposureXEVT = 0.125e9;
         /** END  complete */
 
-        bytes memory transactions;
-        uint8 isDelegateCall = 0;
-        address to = address(transmuter);
-        uint256 value = 0;
-
-        // Add keeper to trusted
+        // Modify EURC exposure
         {
-            bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
-            address to = multiBlockHarvesterUSD;
+            uint64[] memory xFeeMint = new uint64[](1);
+            uint64[] memory xFeeBurn = new uint64[](1);
+            xFeeMint[0] = 0;
+            xFeeBurn[0] = 0;
+            bytes memory data = abi.encodeWithSelector(
+                ISettersGuardian.setFees.selector,
+                EUROC,
+                xFeeMint,
+                xFeeBurn,
+                true
+            );
+            address to = _chainToContract(chainId, ContractType.TransmuterAgEUR);
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
+
+        // Add keeper to trusted
         {
-            bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
-            address to = multiBlockHarvesterEUR;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
-            transactions = abi.encodePacked(transactions, internalTx);
+            address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
+            {
+                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
+                address to = multiBlockHarvesterUSD;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
+                address to = multiBlockHarvesterEUR;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
         }
 
         // set yield bearing to deposit address
         {
-            bytes memory data = abi.encodeWithSelector(IHarvester.setYieldBearingToDepositAddress.selector, XEVT, XEVT);
+            address depositAddressUSDM = 0x78A42Aa9b25Cd00823Ebb34DDDCF38224D99e0C8;
 
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
-
-        {
             bytes memory data = abi.encodeWithSelector(
                 IHarvester.setYieldBearingToDepositAddress.selector,
                 USDM,
                 depositAddressUSDM
             );
+            address to = multiBlockHarvesterUSD;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
 
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+        {
+            bytes memory data = abi.encodeWithSelector(IHarvester.setYieldBearingToDepositAddress.selector, XEVT, XEVT);
+            address to = multiBlockHarvesterEUR;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
 
         // Set target exposures
         {
+            address genericHarvesterUSD = 0x54b96Fee8208Ea7aCe3d415e5c14798112909794;
+
             bytes memory data = abi.encodeWithSelector(
                 BaseHarvester.setYieldBearingAssetData.selector,
                 STEAK_USDC,
@@ -83,6 +120,7 @@ contract SetupHarvestersScript is Utils {
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
+
         {
             bytes memory data = abi.encodeWithSelector(
                 BaseHarvester.setYieldBearingAssetData.selector,
@@ -97,6 +135,7 @@ contract SetupHarvestersScript is Utils {
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }
+
         {
             bytes memory data = abi.encodeWithSelector(
                 BaseHarvester.setYieldBearingAssetData.selector,
