@@ -81,11 +81,11 @@ contract TransmuterAddCollateralXEVTTest is BaseTest {
             assertEq(yFeeBurn.length, 3);
 
             assertEq(xFeeMint[0], 0);
-            assertEq(xFeeMint[1], 0.79e9);
-            assertEq(xFeeMint[2], 0.80e9);
+            assertEq(xFeeMint[1], 0.59e9);
+            assertEq(xFeeMint[2], 0.60e9);
             assertEq(xFeeBurn[0], 1e9);
-            assertEq(xFeeBurn[1], 0.31e9);
-            assertEq(xFeeBurn[2], 0.30e9);
+            assertEq(xFeeBurn[1], 0.21e9);
+            assertEq(xFeeBurn[2], 0.20e9);
 
             assertEq(yFeeBurn[0], 0.005e9);
             assertEq(yFeeBurn[1], 0.005e9);

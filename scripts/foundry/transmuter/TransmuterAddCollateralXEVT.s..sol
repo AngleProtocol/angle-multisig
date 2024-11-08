@@ -28,10 +28,10 @@ contract TransmuterAddCollateralXEVT is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
-        uint64[] memory xFeeBurn = new uint64[](3);
-        uint64[] memory xFeeMint = new uint64[](3);
-        int64[] memory yFeeMint = new int64[](xFeeMint.length);
-        int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
+        xFeeBurn = new uint64[](3);
+        xFeeMint = new uint64[](3);
+        yFeeMint = new int64[](xFeeMint.length);
+        yFeeBurn = new int64[](xFeeBurn.length);
         xFeeBurn[0] = 1e9;
         xFeeBurn[1] = 0.06e9;
         xFeeBurn[2] = 0.05e9;

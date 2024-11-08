@@ -28,20 +28,20 @@ contract TransmuterAddCollateralMW_EURC is Utils {
         address to = address(transmuter);
         uint256 value = 0;
 
-        uint64[] memory xFeeBurn = new uint64[](3);
-        uint64[] memory xFeeMint = new uint64[](3);
-        int64[] memory yFeeMint = new int64[](xFeeMint.length);
-        int64[] memory yFeeBurn = new int64[](xFeeBurn.length);
+        xFeeBurn = new uint64[](3);
+        xFeeMint = new uint64[](3);
+        yFeeMint = new int64[](xFeeMint.length);
+        yFeeBurn = new int64[](xFeeBurn.length);
         xFeeBurn[0] = 1e9;
-        xFeeBurn[1] = 0.31e9;
-        xFeeBurn[2] = 0.30e9;
+        xFeeBurn[1] = 0.21e9;
+        xFeeBurn[2] = 0.20e9;
         yFeeBurn[0] = 0.005e9;
         yFeeBurn[1] = 0.005e9;
         yFeeBurn[2] = 0.999e9;
 
         xFeeMint[0] = 0;
-        xFeeMint[1] = 0.79e9;
-        xFeeMint[2] = 0.80e9;
+        xFeeMint[1] = 0.59e9;
+        xFeeMint[2] = 0.60e9;
         yFeeMint[0] = 0.0005e9;
         yFeeMint[1] = 0.0005e9;
         yFeeMint[2] = 100e9 - 1;
@@ -49,16 +49,16 @@ contract TransmuterAddCollateralMW_EURC is Utils {
         // Add the new collateral
         {
             {
-                address oracle = 0x6B102047A4bB943DE39233E44487F2d57bDCb33e; // TODO
-                uint256 normalizationFactor = 1e18; // TODO
+                address oracle = 0xa7ea0d40C246b876F76713Ba9a9A95f3f18AB794;
+                uint256 normalizationFactor = 1e18;
                 bytes memory readData;
                 bytes memory targetData = abi.encode(oracle, normalizationFactor);
                 oracleConfigCollatToAdd = abi.encode(
-                    Storage.OracleReadType.NO_ORACLE,
+                    Storage.OracleReadType.MAX,
                     Storage.OracleReadType.MORPHO_ORACLE,
                     readData,
                     targetData,
-                    abi.encode(uint128(0), uint128(0))
+                    abi.encode(uint128(0), uint128(0.0005e18))
                 );
             }
             {
