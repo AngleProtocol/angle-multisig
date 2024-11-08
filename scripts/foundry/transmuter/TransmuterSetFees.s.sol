@@ -6,6 +6,7 @@ import "transmuter/transmuter/Storage.sol" as Storage;
 import { ITransmuter, ISettersGovernor, ISettersGuardian, ISwapper } from "transmuter/interfaces/ITransmuter.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
+import { BaseHarvester } from "transmuter/helpers/BaseHarvester.sol";
 import "../Constants.s.sol";
 
 contract TransmuterSetFees is Utils {
@@ -25,10 +26,17 @@ contract TransmuterSetFees is Utils {
 
         {
             ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
-            address to = address(transmuter);
             uint8 isDelegateCall = 0;
             {
+                address to = address(transmuter);
                 bytes memory data = abi.encodeWithSelector(ISettersGuardian.setFees.selector, 0x3Ee320c9F73a84D1717557af00695A34b26d1F1d, xFeeBurn, yFeeBurn, false);
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
+            {
+                address to = 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77;
+                bytes memory data = abi.encodeWithSelector(BaseHarvester.setTargetExposure.selector, 0x3Ee320c9F73a84D1717557af00695A34b26d1F1d, 0);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
