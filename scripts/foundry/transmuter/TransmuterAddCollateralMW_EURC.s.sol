@@ -123,6 +123,16 @@ contract TransmuterAddCollateralMW_EURC is Utils {
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
+            {
+                bytes memory data = abi.encodeWithSelector(
+                    ISettersGuardian.setStablecoinCap.selector,
+                    COLLATERAL_TO_ADD,
+                    2_000_000e18
+                );
+                uint256 dataLength = data.length;
+                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
+                transactions = abi.encodePacked(transactions, internalTx);
+            }
         }
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
