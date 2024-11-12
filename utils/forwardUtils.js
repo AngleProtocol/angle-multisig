@@ -8,7 +8,7 @@ if (process.argv.length < 3) {
 const command = process.argv[2];
 const extraArgs = process.argv.slice(3).join(' ');
 
-exec(`node lib/utils/utils/${command}.js ${extraArgs}`, (error, stdout, stderr) => {
+exec(`bun run lib/utils/utils/${command}.js ${extraArgs}`, (error, stdout, stderr) => {
   if (error) {
     console.log(error);
     process.exit(1);
