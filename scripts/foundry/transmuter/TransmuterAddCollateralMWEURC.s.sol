@@ -6,9 +6,10 @@ import "transmuter/transmuter/Storage.sol" as Storage;
 import { ITransmuter, ISettersGovernor, ISettersGuardian, ISwapper } from "transmuter/interfaces/ITransmuter.sol";
 import { Enum } from "safe/Safe.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
+import { MAX_MINT_FEE, MAX_BURN_FEE } from "transmuter/utils/Constants.sol";
 import "../Constants.s.sol";
 
-contract TransmuterAddCollateralMW_EURC is Utils {
+contract TransmuterAddCollateralMWEURC is Utils {
     address public constant COLLATERAL_TO_ADD = 0xf24608E0CCb972b0b0f4A6446a0BBf58c701a026;
 
     bytes oracleConfigCollatToAdd;
@@ -16,12 +17,14 @@ contract TransmuterAddCollateralMW_EURC is Utils {
     int64[] public yFeeMint;
     uint64[] public xFeeBurn;
     int64[] public yFeeBurn;
+    uint256 public capStablecoin;
     address public agToken;
 
     function run() external {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
-        ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
+        // ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
+        ITransmuter transmuter = ITransmuter(0xBA0e73218a80C3deC1213d64873aF83B02cE0455);
         agToken = address(transmuter.agToken());
         bytes memory transactions;
         uint8 isDelegateCall = 0;
@@ -37,30 +40,19 @@ contract TransmuterAddCollateralMW_EURC is Utils {
         xFeeBurn[2] = 0.20e9;
         yFeeBurn[0] = 0.005e9;
         yFeeBurn[1] = 0.005e9;
-        yFeeBurn[2] = 0.999e9;
+        yFeeBurn[2] = int64(uint64(MAX_BURN_FEE));
 
         xFeeMint[0] = 0;
         xFeeMint[1] = 0.59e9;
         xFeeMint[2] = 0.60e9;
         yFeeMint[0] = 0.0005e9;
         yFeeMint[1] = 0.0005e9;
-        yFeeMint[2] = 100e9 - 1;
+        yFeeMint[2] = int64(uint64(MAX_MINT_FEE));
+
+        capStablecoin = 2_000_000 ether;
 
         // Add the new collateral
         {
-            {
-                address oracle = 0xa7ea0d40C246b876F76713Ba9a9A95f3f18AB794;
-                uint256 normalizationFactor = 1e18;
-                bytes memory readData;
-                bytes memory targetData = abi.encode(oracle, normalizationFactor);
-                oracleConfigCollatToAdd = abi.encode(
-                    Storage.OracleReadType.MAX,
-                    Storage.OracleReadType.MORPHO_ORACLE,
-                    readData,
-                    targetData,
-                    abi.encode(uint128(0), uint128(0.0005e18))
-                );
-            }
             {
                 bytes memory data = abi.encodeWithSelector(ISettersGovernor.addCollateral.selector, COLLATERAL_TO_ADD);
                 uint256 dataLength = data.length;
@@ -93,6 +85,21 @@ contract TransmuterAddCollateralMW_EURC is Utils {
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
+
+            {
+                address oracle = 0xa7ea0d40C246b876F76713Ba9a9A95f3f18AB794;
+                uint256 normalizationFactor = 1e18;
+                bytes memory targetData = abi.encode(1008235463728948111);
+                bytes memory readData = abi.encode(oracle, normalizationFactor);
+                oracleConfigCollatToAdd = abi.encode(
+                    Storage.OracleReadType.MORPHO_ORACLE,
+                    Storage.OracleReadType.MAX,
+                    readData,
+                    targetData,
+                    abi.encode(uint128(0), uint128(0.0005e18))
+                );
+            }
+
             {
                 bytes memory data = abi.encodeWithSelector(
                     ISettersGovernor.setOracle.selector,
@@ -127,7 +134,7 @@ contract TransmuterAddCollateralMW_EURC is Utils {
                 bytes memory data = abi.encodeWithSelector(
                     ISettersGuardian.setStablecoinCap.selector,
                     COLLATERAL_TO_ADD,
-                    2_000_000e18
+                    capStablecoin
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -137,6 +144,15 @@ contract TransmuterAddCollateralMW_EURC is Utils {
 
         bytes memory payloadMultiSend = abi.encodeWithSelector(MultiSend.multiSend.selector, transactions);
         address multiSend = address(_chainToMultiSend(chainId));
-        _serializeJson(chainId, multiSend, 0, payloadMultiSend, Enum.Operation.DelegateCall, hex"", _chainToContract(chainId, ContractType.GovernorMultisig));
+        _serializeJson(
+            chainId,
+            multiSend,
+            0,
+            payloadMultiSend,
+            Enum.Operation.DelegateCall,
+            hex"",
+            // _chainToContract(chainId, ContractType.GovernorMultisig)
+            0x7DF37fc774843b678f586D55483819605228a0ae
+        );
     }
 }
