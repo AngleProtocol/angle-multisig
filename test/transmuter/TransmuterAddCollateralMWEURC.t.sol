@@ -32,13 +32,9 @@ contract TransmuterAddCollateralMWEURCTest is BaseTest {
         StablecoinType fiat = StablecoinType.EUR;
         // TODO END
 
-        // address gnosisSafe = _chainToContract(chainId, ContractType.GovernorMultisig);
-        // transmuter = ITransmuter(address(_getTransmuter(chainId, fiat)));
-        // agToken = _getAgToken(chainId, fiat);
-
-        address gnosisSafe = 0x7DF37fc774843b678f586D55483819605228a0ae;
-        transmuter = ITransmuter(0xBA0e73218a80C3deC1213d64873aF83B02cE0455);
-        agToken = IAgToken(address(transmuter.agToken()));
+        address gnosisSafe = _chainToContract(chainId, ContractType.GovernorMultisig);
+        transmuter = ITransmuter(address(_getTransmuter(chainId, fiat)));
+        agToken = _getAgToken(chainId, fiat);
 
         address to = json.readAddress("$.to");
         // uint256 value = json.readUint("$.value");
@@ -127,7 +123,7 @@ contract TransmuterAddCollateralMWEURCTest is BaseTest {
             assertApproxEqAbs(mint, value, 0.01 ether);
             assertApproxEqAbs(burn, value, 0.01 ether);
             assertApproxEqAbs(ratio, BASE_18, 0.01 ether);
-            assertApproxEqAbs(redemption, value,0.01 ether);
+            assertApproxEqAbs(redemption, value, 0.01 ether);
         }
 
         // Check quotes are working on the added collateral

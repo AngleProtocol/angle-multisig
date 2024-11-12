@@ -23,8 +23,7 @@ contract TransmuterAddCollateralMWEURC is Utils {
     function run() external {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
-        // ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
-        ITransmuter transmuter = ITransmuter(0xBA0e73218a80C3deC1213d64873aF83B02cE0455);
+        ITransmuter transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
         agToken = address(transmuter.agToken());
         bytes memory transactions;
         uint8 isDelegateCall = 0;
@@ -151,8 +150,7 @@ contract TransmuterAddCollateralMWEURC is Utils {
             payloadMultiSend,
             Enum.Operation.DelegateCall,
             hex"",
-            // _chainToContract(chainId, ContractType.GovernorMultisig)
-            0x7DF37fc774843b678f586D55483819605228a0ae
+            _chainToContract(chainId, ContractType.GovernorMultisig)
         );
     }
 }
