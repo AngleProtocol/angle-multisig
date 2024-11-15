@@ -88,7 +88,7 @@ contract TransmuterAddCollateralMWEURC is Utils {
             {
                 address oracle = 0xa7ea0d40C246b876F76713Ba9a9A95f3f18AB794;
                 uint256 normalizationFactor = 1e18;
-                bytes memory targetData = abi.encode(1008235463728948111);
+                bytes memory targetData = abi.encode(1000794000000000000); // 1008235463728948111
                 bytes memory readData = abi.encode(oracle, normalizationFactor);
                 oracleConfigCollatToAdd = abi.encode(
                     Storage.OracleReadType.MORPHO_ORACLE,

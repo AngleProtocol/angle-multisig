@@ -74,7 +74,7 @@ contract TransmuterAddCollateralMWEURCTest is BaseTest {
             assertEq(uint256(oracleType), uint256(Storage.OracleReadType.MORPHO_ORACLE));
             assertEq(uint256(targetType), uint256(Storage.OracleReadType.MAX));
             assertEq(oracleData, readData);
-            assertEq(targetData, abi.encode(1008235463728948111));
+            assertEq(targetData, abi.encode(1000794000000000000));
             assertEq(hyperparameters, abi.encode(uint128(0), uint128(0.0005e18)));
         }
 
