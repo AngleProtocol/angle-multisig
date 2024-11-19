@@ -8,7 +8,7 @@ async function main() {
   const safeAddress = transactionJson['safe'];
   if(!safeAddress) throw new Error('Safe address not found');
 
-  await submit(transactionJson, 52, chainId, safeAddress);
+  await submit(transactionJson, 0, chainId, safeAddress);
 }
 
 main().catch(error => {
