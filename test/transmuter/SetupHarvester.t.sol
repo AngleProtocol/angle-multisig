@@ -50,7 +50,7 @@ contract SetupHarvesterTest is BaseTest {
 
         {
             address transmuter = _chainToContract(chainId, ContractType.TransmuterAgEUR);
-            assertEq(IGetters(transmuter).isTrusted(harvester), true);
+            assertEq(IGetters(transmuter).isTrustedSeller(harvester), true);
         }
 
         {

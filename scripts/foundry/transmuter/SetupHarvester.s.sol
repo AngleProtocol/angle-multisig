@@ -41,7 +41,7 @@ contract SetupHarvester is Utils {
         if (!isGenericHarvester) {
             address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
             {
-                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper, TrustedType.Updater);
+                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper, TrustedType.Seller);
                 address to = harvester;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
                 transactions = abi.encodePacked(transactions, internalTx);
