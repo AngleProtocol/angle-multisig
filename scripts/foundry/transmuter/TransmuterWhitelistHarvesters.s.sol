@@ -21,7 +21,7 @@ contract TransmuterWhitelistHarvesters is Utils {
             address to = address(transmuter);
             uint8 isDelegateCall = 0;
             {
-                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77, TrustedType.Updater);
+                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77, TrustedType.Seller);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
@@ -32,13 +32,13 @@ contract TransmuterWhitelistHarvesters is Utils {
             address to = address(transmuter);
             uint8 isDelegateCall = 0;
             {
-                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x54b96Fee8208Ea7aCe3d415e5c14798112909794, TrustedType.Updater);
+                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x54b96Fee8208Ea7aCe3d415e5c14798112909794, TrustedType.Seller);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
-                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D, TrustedType.Updater);
+                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D, TrustedType.Seller);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
