@@ -31,7 +31,7 @@ contract SetupHarvester is Utils {
         // Add harvester to trusted
         {
             address transmuter = _chainToContract(chainId, ContractType.TransmuterAgEUR);
-            bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, harvester);
+            bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, harvester, TrustedType.Seller);
             address to = transmuter;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
@@ -41,7 +41,7 @@ contract SetupHarvester is Utils {
         if (!isGenericHarvester) {
             address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
             {
-                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper, TrustedType.Seller);
+                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
                 address to = harvester;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
                 transactions = abi.encodePacked(transactions, internalTx);
@@ -50,7 +50,7 @@ contract SetupHarvester is Utils {
 
         // set yield bearing to deposit address
         if (!isGenericHarvester) {
-            address depositAddress = 0x78A42Aa9b25Cd00823Ebb34DDDCF38224D99e0C8;
+            address depositAddress = XEVT;
 
             bytes memory data = abi.encodeWithSelector(
                 MultiBlockHarvester.setYieldBearingToDepositAddress.selector,

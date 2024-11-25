@@ -43,8 +43,8 @@ contract SetupHarvesterTest is BaseTest {
             assertEq(BaseHarvester(harvester).isTrusted(keeper), true);
 
             assertEq(
-                MultiBlockHarvester(harvester).yieldBearingToDepositAddress(USDM),
-                0x78A42Aa9b25Cd00823Ebb34DDDCF38224D99e0C8
+                MultiBlockHarvester(harvester).yieldBearingToDepositAddress(XEVT),
+                XEVT
             );
         }
 
