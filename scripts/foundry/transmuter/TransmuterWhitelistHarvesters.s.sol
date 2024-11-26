@@ -21,7 +21,7 @@ contract TransmuterWhitelistHarvesters is Utils {
             address to = address(transmuter);
             uint8 isDelegateCall = 0;
             {
-                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x0A10f87F55d89eb2a89c264ebE46C90785a10B77, TrustedType.Seller);
+                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x16CA2999e5f5e43aEc2e6c18896655b9B05a1560, TrustedType.Seller);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
@@ -38,7 +38,7 @@ contract TransmuterWhitelistHarvesters is Utils {
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
-                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D, TrustedType.Seller);
+                bytes memory data = abi.encodeWithSelector(ISettersGovernor.toggleTrusted.selector, 0xf156D2F6726E3231dd94dD9CB2e86D9A85A38d18, TrustedType.Seller);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, uint256(0), dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
