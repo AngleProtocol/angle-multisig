@@ -36,12 +36,12 @@ contract TransmuterWhitelistHarvestersTest is BaseTest {
 
         {
             transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgEUR));
-            assertEq(IGetters(address(transmuter)).isTrustedSeller(address(0x0A10f87F55d89eb2a89c264ebE46C90785a10B77)), true);
+            assertEq(IGetters(address(transmuter)).isTrustedSeller(address(0x16CA2999e5f5e43aEc2e6c18896655b9B05a1560)), true);
         }
         {
             transmuter = ITransmuter(_chainToContract(chainId, ContractType.TransmuterAgUSD));
             assertEq(IGetters(address(transmuter)).isTrustedSeller(address(0x54b96Fee8208Ea7aCe3d415e5c14798112909794)), true);
-            assertEq(IGetters(address(transmuter)).isTrustedSeller(address(0x5BEdD878CBfaF4dc53EC272A291A6a4C2259369D)), true);
+            assertEq(IGetters(address(transmuter)).isTrustedSeller(address(0xf156D2F6726E3231dd94dD9CB2e86D9A85A38d18)), true);
         }
     }
 }
