@@ -20,7 +20,7 @@ contract ActivateFlashAngle is Utils {
         address treasury = _chainToContract(chainId, ContractType.TreasuryAgEUR);
         address agToken = _chainToContract(chainId, ContractType.AgEUR);
         uint64 flashLoanFee = 0;
-        uint256 maxBorrowable = 300000e18;
+        uint256 maxBorrowable = 2000000e18;
         /** END  complete */
 
         {
