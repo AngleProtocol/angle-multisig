@@ -9,6 +9,7 @@ gas_reports = ["*"]
 via_ir = false
 sizes = true
 optimizer_runs=1000
+evm_version = 'shanghai'
 solc_version = '0.8.22'
 fs_permissions = [{ access = "read-write", path = "./scripts/foundry/transaction.json"}, { access = "read-write", path = "./scripts/foundry/transactions.json"}, { access = "read-write", path = "./lib/angle-tokens/scripts"}, { access = "read-write", path = "./scripts/proposals/transmuter/selectors.json"}, { access = "read-write", path = "./scripts/foundry/transmuter/updateFacets/selectors_replace.json"}, { access = "read-write", path = "./scripts/foundry/transmuter/updateFacets/selectors_add.json"}]
 
@@ -32,5 +33,3 @@ mode = "${ETH_NODE_URI_MODE}"
 blast = "${ETH_NODE_URI_BLAST}"
 xlayer = "${ETH_NODE_URI_XLAYER}"
 
-[etherscan]
-blast = { key = "${BLAST_ETHERSCAN_API_KEY}", url = "https://api.blastscan.io/api" }
