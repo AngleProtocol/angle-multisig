@@ -32,5 +32,3 @@ mode = "${ETH_NODE_URI_MODE}"
 blast = "${ETH_NODE_URI_BLAST}"
 xlayer = "${ETH_NODE_URI_XLAYER}"
 
-[etherscan]
-blast = { key = "${BLAST_ETHERSCAN_API_KEY}", url = "https://api.blastscan.io/api" }
