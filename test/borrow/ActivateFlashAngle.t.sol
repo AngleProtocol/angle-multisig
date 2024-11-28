@@ -21,7 +21,7 @@ contract ActivateFlashAngleTest is BaseTest {
         address treasury = _chainToContract(chainId, ContractType.TreasuryAgEUR);
         address flashAngle = 0x4e4C68B5De42aFE4fDceFE4e2F9dA684822cBa18; // _chainToContract(chainId, ContractType.FlashLoan);
         uint64 flashLoanFee = 0;
-        uint256 maxBorrowable = 300000e18;
+        uint256 maxBorrowable = 2000000e18;
         /** END  complete */
 
         address to = json.readAddress("$.to");
