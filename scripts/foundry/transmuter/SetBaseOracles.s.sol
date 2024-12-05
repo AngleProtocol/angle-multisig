@@ -21,7 +21,7 @@ contract SetBaseOracles is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         /** TODO  complete */
-        address harvester = 0x16CA2999e5f5e43aEc2e6c18896655b9B05a1560;
+        address harvester = 0x9b4C3f0EB7e732A64C549eC989d62Ec82b00D37B;
         /** END  complete */
 
         // Add to seller harvester
@@ -71,9 +71,9 @@ contract SetBaseOracles is Utils {
         // Set MW_EURC oracle
         {
             address transmuter = _chainToContract(chainId, ContractType.TransmuterAgEUR);
-            address oracle = x312175C3d1f38232946218aA4e68627cD79D631d;
+            address oracle = 0x312175C3d1f38232946218aA4e68627cD79D631d;
             uint256 normalizationFactor = 1e18;
-            bytes memory targetData = abi.encode(1000794000000000000); // 1008235463728948111
+            bytes memory targetData = abi.encode(1002110880340852975); // 1002345422600947750
             bytes memory readData = abi.encode(oracle, normalizationFactor);
             bytes memory oracleConfigCollatToAdd = abi.encode(
                 Storage.OracleReadType.MORPHO_ORACLE,

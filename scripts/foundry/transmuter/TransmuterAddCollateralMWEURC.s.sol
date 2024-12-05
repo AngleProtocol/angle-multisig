@@ -36,14 +36,14 @@ contract TransmuterAddCollateralMWEURC is Utils {
         yFeeBurn = new int64[](xFeeBurn.length);
         xFeeBurn[0] = 1e9;
         xFeeBurn[1] = 0.21e9;
-        xFeeBurn[2] = 0.20e9;
+        xFeeBurn[2] = 0.2e9;
         yFeeBurn[0] = 0.005e9;
         yFeeBurn[1] = 0.005e9;
         yFeeBurn[2] = int64(uint64(MAX_BURN_FEE));
 
         xFeeMint[0] = 0;
         xFeeMint[1] = 0.59e9;
-        xFeeMint[2] = 0.60e9;
+        xFeeMint[2] = 0.6e9;
         yFeeMint[0] = 0.0005e9;
         yFeeMint[1] = 0.0005e9;
         yFeeMint[2] = int64(uint64(MAX_MINT_FEE));
@@ -61,11 +61,7 @@ contract TransmuterAddCollateralMWEURC is Utils {
             {
                 // Mint fees
                 bytes memory data = abi.encodeWithSelector(
-                    ISettersGuardian.setFees.selector,
-                    COLLATERAL_TO_ADD,
-                    xFeeMint,
-                    yFeeMint,
-                    true
+                    ISettersGuardian.setFees.selector, COLLATERAL_TO_ADD, xFeeMint, yFeeMint, true
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -74,11 +70,7 @@ contract TransmuterAddCollateralMWEURC is Utils {
             {
                 // Burn fees
                 bytes memory data = abi.encodeWithSelector(
-                    ISettersGuardian.setFees.selector,
-                    COLLATERAL_TO_ADD,
-                    xFeeBurn,
-                    yFeeBurn,
-                    false
+                    ISettersGuardian.setFees.selector, COLLATERAL_TO_ADD, xFeeBurn, yFeeBurn, false
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -86,24 +78,37 @@ contract TransmuterAddCollateralMWEURC is Utils {
             }
 
             {
-                address oracle = 0xa7ea0d40C246b876F76713Ba9a9A95f3f18AB794;
-                uint256 normalizationFactor = 1e18;
-                bytes memory targetData = abi.encode(1000794000000000000); // 1008235463728948111
-                bytes memory readData = abi.encode(oracle, normalizationFactor);
+                bytes memory readData;
+                {
+                    bytes32[] memory feedIds = new bytes32[](2);
+                    uint32[] memory stalePeriods = new uint32[](2);
+                    uint8[] memory isMultiplied = new uint8[](2);
+                    // pyth address
+                    address pyth = 0x8250f4aF4B972684F7b336503E2D6dFeDeB1487a;
+                    // EUROC/USD
+                    feedIds[0] = 0x76fa85158bf14ede77087fe3ae472f66213f6ea2f5b411cb2de472794990fa5c;
+                    // USD/EUR
+                    feedIds[1] = 0xa995d00bb36a63cef7fd2c287dc105fc8f3d93779f062f09551b0af3e81ec30b;
+                    stalePeriods[0] = 14 days;
+                    stalePeriods[1] = 14 days;
+                    isMultiplied[0] = 1;
+                    isMultiplied[1] = 0;
+                    Storage.OracleQuoteType quoteType = Storage.OracleQuoteType.UNIT;
+                    readData = abi.encode(pyth, feedIds, stalePeriods, isMultiplied, quoteType);
+                }
+                bytes memory targetData;
                 oracleConfigCollatToAdd = abi.encode(
-                    Storage.OracleReadType.MORPHO_ORACLE,
-                    Storage.OracleReadType.MAX,
+                    Storage.OracleReadType.PYTH,
+                    Storage.OracleReadType.STABLE,
                     readData,
                     targetData,
-                    abi.encode(uint128(0), uint128(0.0005e18))
+                    abi.encode(uint128(0), uint128(0))
                 );
             }
 
             {
                 bytes memory data = abi.encodeWithSelector(
-                    ISettersGovernor.setOracle.selector,
-                    COLLATERAL_TO_ADD,
-                    oracleConfigCollatToAdd
+                    ISettersGovernor.setOracle.selector, COLLATERAL_TO_ADD, oracleConfigCollatToAdd
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -111,9 +116,7 @@ contract TransmuterAddCollateralMWEURC is Utils {
             }
             {
                 bytes memory data = abi.encodeWithSelector(
-                    ISettersGuardian.togglePause.selector,
-                    COLLATERAL_TO_ADD,
-                    Storage.ActionType.Mint
+                    ISettersGuardian.togglePause.selector, COLLATERAL_TO_ADD, Storage.ActionType.Mint
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
@@ -121,20 +124,15 @@ contract TransmuterAddCollateralMWEURC is Utils {
             }
             {
                 bytes memory data = abi.encodeWithSelector(
-                    ISettersGuardian.togglePause.selector,
-                    COLLATERAL_TO_ADD,
-                    Storage.ActionType.Burn
+                    ISettersGuardian.togglePause.selector, COLLATERAL_TO_ADD, Storage.ActionType.Burn
                 );
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
             }
             {
-                bytes memory data = abi.encodeWithSelector(
-                    ISettersGuardian.setStablecoinCap.selector,
-                    COLLATERAL_TO_ADD,
-                    capStablecoin
-                );
+                bytes memory data =
+                    abi.encodeWithSelector(ISettersGuardian.setStablecoinCap.selector, COLLATERAL_TO_ADD, capStablecoin);
                 uint256 dataLength = data.length;
                 bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
                 transactions = abi.encodePacked(transactions, internalTx);
