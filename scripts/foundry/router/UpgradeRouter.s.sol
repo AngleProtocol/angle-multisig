@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.19;
 
-import { TransparentUpgradeableProxy, ITransparentUpgradeableProxy } from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {ITransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { MultiSend, Utils } from "../Utils.s.sol";
 import { Enum } from "safe/Safe.sol";
 import "../Constants.s.sol";

@@ -120,7 +120,7 @@ function main {
         read execute
 
         if [[ $execute == "yes" ]]; then
-            yarn submit:foundry
+            bun submit:foundry
         fi
     done
 }
