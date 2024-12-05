@@ -10,6 +10,7 @@ import { BaseHarvester, YieldBearingParams } from "transmuter/helpers/BaseHarves
 import { ISettersGuardian, ISettersGovernor } from "transmuter/interfaces/ITransmuter.sol";
 import { TrustedType } from "transmuter/transmuter/Storage.sol";
 import { MultiBlockHarvester } from "transmuter/helpers/MultiBlockHarvester.sol";
+import "transmuter/transmuter/Storage.sol" as Storage;
 import "../Constants.s.sol";
 
 contract SetBaseOracles is Utils {
@@ -50,7 +51,7 @@ contract SetBaseOracles is Utils {
                 stalePeriods[1] = 14 days;
                 isMultiplied[0] = 1;
                 isMultiplied[1] = 0;
-                OracleQuoteType quoteType = OracleQuoteType.UNIT;
+                Storage.OracleQuoteType quoteType = Storage.OracleQuoteType.UNIT;
                 readData = abi.encode(pyth, feedIds, stalePeriods, isMultiplied, quoteType);
             }
             bytes memory targetData;
@@ -62,7 +63,7 @@ contract SetBaseOracles is Utils {
                 abi.encode(uint128(0), uint128(0))
             );
             address transmuter = _chainToContract(chainId, ContractType.TransmuterAgEUR);
-            bytes memory data = abi.encodeWithSelector(ISettersGovernor.setOracle.selector, EURC, oracleConfigCollatToAdd);
+            bytes memory data = abi.encodeWithSelector(ISettersGovernor.setOracle.selector, BASE_EURC, oracleConfigCollatToAdd);
             address to = transmuter;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
@@ -84,6 +85,15 @@ contract SetBaseOracles is Utils {
             );
             bytes memory data = abi.encodeWithSelector(ISettersGovernor.setOracle.selector, MW_EURC, oracleConfigCollatToAdd);
             address to = transmuter;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
+        }
+
+        // Add keeper to trusted
+        address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
+        {
+            bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
+            address to = harvester;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
             transactions = abi.encodePacked(transactions, internalTx);
         }

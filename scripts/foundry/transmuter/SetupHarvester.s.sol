@@ -38,14 +38,12 @@ contract SetupHarvester is Utils {
         }
 
         // Add keeper to trusted
-        if (!isGenericHarvester) {
+        {
             address keeper = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
-            {
-                bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
-                address to = harvester;
-                bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
-                transactions = abi.encodePacked(transactions, internalTx);
-            }
+            bytes memory data = abi.encodeWithSelector(BaseHarvester.toggleTrusted.selector, keeper);
+            address to = harvester;
+            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, data.length, data);
+            transactions = abi.encodePacked(transactions, internalTx);
         }
 
         // set yield bearing to deposit address
