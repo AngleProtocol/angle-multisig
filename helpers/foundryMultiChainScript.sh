@@ -24,9 +24,9 @@ function get_selected_chains() {
     local selected_chains=()
     local exclude_chain_ids=(314)  # Default exclusions: filecoin, avalanche
 
-    read -p "Do you want to deploy to all chains? (yes/no) -- Note: ChainIDs 314 is already excluded by default: " deploy_all
+    read -p "Do you want to run the script on all chains? (y/n) -- Note: ChainIDs 314 is already excluded by default: " deploy_all
 
-    if [[ "$deploy_all" == "yes" ]]; then
+    if [[ "$deploy_all" == "y" ]]; then
         for chain_id in "${chain_ids[@]}"; do
             if [[ ! " ${exclude_chain_ids[@]} " =~ " ${chain_id} " ]]; then
                 selected_chains+=("$chain_id")
@@ -132,6 +132,17 @@ function main {
     successful_chains=()
     failed_chains=()
 
+    # Prompt user for broadcast and verify options
+    read -p "Do you want to broadcast the transaction? (y/n): " broadcast_choice
+
+    # Set flags based on user input
+    if [ "$broadcast_choice" == "y" ]; then
+        broadcast_flag="--broadcast"
+        read -p "Do you want to verify the transaction? (y/n): " verify_choice
+    else
+        broadcast_flag=""
+    fi
+
     # Run forge script for each selected chain
     for chain_id in "${selected_chains[@]}"; do
         echo "Running forge script for chain ID: $chain_id"
@@ -139,12 +150,16 @@ function main {
         rpc_url=$(eval "echo \$$rpc_url_var")
         
         # Verification string based on chain-specific environment variables
-        verify_string=$(get_verify_string "$chain_id")
-        
+        if [ "$verify_choice" == "y" ]; then
+            verify_string=$(get_verify_string "$chain_id")
+        else
+            verify_string=""
+        fi
+
         # Compilation specific flags
         compile_flags=$(get_compile_flags "$chain_id")
 
-        cmd="forge script $FOUNDRY_SCRIPT --broadcast --rpc-url $rpc_url $compile_flags $verify_string"
+        cmd="forge script $FOUNDRY_SCRIPT $broadcast_flag --rpc-url $rpc_url $compile_flags $verify_string"
         echo "Running command: $cmd"
         if eval $cmd && [ -f "scripts/foundry/transaction.json" ]; then
             successful_chains+=("$chain_id")
