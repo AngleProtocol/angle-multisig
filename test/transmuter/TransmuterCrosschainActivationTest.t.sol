@@ -59,7 +59,7 @@ contract TransmuterCrosschainActivationTest is BaseTest {
         }
 
         // // No minter role
-        // if (chainId == CHAIN_BASE) {
+        // if (chainId == Constants.CHAIN_BASE) {
         //     assertGe(agToken.balanceOf(receiver), amount);
         // }
 

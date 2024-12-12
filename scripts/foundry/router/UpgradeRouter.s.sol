@@ -19,7 +19,7 @@ contract UpgradeRouter is Utils {
         address routerImpl = implRouter(chainId);
         /** END  complete */
 
-        if (chainId == CHAIN_LINEA) {
+        if (chainId == Constants.CHAIN_LINEA) {
             {
                 bytes memory data = abi.encodeWithSelector(ITransparentUpgradeableProxy.upgradeTo.selector, routerImpl);
                 address to = router;

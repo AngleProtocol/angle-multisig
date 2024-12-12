@@ -45,7 +45,7 @@ contract TransmuterCrosschainActivation is Utils {
         address to;
         uint256 value = 0;
 
-        if (chainId != CHAIN_ARBITRUM) {
+        if (chainId != Constants.CHAIN_ARBITRUM) {
             to = address(treasury);
             bytes memory data = abi.encodeWithSelector(IAddMinter.addMinter.selector, address(transmuter));
             uint256 dataLength = data.length;
@@ -87,7 +87,7 @@ contract TransmuterCrosschainActivation is Utils {
 
         // // TODO only on BASE
         // // No minter role
-        // if (chainId == CHAIN_BASE) {
+        // if (chainId == Constants.CHAIN_BASE) {
         //     address receiver = 0xa9bbbDDe822789F123667044443dc7001fb43C01;
         //     uint256 amount = 100_000 ether;
 

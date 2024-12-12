@@ -8,6 +8,7 @@
     "create-tx": "bash helpers/createTx.sh",
     "submit:foundry": "hardhat run ./scripts/submitFoundryTx.ts",
     "submit-multiple:foundry": "hardhat run ./scripts/submitMultipleFoundryTx.ts",
+    "deploy-multiple:foundry": "chmod +x ./helpers/foundryMultiChainScript.sh && bash helpers/foundryMultiChainScript.sh",
     "test": "forge test -vvvv",
     "prettier": "prettier --write ."
   },

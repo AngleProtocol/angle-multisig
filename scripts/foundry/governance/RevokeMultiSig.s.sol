@@ -32,12 +32,12 @@ contract RevokeMultiSig is Utils {
         bytes32 guardianRole = core.GUARDIAN_ROLE();
 
         if (
-            chainId == CHAIN_ETHEREUM ||
-            chainId == CHAIN_POLYGON ||
-            chainId == CHAIN_ARBITRUM ||
-            chainId == CHAIN_OPTIMISM ||
-            chainId == CHAIN_AVALANCHE ||
-            chainId == CHAIN_BNB
+            chainId == Constants.CHAIN_ETHEREUM ||
+            chainId == Constants.CHAIN_POLYGON ||
+            chainId == Constants.CHAIN_ARBITRUM ||
+            chainId == Constants.CHAIN_OPTIMISM ||
+            chainId == Constants.CHAIN_AVALANCHE ||
+            chainId == Constants.CHAIN_BNB
         ) {
             /** Add minting agEUR privilege to the on chain governance */
             {
@@ -100,7 +100,7 @@ contract RevokeMultiSig is Utils {
         //     transactions = abi.encodePacked(transactions, internalTx);
         // }
 
-        if (chainId == CHAIN_ETHEREUM) {
+        if (chainId == Constants.CHAIN_ETHEREUM) {
             {
                 to = _chainToContract(chainId, ContractType.Angle);
                 bytes memory data = abi.encodeWithSelector(
