@@ -26,7 +26,7 @@ contract Utils is Script, CommonUtils {
     address[] private safes;
 
     function setUp() public virtual {
-        setUpForks();
+        // setUpForks();
     }
 
     function _serializeJson(
