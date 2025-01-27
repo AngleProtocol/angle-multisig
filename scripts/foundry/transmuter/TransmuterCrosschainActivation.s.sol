@@ -29,9 +29,7 @@ contract TransmuterCrosschainActivation is Utils {
         uint256 chainId = vm.envUint("CHAIN_ID");
 
         // TODO
-        StablecoinType fiat = StablecoinType.USD;
-        uint256 newCap = 2_000_000 ether;
-        userProtection = uint128(5 * BPS);
+        StablecoinType fiat = StablecoinType.EUR;
         // TODO END
 
         transmuter = _getTransmuter(chainId, fiat);
@@ -45,41 +43,9 @@ contract TransmuterCrosschainActivation is Utils {
         address to;
         uint256 value = 0;
 
-        if (chainId != CHAIN_ARBITRUM) {
+        {
             to = address(treasury);
             bytes memory data = abi.encodeWithSelector(IAddMinter.addMinter.selector, address(transmuter));
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
-
-        {
-            to = address(transmuter);
-            bytes memory data = abi.encodeWithSelector(
-                ISetStablecoin.setStablecoinCap.selector,
-                collateralList[0],
-                newCap
-            );
-            uint256 dataLength = data.length;
-            bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
-            transactions = abi.encodePacked(transactions, internalTx);
-        }
-
-        {
-            (
-                Storage.OracleReadType oracleType,
-                Storage.OracleReadType targetType,
-                bytes memory oracleData,
-                bytes memory targetData,
-
-            ) = transmuter.getOracle(collateralList[0]);
-
-            to = address(transmuter);
-            bytes memory data = abi.encodeWithSelector(
-                ISettersGovernor.setOracle.selector,
-                collateralList[0],
-                abi.encode(oracleType, targetType, oracleData, targetData, abi.encode(userProtection, uint128(0)))
-            );
             uint256 dataLength = data.length;
             bytes memory internalTx = abi.encodePacked(isDelegateCall, to, value, dataLength, data);
             transactions = abi.encodePacked(transactions, internalTx);
