@@ -15,6 +15,7 @@ fs_permissions = [{ access = "read-write", path = "./scripts/foundry/transaction
 ffi = true
 
 [rpc_endpoints]
+# Legacy per-chain env vars (fallback)
 arbitrum = "${ETH_NODE_URI_ARBITRUM}"
 gnosis = "${ETH_NODE_URI_GNOSIS}"
 mainnet = "${ETH_NODE_URI_MAINNET}"
@@ -31,4 +32,8 @@ mantle = "${ETH_NODE_URI_MANTLE}"
 mode = "${ETH_NODE_URI_MODE}"
 blast = "${ETH_NODE_URI_BLAST}"
 xlayer = "${ETH_NODE_URI_XLAYER}"
+
+# eRPC endpoints — use with: forge script ... --fork-url ${ERPC_URL}/<chainId>
+# Set ERPC_URL via: ./op-run.sh -e multisig <command>
+# or export ERPC_URL=https://rpc.internal.merkl.xyz/main/evm
 
