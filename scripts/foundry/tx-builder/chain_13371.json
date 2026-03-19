@@ -1,0 +1,79 @@
+{
+  "version": "1.0",
+  "chainId": "13371",
+  "createdAt": 1773940080,
+  "meta": {
+    "name": "Add Signers & Update Threshold",
+    "description": "Add new signers to Safe 0xA82cc51D3d5723c0534C8A8476d740d0288099cb and update threshold to 4/6",
+    "txBuilderVersion": "1.16.5",
+    "safeUI": "https://safe.immutable.com/apps/open?safe=imx:0xA82cc51D3d5723c0534C8A8476d740d0288099cb&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Ftx-builder"
+  },
+  "transactions": [
+    {
+      "to": "0xA82cc51D3d5723c0534C8A8476d740d0288099cb",
+      "value": "0",
+      "data": "0x0d582f1300000000000000000000000072b7bddfd2ab1bab6fce0aa8c3ba38953c3a4cef0000000000000000000000000000000000000000000000000000000000000002",
+      "contractMethod": {
+        "name": "addOwnerWithThreshold",
+        "payable": false,
+        "inputs": [
+          {
+            "name": "owner",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "_threshold",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      "contractInputsValues": null
+    },
+    {
+      "to": "0xA82cc51D3d5723c0534C8A8476d740d0288099cb",
+      "value": "0",
+      "data": "0x0d582f130000000000000000000000006a75d4dda3849f6755a0f83e5f9f29a4c9461eb30000000000000000000000000000000000000000000000000000000000000002",
+      "contractMethod": {
+        "name": "addOwnerWithThreshold",
+        "payable": false,
+        "inputs": [
+          {
+            "name": "owner",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "_threshold",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      "contractInputsValues": null
+    },
+    {
+      "to": "0xA82cc51D3d5723c0534C8A8476d740d0288099cb",
+      "value": "0",
+      "data": "0x0d582f13000000000000000000000000957947b78857811a7c7bf62a0c6cd23c87adc7cc0000000000000000000000000000000000000000000000000000000000000004",
+      "contractMethod": {
+        "name": "addOwnerWithThreshold",
+        "payable": false,
+        "inputs": [
+          {
+            "name": "owner",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "_threshold",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      "contractInputsValues": null
+    }
+  ]
+}

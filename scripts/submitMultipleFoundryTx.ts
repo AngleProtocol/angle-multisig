@@ -9,9 +9,29 @@ const transactionsJson = JSON.parse(
 
 // Filter to specific chains. Empty array = all chains.
 const TARGET_CHAINS: number[] = [
-    151, 
-    // 714, 747, 988, 4114, 4217, 16661, 21000000
-  ];
+  // 151,      // REDBELLY
+  239,      // TAC
+  714,      // EDEN
+  747,      // FLOW
+  1135,     // LISK
+  1868,     // SONEIUM
+  1923,     // SWELL
+  2020,     // RONIN
+  4114,     // CITREA
+  4217,     // TEMPO
+  5064014,  // ETHEREAL
+  13371,    // IMMUTABLE
+  // 16661,    // ZERO_G — has safe.global API
+  21000000, // CORN
+  31612,    // MEZO
+  33139,    // APECHAIN
+  34443,    // MODE
+  42793,    // ETHERLINK
+  81457,    // BLAST
+  167000,   // TAIKO
+  685689,   // GENSYN
+  747474,   // KATANA
+];
 
 const outDir = path.join(__dirname, 'foundry', 'tx-builder');
 
@@ -54,10 +74,10 @@ const SAFE_UI: Record<number, { base: string; prefix: string }> = {
   5064014: { base: 'https://safe.ethereal.trade', prefix: 'ethereal' },
   8453: { base: 'https://app.safe.global', prefix: 'base' },
   13371: { base: 'https://safe.immutable.com', prefix: 'imx' },
-  16661: { base: 'https://staging.safe.citrea.xyz', prefix: 'citrea-mainnet' },
+  16661: { base: 'https://app.safe.global', prefix: '0g' },
   21000000: { base: 'https://safe.usecorn.com', prefix: 'corn' },
-  31612: { base: 'https://app.safe.global', prefix: 'mezo' },
-  33139: { base: 'https://app.safe.global', prefix: 'apechain' },
+  31612: { base: 'https://safe.mezo.org', prefix: 'mezo' },
+  33139: { base: 'https://safe.apechain.com', prefix: 'ape' },
   34443: { base: 'https://safe.optimism.io', prefix: 'mode' },
   42161: { base: 'https://app.safe.global', prefix: 'arb' },
   42220: { base: 'https://app.safe.global', prefix: 'celo' },
@@ -69,7 +89,7 @@ const SAFE_UI: Record<number, { base: string; prefix: string }> = {
   59144: { base: 'https://safe.linea.build', prefix: 'linea' },
   60808: { base: 'https://safe.gobob.xyz', prefix: 'bob' },
   80094: { base: 'https://safe.berachain.com', prefix: 'berachain' },
-  81457: { base: 'https://blast-safe.io', prefix: 'blast' },
+  81457: { base: 'https://app.safe.protofire.io', prefix: 'blastmainnet' },
   167000: { base: 'https://safe.taiko.xyz', prefix: 'tko-mainnet' },
   534352: { base: 'https://app.safe.global', prefix: 'scr' },
   685689: { base: 'https://app.safe.global', prefix: 'gensyn' },

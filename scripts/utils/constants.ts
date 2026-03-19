@@ -31,6 +31,7 @@ export function getSafeAPI(chainId: number): string | null {
     59144: 'linea',       // LINEA
     80094: 'berachain',   // BERACHAIN
     534352: 'scroll',     // SCROLL
+    16661: '0g',          // ZERO_G
   };
 
   if (safeGlobal[chainId]) {
